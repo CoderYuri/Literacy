@@ -13,4 +13,4 @@ ${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework
 ${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework
 ${BUILT_PRODUCTS_DIR}/TPKeyboardAvoiding/TPKeyboardAvoiding.framework
 ${BUILT_PRODUCTS_DIR}/TZImagePickerController/TZImagePickerController.framework
-${BUILT_PRODUCTS_DIR}/UIImageView-PlayGIF/UIImageView_PlayGIF.framework
+${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework

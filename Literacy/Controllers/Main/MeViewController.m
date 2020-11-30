@@ -7,11 +7,18 @@
 
 #import "MeViewController.h"
 #import "WordCollectionViewCell.h"
+#import "NSString+correctPhone.h"
+
+#import <WebKit/WKWebView.h>
+#import <WebKit/WKUIDelegate.h>
+#import <WebKit/WKNavigationDelegate.h>
+
 #define kbackColor [JKUtil getColor:@"F4FAFF"]
 #define klcolor [JKUtil getColor:@"E5EEFD"]
 #define kocolor [JKUtil getColor:@"FF6112"]
+#define kmebluecolor [JKUtil getColor:@"1D69FF"]
 
-@interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>{
+@interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate>{
     UIView *backV;
     
     UIImageView *vipImg;
@@ -33,10 +40,25 @@
     UICollectionView *collectionView;
     UILabel *leftL;
     UILabel *rightL;
+    
+    //关闭按钮 登录页面
+    UIView *blackV;
+    UIView *dengluV;
+    NoHighBtn *closeBtn;
+    
+    UITextField *mobileTextF;
+    UITextField *codeTextF;
+    
+    UIButton *huoquBtn;
+    
+    NoHighBtn *anothercloseBtn;
 }
 
 @property (nonatomic,strong) NudeIn *monL;
 
+@property (nonatomic,strong) NudeIn *xieyiLabel;
+
+@property (nonatomic,strong)WKWebView *YLwkwebView;
 @end
 
 @implementation MeViewController
@@ -46,7 +68,134 @@
     // Do any additional setup after loading the view.
     
     [self setupView];
+    [self setupDengluV];
 }
+
+- (void)setupDengluV{
+    blackV = [UIView new];
+    blackV.backgroundColor = kblackColor;
+    blackV.alpha = 0.55;
+    [backV addSubview:blackV];
+    blackV.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
+    
+    dengluV = [UIView new];
+    dengluV.backgroundColor = WhiteColor;
+    [backV addSubview:dengluV];
+    dengluV.layer.cornerRadius = 3 * YScaleWidth;
+    dengluV.layer.borderColor = [JKUtil getColor:@"B8D0FF"].CGColor;
+    dengluV.layer.borderWidth = 2 * YScaleWidth;
+    dengluV.layer.masksToBounds = YES;
+    dengluV.sd_layout.centerXEqualToView(backV).topSpaceToView(backV, 158 * YScaleHeight).widthIs(620 * YScaleWidth).heightIs(516 * YScaleHeight);
+    
+    closeBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"elementclose"] forState:UIControlStateNormal];
+    [backV addSubview:closeBtn];
+    closeBtn.sd_layout.rightSpaceToView(backV, 205 * YScaleWidth).topSpaceToView(backV, 131 * YScaleHeight).widthIs(94 * YScaleHeight).heightEqualToWidth();
+    [closeBtn addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self closeClick];
+    
+    UILabel *shangzL = [UILabel new];
+    shangzL.text = @"手机号快捷登录";
+    shangzL.font = YSystemFont(32 * YScaleHeight);
+    shangzL.textColor = [JKUtil getColor:@"5B5B5B"];
+    shangzL.textAlignment = NSTextAlignmentCenter;
+    [dengluV addSubview:shangzL];
+    shangzL.sd_layout.topSpaceToView(dengluV, 75 * YScaleHeight).centerXEqualToView(dengluV).widthIs(400 * YScaleWidth).heightIs(45 * YScaleHeight);
+    
+    UILabel *detaiL = [UILabel new];
+    detaiL.text = @"未注册的手机号将自动创建账户";
+    detaiL.font = YSystemFont(22 * YScaleHeight);
+    detaiL.textColor = [JKUtil getColor:@"B6B7BA"];
+    detaiL.textAlignment = NSTextAlignmentCenter;
+    [dengluV addSubview:detaiL];
+    detaiL.sd_layout.topSpaceToView(shangzL, 10 * YScaleHeight).centerXEqualToView(dengluV).widthIs(400 * YScaleWidth).heightIs(22 * YScaleHeight);
+    
+    UIView *backV1 = [UIView new];
+    [dengluV addSubview:backV1];
+    backV1.backgroundColor = [JKUtil getColor:@"EBF3F6"];
+    backV1.sd_layout.topSpaceToView(dengluV, 182 * YScaleHeight).centerXEqualToView(dengluV).widthIs(440 * YScaleWidth).heightIs(60 * YScaleHeight);
+    backV1.layer.cornerRadius = 4;
+    backV1.layer.masksToBounds = YES;
+
+    
+    mobileTextF = [self textF];
+    mobileTextF.placeholder = @"请输入手机号";
+    [backV1 addSubview:mobileTextF];
+    mobileTextF.sd_layout.centerYEqualToView(backV1).leftSpaceToView(backV1, 24 * YScaleWidth).rightSpaceToView(backV1, 24 * YScaleWidth).heightIs(25 * YScaleHeight);
+    
+    UIView *backV2 = [UIView new];
+    [dengluV addSubview:backV2];
+    backV2.backgroundColor = [JKUtil getColor:@"EBF3F6"];
+    backV2.sd_layout.topSpaceToView(backV1, 23 * YScaleHeight).centerXEqualToView(dengluV).widthIs(440 * YScaleWidth).heightIs(60 * YScaleHeight);
+    backV2.layer.cornerRadius = 4;
+    backV2.layer.masksToBounds = YES;
+
+    
+    codeTextF = [self textF];
+    codeTextF.placeholder = @"请输入验证码";
+    [backV2 addSubview:codeTextF];
+    codeTextF.sd_layout.centerYEqualToView(backV2).leftSpaceToView(backV2, 24 * YScaleWidth).rightSpaceToView(backV2, 160 * YScaleWidth).heightIs(25 * YScaleHeight);
+    
+    UIView *lineV = [UIView new];
+    lineV.backgroundColor = [JKUtil getColor:@"B6B7BA"];
+    [backV2 addSubview:lineV];
+    lineV.sd_layout.leftSpaceToView(codeTextF, 10 * YScaleWidth).centerYEqualToView(backV2).widthIs(1 * YScaleWidth).heightIs(30 * YScaleHeight);
+    
+    huoquBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [huoquBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+    [huoquBtn setTitleColor:[JKUtil getColor:@"1665FF"] forState:UIControlStateNormal];
+    huoquBtn.titleLabel.font = YSystemFont(16 * YScaleHeight);
+    [huoquBtn addTarget:self action:@selector(huoquclick) forControlEvents:UIControlEventTouchUpInside];
+    [backV2 addSubview:huoquBtn];
+    huoquBtn.sd_layout.centerYEqualToView(backV2).rightEqualToView(backV2).widthIs(150 * YScaleWidth).heightIs(22 * YScaleHeight);
+    
+    UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [loginBtn setTitle:@"立即登录" forState:UIControlStateNormal];
+    [loginBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
+    [loginBtn setBackgroundColor:korangeColor];
+    loginBtn.titleLabel.font = YSystemFont(26 * YScaleHeight);
+    [loginBtn addTarget:self action:@selector(dengluClick) forControlEvents:UIControlEventTouchUpInside];
+    loginBtn.layer.cornerRadius = 30 * YScaleHeight;
+    loginBtn.layer.masksToBounds = YES;
+    [dengluV addSubview:loginBtn];
+    loginBtn.sd_layout.centerXEqualToView(dengluV).bottomSpaceToView(dengluV, 96 * YScaleHeight).widthIs(358 * YScaleWidth).heightIs(60 * YScaleHeight);
+    
+    _xieyiLabel = [NudeIn make:^(NUDTextMaker *make) {
+    make.text(@"点击登录，即表示同意").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"CDCDCD"]).attach();
+        make.text(@"《用户协议》").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"1665FF"]).attach();
+        make.text(@"和").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"CDCDCD"]).attach();
+        make.text(@"《隐私政策》").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"1665FF"]).attach();
+        
+    }];
+    _xieyiLabel.userInteractionEnabled = NO;
+        _xieyiLabel.textAlignment = NSTextAlignmentCenter;
+    [dengluV addSubview:_xieyiLabel];
+    _xieyiLabel.sd_layout.topSpaceToView(loginBtn, 44 * YScaleHeight).widthIs(400 * YScaleWidth).heightIs(20 * YScaleHeight).centerXEqualToView(dengluV);
+
+    UIButton *xieyiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [xieyiBtn addTarget:self action:@selector(xieyiclick) forControlEvents:UIControlEventTouchUpInside];
+    [dengluV addSubview:xieyiBtn];
+    xieyiBtn.sd_layout.topSpaceToView(loginBtn, 34 * YScaleHeight).leftSpaceToView(dengluV, 300 * YScaleWidth).widthIs(72 * YScaleWidth).heightIs(40 * YScaleHeight);
+    
+    UIButton *yinsiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [yinsiBtn addTarget:self action:@selector(yinsiclick) forControlEvents:UIControlEventTouchUpInside];
+    [dengluV addSubview:yinsiBtn];
+    yinsiBtn.sd_layout.topSpaceToView(loginBtn, 34 * YScaleHeight).rightSpaceToView(dengluV, 151 * YScaleHeight).widthIs(72 * YScaleWidth).heightIs(40 * YScaleHeight);
+    
+}
+
+- (UITextField *)textF{
+    UITextField *textF = [[UITextField alloc] init];
+    textF.backgroundColor = ClearColor;
+    textF.font = YSystemFont(18 * YScaleHeight);
+    textF.tintColor = kblackColor;
+//    textF.delegate = self;
+    textF.keyboardType = UIKeyboardTypeNumberPad;
+
+    return textF;
+}
+
 
 - (void)setupView{
     backV = self.view;
@@ -267,11 +416,12 @@
     
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
     layout.itemSize = CGSizeMake(112 * YScaleWidth, 112 * YScaleWidth);
-//    layout.minimumLineSpacing = 40 * YScaleHeight;
-    
+    layout.minimumInteritemSpacing = 30 * YScaleWidth;
+    layout.minimumLineSpacing = 30 * YScaleWidth;
+
     
     collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(17 * YScaleWidth, 20 * YScaleHeight + 38 * YScaleWidth, 806 * YScaleWidth, 572 * YScaleHeight) collectionViewLayout:layout];
-    collectionView.contentInset = UIEdgeInsetsMake(50 * YScaleHeight, 82 * YScaleWidth, 50 * YScaleHeight, 44 * YScaleWidth);
+    collectionView.contentInset = UIEdgeInsetsMake(50 * YScaleWidth, 82 * YScaleWidth, 50 * YScaleWidth, 44 * YScaleWidth);
     collectionView.showsVerticalScrollIndicator = NO;
     collectionView.showsHorizontalScrollIndicator = FALSE;
     collectionView.backgroundColor = kbackColor;
@@ -280,6 +430,20 @@
     collectionView.dataSource = self;
     [qingkuangV addSubview:collectionView];
         
+    
+    for (int i = 0; i < 10; i++) {
+        UILabel *label = [UILabel new];
+        label.text = [NSString stringWithFormat:@"%d",(i + 1) * 10];
+        label.textColor = [JKUtil getColor:@"1D69FF"];
+        label.font = YSystemFont(20 * YScaleWidth);
+        label.textAlignment = NSTextAlignmentRight;
+        
+        [collectionView addSubview:label];
+        label.frame = CGRectMake( - 74 * YScaleWidth, 184 * YScaleWidth + 284 * YScaleWidth * i, 50 * YScaleWidth, 28 * YScaleWidth);
+        
+    }
+
+    
 }
 
 
@@ -299,13 +463,13 @@
     dixiaL.sd_layout.bottomSpaceToView(kefuV, 20 * YScaleHeight).widthIs(460 * YScaleWidth).centerXEqualToView(kefuV).heightIs(26 * YScaleHeight);
     
     UILabel *shangL = [UILabel new];
-    shangL.textColor = [JKUtil getColor:@"1D69FF"];
+    shangL.textColor = kmebluecolor;
     shangL.text = @"服务时间：工作日8:30-17:30";
     shangL.backgroundColor = kbackColor;
     shangL.font = YSystemFont(20 * YScaleHeight);
     shangL.textAlignment = NSTextAlignmentCenter;
     shangL.layer.cornerRadius = 4;
-    shangL.layer.borderColor = [JKUtil getColor:@"1D69FF"].CGColor;
+    shangL.layer.borderColor = kmebluecolor.CGColor;
     shangL.layer.borderWidth = 1;
     [kefuV addSubview:shangL];
     shangL.sd_layout.centerXEqualToView(kefuV).topSpaceToView(kefuV, 200 * YScaleHeight).widthIs(356 * YScaleWidth).heightIs(50 * YScaleHeight);
@@ -347,11 +511,93 @@
     [rightV addSubview:aboutV];
     aboutV.sd_layout.centerXEqualToView(rightV).centerYEqualToView(rightV).widthIs(806 * YScaleWidth).heightIs(600 * YScaleHeight);
     
+    NSArray *nameArr = @[@"用户协议",@"隐私协议",@"证照信息"];
+    for (int i = 0; i < nameArr.count; i++) {
+        NoHighBtn *b = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+        [b setTitle:nameArr[i] forState:UIControlStateNormal];
+        b.titleLabel.font = YSystemFont(18 * YScaleHeight);
+        b.layer.cornerRadius = 4;
+        [b setBackgroundColor:ClearColor];
+        [b setTitleColor:kmebluecolor forState:UIControlStateNormal];
+        b.layer.borderColor = kmebluecolor.CGColor;
+        b.layer.borderWidth = 1;
+        b.layer.masksToBounds = YES;
+        [aboutV addSubview:b];
+        b.frame = CGRectMake(57 * YScaleWidth + 236 * YScaleWidth * i, 44 * YScaleHeight, 220 * YScaleWidth, 50 * YScaleHeight);
+        b.tag = i;
+        [b addTarget:self action:@selector(aboutClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    UIView *lineV = [UIView new];
+    lineV.backgroundColor = klcolor;
+    [aboutV addSubview:lineV];
+    lineV.sd_layout.centerXEqualToView(aboutV).topSpaceToView(aboutV, 351 * YScaleHeight).widthIs(772 * YScaleWidth).heightIs(1);
+    
+    UILabel *huanbanL = [UILabel new];
+    huanbanL.text = @"滑板车系列产品";
+    huanbanL.font = YSystemFont(24 * YScaleHeight);
+    huanbanL.textColor = [JKUtil getColor:@"2E4476"];
+    [aboutV addSubview:huanbanL];
+    huanbanL.sd_layout.leftSpaceToView(aboutV, 34 * YScaleWidth).widthIs(175 * YScaleWidth).heightIs(33 * YScaleHeight).topSpaceToView(lineV, 19 * YScaleHeight);
+    
+    UIImageView *banImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
+    [aboutV addSubview:banImg];
+    banImg.sd_layout.leftEqualToView(huanbanL).topSpaceToView(huanbanL, 20 * YScaleHeight).widthIs(100 * YScaleHeight).heightEqualToWidth();
+    
+    NoHighBtn *b = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [b setTitle:@"下载" forState:UIControlStateNormal];
+    b.titleLabel.font = YSystemFont(18 * YScaleHeight);
+    b.layer.cornerRadius = 4;
+    [b setBackgroundColor:ClearColor];
+    [b setTitleColor:korangeColor forState:UIControlStateNormal];
+    b.layer.borderColor = korangeColor.CGColor;
+    b.layer.borderWidth = 1;
+    b.layer.masksToBounds = YES;
+    [aboutV addSubview:b];
+    b.sd_layout.leftEqualToView(banImg).topSpaceToView(banImg, 16 * YScaleHeight).widthIs(100 * YScaleHeight).heightIs(40 * YScaleHeight);
+    [b addTarget:self action:@selector(xiazaiClick) forControlEvents:UIControlEventTouchUpInside];
+
+    
 }
 
 
 
 #pragma mark - click
+- (void)xiazaiClick{
+    //滑板车背诵  id  1528921153
+    
+    NSString * url = [NSString stringWithFormat:@"https://itunes.apple.com/app/id%@?mt=8",@"1528921153"];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+}
+
+- (void)aboutClick:(UIButton *)btn{
+    NSInteger aboutIndex = btn.tag;
+    
+    _YLwkwebView = [[WKWebView alloc]init];
+    
+    _YLwkwebView.backgroundColor = kstandardColor;
+    _YLwkwebView.navigationDelegate = self;
+    _YLwkwebView.UIDelegate = self;
+
+    [_YLwkwebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.baidu.com"]]];
+
+    [aboutV addSubview:_YLwkwebView];
+    _YLwkwebView.sd_layout.leftSpaceToView(aboutV, 14 * YScaleHeight).rightSpaceToView(aboutV, 14 * YScaleHeight).topSpaceToView(aboutV, 14 * YScaleHeight).bottomSpaceToView(aboutV, 14 * YScaleHeight);
+
+    
+    anothercloseBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [anothercloseBtn setBackgroundImage:[UIImage imageNamed:@"elementclose"] forState:UIControlStateNormal];
+    [aboutV addSubview:anothercloseBtn];
+    anothercloseBtn.sd_layout.rightSpaceToView(aboutV, 0).topSpaceToView(aboutV, 0).widthIs(40 * YScaleHeight).heightEqualToWidth();
+    [anothercloseBtn addTarget:self action:@selector(anothercloseClick) forControlEvents:UIControlEventTouchUpInside];
+
+}
+
+- (void)anothercloseClick{
+    [_YLwkwebView removeFromSuperview];
+    [anothercloseBtn removeFromSuperview];
+}
+
 - (void)back{
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -419,8 +665,84 @@
 
 - (void)payClick{
     YLogFunc
+    
+    blackV.hidden = NO;
+    closeBtn.hidden = NO;
+    dengluV.hidden = NO;
 }
 
+- (void)closeClick{
+    blackV.hidden = YES;
+    closeBtn.hidden = YES;
+    dengluV.hidden = YES;
+
+    [self.view endEditing:YES];
+    
+}
+
+//获取验证码
+- (void)huoquclick{
+    huoquBtn.enabled = NO;
+//    NSString *warnS = [NSString valiMobile:mobileTextF.text];
+//    if(warnS.length){
+//        YLog(@"%@",warnS)
+////        [self.view makeToast:warnS duration:2 position:@"center"];
+//        return;
+//    }
+    
+    [self setRestTime];
+    //网络请求
+
+}
+
+- (void)setRestTime{
+    //修改时间效果
+    __block int timeout = 59;
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
+    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), 1.0*NSEC_PER_SEC, 0);
+    dispatch_source_set_event_handler(_timer, ^{
+        if(timeout<=0){
+            dispatch_source_cancel(_timer);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self->huoquBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+                [self->huoquBtn setTitleColor:[JKUtil getColor:@"1665FF"] forState:UIControlStateNormal];
+                self->huoquBtn.enabled = YES;
+            });
+        }else{
+            self->huoquBtn.enabled = NO;
+            int seconds = timeout % 60;
+            NSString *strTime = [NSString stringWithFormat:@"重新发送（%.2ds）", seconds];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIView beginAnimations:nil context:nil];
+                [UIView setAnimationDuration:1];
+                [self->huoquBtn setTitle:[NSString stringWithFormat:@"%@",strTime] forState:UIControlStateDisabled];
+                [self->huoquBtn setTitleColor: [JKUtil getColor:@"B6B7BA"] forState:UIControlStateNormal];
+                
+                [UIView commitAnimations];
+            });
+            timeout--;
+        }
+    });
+    dispatch_resume(_timer);
+}
+
+//登录
+- (void)dengluClick{
+    YLogFunc
+}
+
+//用户协议
+- (void)xieyiclick{
+    YLogFunc
+}
+
+//隐私政策
+- (void)yinsiclick{
+    YLogFunc
+}
+
+//复制
 - (void)copyClick{
     YLogFunc
 }
@@ -464,10 +786,10 @@
 }
 
 //定义每个UICollectionView 的边距
--(UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    //边距的顺序是 上左下右
-  return UIEdgeInsetsMake(0,0,0,30 * YScaleWidth);
-}
+//-(UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+//    //边距的顺序是 上左下右
+//  return UIEdgeInsetsMake(0,0,0,30 * YScaleWidth);
+//}
 
 
 

@@ -55,6 +55,8 @@
 #import <UMShare/UMShare.h>
 #import "NudeIn.h"
 #import <UMCommon/MobClick.h>
+#import <YYImage/YYImage.h>
+
 
 #endif
 
@@ -172,7 +174,7 @@
 #define kstandardColor                  [JKUtil getColor:@"F5F7FA"]  //基准色 常态
 #define kgreenColor                     [JKUtil getColor:@"1ab696"]
 #define klightgreenColor                [JKUtil getColor:@"2ecc71"]
-#define korangeColor                    [JKUtil getColor:@"f39c12"]
+#define korangeColor                    [JKUtil getColor:@"FF5E18"]
 #define klightOrangeColor               [JKUtil getColor:@"f6b517"]
 #define kiconColor                      [JKUtil getColor:@"505050"]
 #define kciyaoColor                     [JKUtil getColor:@"4a4a4a"]

@@ -27,8 +27,9 @@
     [self.window setRootViewController:navC];
     
     [self.window makeKeyAndVisible];
-
     
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+
     //iOS 11 适配
     if (@available(iOS 11.0,*)) {
         UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

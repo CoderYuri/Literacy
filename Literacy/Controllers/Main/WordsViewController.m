@@ -76,7 +76,9 @@
 
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
     layout.itemSize = CGSizeMake(120 * YScaleWidth, 120 * YScaleWidth);
-//    layout.minimumLineSpacing = 40 * YScaleHeight;
+    layout.minimumInteritemSpacing = 40 * YScaleWidth;
+    layout.minimumLineSpacing = 32 * YScaleWidth;
+
     
     
     collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0,120 * YScaleHeight + 44 * YScaleWidth, YScreenW, YScreenH - 120 * YScaleHeight - 44 * YScaleWidth) collectionViewLayout:layout];
@@ -89,6 +91,18 @@
     collectionView.dataSource = self;
     [backV addSubview:collectionView];
     
+    
+    for (int i = 0; i < 10; i++) {
+        UILabel *label = [UILabel new];
+        label.text = [NSString stringWithFormat:@"%d",(i + 1) * 10];
+        label.textColor = [JKUtil getColor:@"1D69FF"];
+        label.font = YSystemFont(22 * YScaleWidth);
+        label.textAlignment = NSTextAlignmentRight;
+        
+        [collectionView addSubview:label];
+        label.frame = CGRectMake( - 86 * YScaleWidth, 197 * YScaleWidth + 304 * YScaleWidth * i, 50 * YScaleWidth, 30 * YScaleWidth);
+        
+    }
     
     
 }
@@ -110,15 +124,15 @@
 }
 
 //定义每个UICollectionView 的边距
--(UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    //边距的顺序是 上左下右
-  return UIEdgeInsetsMake(0,0,0,40 * YScaleWidth);
-}
+//-(UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+//    //边距的顺序是 上左下右
+//  return UIEdgeInsetsMake(32 * YScaleWidth,0,0,40 * YScaleWidth);
+//}
 
 
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
-    YLogFunc
+    YLog(@"%ld",indexPath.item)
 }
 
 

@@ -6,13 +6,13 @@
 //
 
 #import "MainViewController.h"
-#import <UIImageView-PlayGIF-umbrella.h>
 #import "MainCollectionViewCell.h"
 #import "WordsViewController.h"
 #import "MeViewController.h"
 #import "FunViewController.h"
 
 #import "UIImage+GIF.h"
+#import "YFGIFImageView.h"
 
 #define Transformtimeinterval 1.0
 @interface MainViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>{
@@ -24,7 +24,7 @@
     UILabel *nameL;
     UILabel *vipL;
     
-    UIImageView *gifView;
+    YYAnimatedImageView *gifView;
     UICollectionView *collectionView;
     UIScrollView *scrollV;
     NSMutableArray *dataArr;
@@ -32,12 +32,34 @@
     //gif的x值
     CGFloat gifCenterX;
     CGFloat lastOffSetX;
+    
+    NSInteger selectIndex;
+    BOOL ifNoanimation;
 }
 
 @end
 
 @implementation MainViewController
 
+- (void)forceToOrientation:(UIDeviceOrientation)orientation
+{
+    NSNumber *orientationUnknown = [NSNumber numberWithInt:0];
+    [[UIDevice currentDevice] setValue:orientationUnknown forKey:@"orientation"];
+    
+    NSNumber *orientationTarget = [NSNumber numberWithInt:orientation];
+    [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
+}
+
+
+//- (void)viewDidAppear:(BOOL)animated{
+//    [super viewDidAppear:animated];
+//
+//    if(ifNoanimation){
+//        [gifView stopAnimating];
+//    }
+//    ifNoanimation = NO;
+////    [gifView stopAnimating];
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,8 +68,10 @@
     dataArr = [NSMutableArray array];
     
     NSArray *ziArr = @[@"一",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十"];
+        
     
-
+    NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
+    [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
     
 //    [[SDAnimatedImagePlayer alloc] initWithProvider:]
 //
@@ -166,14 +190,23 @@
     [scrollV addSubview:collectionView];
     */
     
+    selectIndex = -1;
     gifCenterX = 267 * YScaleHeight * 0.5;
-    gifView = [[UIImageView alloc] init];
+//    gifView = [[UIImageView alloc] init];
     NSString *filePath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"shaonv" ofType:@"gif"];
     NSData *imageData = [NSData dataWithContentsOfFile:filePath];
-    gifView.image = [UIImage sd_imageWithGIFData:imageData];
+//    gifView.image = [UIImage sd_imageWithGIFData:imageData];
+    
+//    gifView = [[YFGIFImageView alloc] init];
+//    gifView.gifData = imageData;
+//    [gifView startGIFWithRunLoopMode:NSRunLoopCommonModes];
+    
+    UIImage *image = [YYImage imageNamed:@"shaonv.gif"];
+    gifView = [[YYAnimatedImageView alloc] initWithImage:image];
+    [gifView startAnimating];
     
     [backV addSubview:gifView];
-    gifView.frame = CGRectMake(0, 0,267 * YScaleHeight, 282 * YScaleHeight);
+    gifView.frame = CGRectMake( - 267 * YScaleHeight, 0, 267 * YScaleHeight, 282 * YScaleHeight);
     gifView.mj_y = YScreenH - 282 * YScaleHeight - 88 * YScaleWidth;
 
 //    if(isPad){
@@ -187,6 +220,11 @@
 //    }
     
     [self setshangV];  //YScaleWidth
+    
+    [UIView animateWithDuration:1
+                     animations:^{
+        self->gifView.centerX = gifCenterX;
+    }];
     
 }
 
@@ -248,13 +286,15 @@
     
 }
 
-
 #pragma mark - click
 - (void)caozuoClick:(UITapGestureRecognizer *)tap{
-    NSInteger selectIndex = tap.view.tag - 10000;
-    YLog(@"%ld",selectIndex)
-    
-    
+    NSInteger ziIndex = tap.view.tag - 10000;
+    YLog(@"%ld",ziIndex)
+
+    //不同字的时候  才开始动画
+    if(ziIndex != selectIndex)
+        [gifView startAnimating];
+
     for (UIView *v in scrollV.subviews) {
         if (v.tag == tap.view.tag)
         {
@@ -268,25 +308,38 @@
             }
             
             [UIView animateWithDuration:Transformtimeinterval animations:^{
-                self->gifView.centerX = v.centerX - self->scrollV.contentOffset.x;
-                self->gifCenterX = v.centerX;
+                
+                if(selectIndex < ziIndex){
+                    self->gifCenterX = v.centerX - 85 * YScaleHeight;
+                }
+                else if(selectIndex > ziIndex){
+                    self->gifCenterX = v.centerX + 85 * YScaleHeight;
+                }
+                self->gifView.centerX = self->gifCenterX- self->scrollV.contentOffset.x;
+//                [gifView startGIF];
 
             } completion:^(BOOL finished) {
                 
+                selectIndex = ziIndex;
+                [gifView stopAnimating];
+
                 FunViewController *vc = [[FunViewController alloc] init];
                 vc.selectedMod = self->dataArr[selectIndex];
-//                [self.navigationController pushViewController:vc animated:YES];
                 vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
                 vc.modalPresentationStyle = UIModalPresentationFullScreen;
-
+                vc.xuanzhongIndex = selectIndex;
 
 //                UIModalTransitionStyleCoverVertical = 0,
-//                UIModalTransitionStyleFlipHorizontal API_UNAVAILABLE(tvos),
+                //         self->       UIModalTransitionStyleFlipHorizontal API_UNAVAILABLE(tvos),
 //                UIModalTransitionStyleCrossDissolve,
 //                UIModalTransitionStylePartialCurl
+                vc.callBack = ^(NSInteger xuanzhongIndex) {
+//                    self->ifNoanimation = YES;
+                    YLog(@"%ld",xuanzhongIndex)
+                };
                 
                 [self presentViewController:vc animated:YES completion:^{
-                    
+
                 }];
             }];
             

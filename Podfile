@@ -31,5 +31,5 @@ platform :ios, '9.0'
   #相册
   pod 'TZImagePickerController'
   #pod 'libOpenInstallSDK'
-
+  pod 'YYImage'
 end
