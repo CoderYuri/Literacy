@@ -12,11 +12,14 @@
 #import <WebKit/WKWebView.h>
 #import <WebKit/WKUIDelegate.h>
 #import <WebKit/WKNavigationDelegate.h>
+#import "YLwebViewController.h"
 
 #define kbackColor [JKUtil getColor:@"F4FAFF"]
 #define klcolor [JKUtil getColor:@"E5EEFD"]
 #define kocolor [JKUtil getColor:@"FF6112"]
 #define kmebluecolor [JKUtil getColor:@"1D69FF"]
+
+
 
 @interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate>{
     UIView *backV;
@@ -52,6 +55,7 @@
     UIButton *huoquBtn;
     
     NoHighBtn *anothercloseBtn;
+    CGFloat thisScale;
 }
 
 @property (nonatomic,strong) NudeIn *monL;
@@ -78,43 +82,50 @@
     [backV addSubview:blackV];
     blackV.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
     
+    if(isPad){
+        thisScale = YScaleWidth;
+    }
+    else{
+        thisScale = YScaleWidth * 0.8;
+    }
+    
     dengluV = [UIView new];
     dengluV.backgroundColor = WhiteColor;
     [backV addSubview:dengluV];
-    dengluV.layer.cornerRadius = 3 * YScaleWidth;
+    dengluV.layer.cornerRadius = 3 ;
     dengluV.layer.borderColor = [JKUtil getColor:@"B8D0FF"].CGColor;
-    dengluV.layer.borderWidth = 2 * YScaleWidth;
-    dengluV.layer.masksToBounds = YES;
-    dengluV.sd_layout.centerXEqualToView(backV).topSpaceToView(backV, 158 * YScaleHeight).widthIs(620 * YScaleWidth).heightIs(516 * YScaleHeight);
+//    dengluV.layer.masksToBounds = YES;
+    dengluV.sd_layout.centerXEqualToView(backV).centerYEqualToView(backV).widthIs(620 * thisScale).heightIs(516 * thisScale);
+    
     
     closeBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"elementclose"] forState:UIControlStateNormal];
     [backV addSubview:closeBtn];
-    closeBtn.sd_layout.rightSpaceToView(backV, 205 * YScaleWidth).topSpaceToView(backV, 131 * YScaleHeight).widthIs(94 * YScaleHeight).heightEqualToWidth();
+    closeBtn.sd_layout.leftSpaceToView(backV, (YScreenW - 620 * thisScale) * 0.5 + 620 * thisScale - 67 * thisScale).topSpaceToView(backV, (YScreenH - 516 * thisScale) * 0.5 - 27 * thisScale).widthIs(94 * thisScale).heightEqualToWidth();
     [closeBtn addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self closeClick];
     
     UILabel *shangzL = [UILabel new];
     shangzL.text = @"手机号快捷登录";
-    shangzL.font = YSystemFont(32 * YScaleHeight);
+    shangzL.font = YSystemFont(32 * thisScale);
     shangzL.textColor = [JKUtil getColor:@"5B5B5B"];
     shangzL.textAlignment = NSTextAlignmentCenter;
     [dengluV addSubview:shangzL];
-    shangzL.sd_layout.topSpaceToView(dengluV, 75 * YScaleHeight).centerXEqualToView(dengluV).widthIs(400 * YScaleWidth).heightIs(45 * YScaleHeight);
+    shangzL.sd_layout.topSpaceToView(dengluV, 75 * thisScale).centerXEqualToView(dengluV).widthIs(400 * thisScale).heightIs(45 * thisScale);
     
     UILabel *detaiL = [UILabel new];
     detaiL.text = @"未注册的手机号将自动创建账户";
-    detaiL.font = YSystemFont(22 * YScaleHeight);
+    detaiL.font = YSystemFont(22 * thisScale);
     detaiL.textColor = [JKUtil getColor:@"B6B7BA"];
     detaiL.textAlignment = NSTextAlignmentCenter;
     [dengluV addSubview:detaiL];
-    detaiL.sd_layout.topSpaceToView(shangzL, 10 * YScaleHeight).centerXEqualToView(dengluV).widthIs(400 * YScaleWidth).heightIs(22 * YScaleHeight);
+    detaiL.sd_layout.topSpaceToView(shangzL, 10 * thisScale).centerXEqualToView(dengluV).widthIs(400 * thisScale).heightIs(22 * thisScale);
     
     UIView *backV1 = [UIView new];
     [dengluV addSubview:backV1];
     backV1.backgroundColor = [JKUtil getColor:@"EBF3F6"];
-    backV1.sd_layout.topSpaceToView(dengluV, 182 * YScaleHeight).centerXEqualToView(dengluV).widthIs(440 * YScaleWidth).heightIs(60 * YScaleHeight);
+    backV1.sd_layout.topSpaceToView(dengluV, 182 * thisScale).centerXEqualToView(dengluV).widthIs(440 * thisScale).heightIs(60 * thisScale);
     backV1.layer.cornerRadius = 4;
     backV1.layer.masksToBounds = YES;
 
@@ -122,12 +133,12 @@
     mobileTextF = [self textF];
     mobileTextF.placeholder = @"请输入手机号";
     [backV1 addSubview:mobileTextF];
-    mobileTextF.sd_layout.centerYEqualToView(backV1).leftSpaceToView(backV1, 24 * YScaleWidth).rightSpaceToView(backV1, 24 * YScaleWidth).heightIs(25 * YScaleHeight);
+    mobileTextF.sd_layout.centerYEqualToView(backV1).leftSpaceToView(backV1, 24 * thisScale).rightSpaceToView(backV1, 24 * thisScale).heightIs(25 * thisScale);
     
     UIView *backV2 = [UIView new];
     [dengluV addSubview:backV2];
     backV2.backgroundColor = [JKUtil getColor:@"EBF3F6"];
-    backV2.sd_layout.topSpaceToView(backV1, 23 * YScaleHeight).centerXEqualToView(dengluV).widthIs(440 * YScaleWidth).heightIs(60 * YScaleHeight);
+    backV2.sd_layout.topSpaceToView(backV1, 23 * thisScale).centerXEqualToView(dengluV).widthIs(440 * thisScale).heightIs(60 * thisScale);
     backV2.layer.cornerRadius = 4;
     backV2.layer.masksToBounds = YES;
 
@@ -135,60 +146,60 @@
     codeTextF = [self textF];
     codeTextF.placeholder = @"请输入验证码";
     [backV2 addSubview:codeTextF];
-    codeTextF.sd_layout.centerYEqualToView(backV2).leftSpaceToView(backV2, 24 * YScaleWidth).rightSpaceToView(backV2, 160 * YScaleWidth).heightIs(25 * YScaleHeight);
+    codeTextF.sd_layout.centerYEqualToView(backV2).leftSpaceToView(backV2, 24 * thisScale).rightSpaceToView(backV2, 160 * thisScale).heightIs(25 * thisScale);
     
     UIView *lineV = [UIView new];
     lineV.backgroundColor = [JKUtil getColor:@"B6B7BA"];
     [backV2 addSubview:lineV];
-    lineV.sd_layout.leftSpaceToView(codeTextF, 10 * YScaleWidth).centerYEqualToView(backV2).widthIs(1 * YScaleWidth).heightIs(30 * YScaleHeight);
+    lineV.sd_layout.leftSpaceToView(codeTextF, 10 * thisScale).centerYEqualToView(backV2).widthIs(1 * thisScale).heightIs(30 * thisScale);
     
     huoquBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [huoquBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
     [huoquBtn setTitleColor:[JKUtil getColor:@"1665FF"] forState:UIControlStateNormal];
-    huoquBtn.titleLabel.font = YSystemFont(16 * YScaleHeight);
+    huoquBtn.titleLabel.font = YSystemFont(18 * thisScale);
     [huoquBtn addTarget:self action:@selector(huoquclick) forControlEvents:UIControlEventTouchUpInside];
     [backV2 addSubview:huoquBtn];
-    huoquBtn.sd_layout.centerYEqualToView(backV2).rightEqualToView(backV2).widthIs(150 * YScaleWidth).heightIs(22 * YScaleHeight);
+    huoquBtn.sd_layout.centerYEqualToView(backV2).rightEqualToView(backV2).widthIs(150 * thisScale).heightIs(22 * thisScale);
     
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [loginBtn setTitle:@"立即登录" forState:UIControlStateNormal];
     [loginBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
     [loginBtn setBackgroundColor:korangeColor];
-    loginBtn.titleLabel.font = YSystemFont(26 * YScaleHeight);
+    loginBtn.titleLabel.font = YSystemFont(26 * thisScale);
     [loginBtn addTarget:self action:@selector(dengluClick) forControlEvents:UIControlEventTouchUpInside];
-    loginBtn.layer.cornerRadius = 30 * YScaleHeight;
+    loginBtn.layer.cornerRadius = 30 * thisScale;
     loginBtn.layer.masksToBounds = YES;
     [dengluV addSubview:loginBtn];
-    loginBtn.sd_layout.centerXEqualToView(dengluV).bottomSpaceToView(dengluV, 96 * YScaleHeight).widthIs(358 * YScaleWidth).heightIs(60 * YScaleHeight);
+    loginBtn.sd_layout.centerXEqualToView(dengluV).bottomSpaceToView(dengluV, 96 * thisScale).widthIs(358 * thisScale).heightIs(60 * thisScale);
     
     _xieyiLabel = [NudeIn make:^(NUDTextMaker *make) {
-    make.text(@"点击登录，即表示同意").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"CDCDCD"]).attach();
-        make.text(@"《用户协议》").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"1665FF"]).attach();
-        make.text(@"和").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"CDCDCD"]).attach();
-        make.text(@"《隐私政策》").fontName(@"PingFangSC-Regular",14 * YScaleHeight).color([JKUtil getColor:@"1665FF"]).attach();
+    make.text(@"点击登录，即表示同意").fontName(@"PingFangSC-Regular",14 * thisScale).color([JKUtil getColor:@"CDCDCD"]).attach();
+        make.text(@"《用户协议》").fontName(@"PingFangSC-Regular",14 * thisScale).color([JKUtil getColor:@"1665FF"]).attach();
+        make.text(@"和").fontName(@"PingFangSC-Regular",14 * thisScale).color([JKUtil getColor:@"CDCDCD"]).attach();
+        make.text(@"《隐私政策》").fontName(@"PingFangSC-Regular",14 * thisScale).color([JKUtil getColor:@"1665FF"]).attach();
         
     }];
     _xieyiLabel.userInteractionEnabled = NO;
         _xieyiLabel.textAlignment = NSTextAlignmentCenter;
     [dengluV addSubview:_xieyiLabel];
-    _xieyiLabel.sd_layout.topSpaceToView(loginBtn, 44 * YScaleHeight).widthIs(400 * YScaleWidth).heightIs(20 * YScaleHeight).centerXEqualToView(dengluV);
+    _xieyiLabel.sd_layout.topSpaceToView(loginBtn, 44 * thisScale).widthIs(400 * thisScale).heightIs(20 * thisScale).centerXEqualToView(dengluV);
 
     UIButton *xieyiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [xieyiBtn addTarget:self action:@selector(xieyiclick) forControlEvents:UIControlEventTouchUpInside];
     [dengluV addSubview:xieyiBtn];
-    xieyiBtn.sd_layout.topSpaceToView(loginBtn, 34 * YScaleHeight).leftSpaceToView(dengluV, 300 * YScaleWidth).widthIs(72 * YScaleWidth).heightIs(40 * YScaleHeight);
+    xieyiBtn.sd_layout.topSpaceToView(loginBtn, 34 * thisScale).leftSpaceToView(dengluV, 300 * thisScale).widthIs(72 * thisScale).heightIs(40 * thisScale);
     
     UIButton *yinsiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [yinsiBtn addTarget:self action:@selector(yinsiclick) forControlEvents:UIControlEventTouchUpInside];
     [dengluV addSubview:yinsiBtn];
-    yinsiBtn.sd_layout.topSpaceToView(loginBtn, 34 * YScaleHeight).rightSpaceToView(dengluV, 151 * YScaleHeight).widthIs(72 * YScaleWidth).heightIs(40 * YScaleHeight);
+    yinsiBtn.sd_layout.topSpaceToView(loginBtn, 34 * thisScale).rightSpaceToView(dengluV, 151 * thisScale).widthIs(72 * thisScale).heightIs(40 * thisScale);
     
 }
 
 - (UITextField *)textF{
     UITextField *textF = [[UITextField alloc] init];
     textF.backgroundColor = ClearColor;
-    textF.font = YSystemFont(18 * YScaleHeight);
+    textF.font = YSystemFont(18 * thisScale);
     textF.tintColor = kblackColor;
 //    textF.delegate = self;
     textF.keyboardType = UIKeyboardTypeNumberPad;
@@ -250,7 +261,7 @@
     ///操作按钮
     for (int i = 0; i < 4; i++) {
         NoHighBtn *btn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
-        btn.titleLabel.font = YSystemFont(20 * YScaleHeight);
+        btn.titleLabel.font = YSystemFont(20 * YScaleWidth);
         [btn setTitle:namearr[i] forState:UIControlStateNormal];
         
         [btn setBackgroundImage:[UIImage imageWithColor:klcolor] forState:UIControlStateNormal];
@@ -260,7 +271,7 @@
         [btn setTitleColor:WhiteColor forState:UIControlStateSelected];
 
         [leftV addSubview:btn];
-        btn.frame = CGRectMake(0, 50 * YScaleWidth + 60 * YScaleHeight + 66 * YScaleHeight * i, 180 * YScaleWidth, 52 * YScaleHeight);
+        btn.frame = CGRectMake(0, 50 * YScaleWidth + 60 * YScaleHeight + 66 * YScaleWidth * i, 180 * YScaleWidth, 52 * YScaleWidth);
         
         btn.tag = 1000 + i;
         [btn addTarget:self action:@selector(caozuoClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -286,16 +297,28 @@
     goumaiV.backgroundColor = kbackColor;
     [rightV addSubview:goumaiV];
     goumaiV.sd_layout.centerXEqualToView(rightV).centerYEqualToView(rightV).widthIs(806 * YScaleWidth).heightIs(600 * YScaleHeight);
+    
+    UIImageView *hintimg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconhint"]];
+    [goumaiV addSubview:hintimg];
+    hintimg.sd_layout.leftSpaceToView(goumaiV, 24 * YScaleWidth).topSpaceToView(goumaiV, 32 * YScaleHeight).widthIs(20 * YScaleWidth).heightEqualToWidth();
+    
+    UILabel *hintL = [UILabel new];
+    hintL.text = @"可支持两台设备同时登录";
+    hintL.textColor = [JKUtil getColor:@"FF0000"];
+    hintL.font = YSystemFont(20 * YScaleWidth);
+    [goumaiV addSubview:hintL];
+    hintL.sd_layout.leftSpaceToView(hintimg, 10 * YScaleWidth).centerYEqualToView(hintimg).widthIs(300 * YScaleWidth).heightIs(28 * YScaleWidth);
+    
 
     NoHighBtn *payBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
     [payBtn setTitle:@"立即购买" forState:UIControlStateNormal];
     [payBtn setBackgroundColor:kocolor];
     [payBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
-    payBtn.titleLabel.font = YSystemFont(24 * YScaleHeight);
-    payBtn.layer.cornerRadius = 30 * YScaleHeight;
+    payBtn.titleLabel.font = YSystemFont(24 * YScaleWidth);
+    payBtn.layer.cornerRadius = 30 * YScaleWidth;
     payBtn.layer.masksToBounds = YES;
     [goumaiV addSubview:payBtn];
-    payBtn.sd_layout.centerXEqualToView(goumaiV).bottomSpaceToView(goumaiV, 68 * YScaleHeight).widthIs(446 * YScaleHeight).heightIs(60 * YScaleHeight);
+    payBtn.sd_layout.centerXEqualToView(goumaiV).bottomSpaceToView(goumaiV, 68 * YScaleHeight).widthIs(446 * YScaleWidth).heightIs(60 * YScaleWidth);
     [payBtn addTarget:self action:@selector(payClick) forControlEvents:UIControlEventTouchUpInside];
 
     
@@ -456,46 +479,46 @@
     
     UILabel *dixiaL = [UILabel new];
     dixiaL.text = @"联系方式：点击复制微信号， 打开微信添加客服为好友";
-    dixiaL.font = YSystemFont(16 * YScaleHeight);
+    dixiaL.font = YSystemFont(16 * YScaleWidth);
     dixiaL.textColor = [JKUtil getColor:@"B0BBD4"];
     dixiaL.textAlignment = NSTextAlignmentCenter;
     [kefuV addSubview:dixiaL];
-    dixiaL.sd_layout.bottomSpaceToView(kefuV, 20 * YScaleHeight).widthIs(460 * YScaleWidth).centerXEqualToView(kefuV).heightIs(26 * YScaleHeight);
+    dixiaL.sd_layout.bottomSpaceToView(kefuV, 20 * YScaleHeight).widthIs(460 * YScaleWidth).centerXEqualToView(kefuV).heightIs(26 * YScaleWidth);
     
     UILabel *shangL = [UILabel new];
     shangL.textColor = kmebluecolor;
     shangL.text = @"服务时间：工作日8:30-17:30";
     shangL.backgroundColor = kbackColor;
-    shangL.font = YSystemFont(20 * YScaleHeight);
+    shangL.font = YSystemFont(20 * YScaleWidth);
     shangL.textAlignment = NSTextAlignmentCenter;
     shangL.layer.cornerRadius = 4;
     shangL.layer.borderColor = kmebluecolor.CGColor;
     shangL.layer.borderWidth = 1;
     [kefuV addSubview:shangL];
-    shangL.sd_layout.centerXEqualToView(kefuV).topSpaceToView(kefuV, 200 * YScaleHeight).widthIs(356 * YScaleWidth).heightIs(50 * YScaleHeight);
+    shangL.sd_layout.centerXEqualToView(kefuV).topSpaceToView(kefuV, 200 * YScaleHeight).widthIs(356 * YScaleWidth).heightIs(50 * YScaleWidth);
     
     UIView *midV = [UIView new];
     midV.backgroundColor = [JKUtil getColor:@"E9F1F6"];
     midV.layer.cornerRadius = 4;
     [kefuV addSubview:midV];
-    midV.sd_layout.topSpaceToView(shangL, 20 * YScaleHeight).widthIs(356 * YScaleWidth).heightIs(50 * YScaleHeight).centerXEqualToView(kefuV);
+    midV.sd_layout.topSpaceToView(shangL, 20 * YScaleHeight).widthIs(356 * YScaleWidth).heightIs(50 * YScaleWidth).centerXEqualToView(kefuV);
     
     UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconwechat"]];
     [midV addSubview:img];
-    img.sd_layout.leftSpaceToView(midV, 33 * YScaleWidth).centerYEqualToView(midV).widthIs(40 * YScaleHeight).heightIs(32 * YScaleHeight);
+    img.sd_layout.leftSpaceToView(midV, 33 * YScaleWidth).centerYEqualToView(midV).widthIs(40 * YScaleWidth).heightIs(32 * YScaleWidth);
     
     UILabel *detailL = [UILabel new];
     detailL.text = @"客服：123456789";
     detailL.textAlignment = NSTextAlignmentCenter;
     detailL.textColor = [JKUtil getColor:@"616E8D"];
-    detailL.font = YSystemFont(20 * YScaleHeight);
+    detailL.font = YSystemFont(20 * YScaleWidth);
     [midV addSubview:detailL];
-    detailL.sd_layout.centerYEqualToView(midV).centerXEqualToView(midV).widthIs(200 * YScaleWidth).heightIs(28 * YScaleHeight);
+    detailL.sd_layout.centerYEqualToView(midV).centerXEqualToView(midV).widthIs(200 * YScaleWidth).heightIs(28 * YScaleWidth);
     
     
     UIImageView *imgg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconcopy"]];
     [midV addSubview:imgg];
-    imgg.sd_layout.rightSpaceToView(midV, 33 * YScaleWidth).centerYEqualToView(midV).widthIs(28 * YScaleHeight).heightEqualToWidth();
+    imgg.sd_layout.rightSpaceToView(midV, 33 * YScaleWidth).centerYEqualToView(midV).widthIs(28 * YScaleWidth).heightEqualToWidth();
 
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn addTarget:self action:@selector(copyClick) forControlEvents:UIControlEventTouchUpInside];
@@ -515,7 +538,7 @@
     for (int i = 0; i < nameArr.count; i++) {
         NoHighBtn *b = [NoHighBtn buttonWithType:UIButtonTypeCustom];
         [b setTitle:nameArr[i] forState:UIControlStateNormal];
-        b.titleLabel.font = YSystemFont(18 * YScaleHeight);
+        b.titleLabel.font = YSystemFont(18 * YScaleWidth);
         b.layer.cornerRadius = 4;
         [b setBackgroundColor:ClearColor];
         [b setTitleColor:kmebluecolor forState:UIControlStateNormal];
@@ -523,7 +546,7 @@
         b.layer.borderWidth = 1;
         b.layer.masksToBounds = YES;
         [aboutV addSubview:b];
-        b.frame = CGRectMake(57 * YScaleWidth + 236 * YScaleWidth * i, 44 * YScaleHeight, 220 * YScaleWidth, 50 * YScaleHeight);
+        b.frame = CGRectMake(57 * YScaleWidth + 236 * YScaleWidth * i, 44 * YScaleHeight, 220 * YScaleWidth, 50 * YScaleWidth);
         b.tag = i;
         [b addTarget:self action:@selector(aboutClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -531,22 +554,22 @@
     UIView *lineV = [UIView new];
     lineV.backgroundColor = klcolor;
     [aboutV addSubview:lineV];
-    lineV.sd_layout.centerXEqualToView(aboutV).topSpaceToView(aboutV, 351 * YScaleHeight).widthIs(772 * YScaleWidth).heightIs(1);
+    lineV.sd_layout.centerXEqualToView(aboutV).bottomSpaceToView(aboutV, 248 * YScaleWidth).widthIs(772 * YScaleWidth).heightIs(1);
     
     UILabel *huanbanL = [UILabel new];
     huanbanL.text = @"滑板车系列产品";
-    huanbanL.font = YSystemFont(24 * YScaleHeight);
+    huanbanL.font = YSystemFont(24 * YScaleWidth);
     huanbanL.textColor = [JKUtil getColor:@"2E4476"];
     [aboutV addSubview:huanbanL];
-    huanbanL.sd_layout.leftSpaceToView(aboutV, 34 * YScaleWidth).widthIs(175 * YScaleWidth).heightIs(33 * YScaleHeight).topSpaceToView(lineV, 19 * YScaleHeight);
+    huanbanL.sd_layout.leftSpaceToView(aboutV, 34 * YScaleWidth).widthIs(175 * YScaleWidth).heightIs(33 * YScaleWidth).topSpaceToView(lineV, 19 * YScaleWidth);
     
     UIImageView *banImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
     [aboutV addSubview:banImg];
-    banImg.sd_layout.leftEqualToView(huanbanL).topSpaceToView(huanbanL, 20 * YScaleHeight).widthIs(100 * YScaleHeight).heightEqualToWidth();
+    banImg.sd_layout.leftEqualToView(huanbanL).topSpaceToView(huanbanL, 20 * YScaleWidth).widthIs(100 * YScaleWidth).heightEqualToWidth();
     
     NoHighBtn *b = [NoHighBtn buttonWithType:UIButtonTypeCustom];
     [b setTitle:@"下载" forState:UIControlStateNormal];
-    b.titleLabel.font = YSystemFont(18 * YScaleHeight);
+    b.titleLabel.font = YSystemFont(18 * YScaleWidth);
     b.layer.cornerRadius = 4;
     [b setBackgroundColor:ClearColor];
     [b setTitleColor:korangeColor forState:UIControlStateNormal];
@@ -554,7 +577,7 @@
     b.layer.borderWidth = 1;
     b.layer.masksToBounds = YES;
     [aboutV addSubview:b];
-    b.sd_layout.leftEqualToView(banImg).topSpaceToView(banImg, 16 * YScaleHeight).widthIs(100 * YScaleHeight).heightIs(40 * YScaleHeight);
+    b.sd_layout.leftEqualToView(banImg).topSpaceToView(banImg, 16 * YScaleWidth).widthIs(100 * YScaleWidth).heightIs(40 * YScaleWidth);
     [b addTarget:self action:@selector(xiazaiClick) forControlEvents:UIControlEventTouchUpInside];
 
     
@@ -586,9 +609,9 @@
 
     
     anothercloseBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
-    [anothercloseBtn setBackgroundImage:[UIImage imageNamed:@"elementclose"] forState:UIControlStateNormal];
+    [anothercloseBtn setBackgroundImage:[UIImage imageNamed:@"elementclosee"] forState:UIControlStateNormal];
     [aboutV addSubview:anothercloseBtn];
-    anothercloseBtn.sd_layout.rightSpaceToView(aboutV, 0).topSpaceToView(aboutV, 0).widthIs(40 * YScaleHeight).heightEqualToWidth();
+    anothercloseBtn.sd_layout.rightSpaceToView(aboutV, 24 * YScaleHeight).topSpaceToView(aboutV, 24 * YScaleHeight).widthIs(36 * YScaleWidth).heightEqualToWidth();
     [anothercloseBtn addTarget:self action:@selector(anothercloseClick) forControlEvents:UIControlEventTouchUpInside];
 
 }
@@ -596,6 +619,9 @@
 - (void)anothercloseClick{
     [_YLwkwebView removeFromSuperview];
     [anothercloseBtn removeFromSuperview];
+    
+    _YLwkwebView = nil;
+    anothercloseBtn = nil;
 }
 
 - (void)back{
@@ -677,7 +703,6 @@
     dengluV.hidden = YES;
 
     [self.view endEditing:YES];
-    
 }
 
 //获取验证码
@@ -735,11 +760,41 @@
 //用户协议
 - (void)xieyiclick{
     YLogFunc
+    
+//    YLwebViewController *vc = [[YLwebViewController alloc]init];
+//    vc.urlString = @"http://www.id-photo-verify.com/treaty/";
+//    vc.titleString = @"长宽快照用户协议";
+//    [self presentViewController:vc animated:YES completion:^{
+//
+//    }];
+
+    [self makewebViewWithurl:@"http://www.id-photo-verify.com/treaty/"];
 }
 
 //隐私政策
 - (void)yinsiclick{
     YLogFunc
+    
+    [self makewebViewWithurl:@"http://www.id-photo-verify.com/treaty/"];
+}
+
+- (void)makewebViewWithurl:(NSString *)url{
+    _YLwkwebView = [[WKWebView alloc]init];
+    _YLwkwebView.backgroundColor = kstandardColor;
+    _YLwkwebView.navigationDelegate = self;
+    _YLwkwebView.UIDelegate = self;
+
+    [_YLwkwebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+
+    [dengluV addSubview:_YLwkwebView];
+    _YLwkwebView.sd_layout.leftEqualToView(dengluV).rightEqualToView(dengluV).topEqualToView(dengluV).bottomEqualToView(dengluV);
+
+    
+    anothercloseBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [anothercloseBtn setBackgroundImage:[UIImage imageNamed:@"elementclose"] forState:UIControlStateNormal];
+    [backV addSubview:anothercloseBtn];
+    anothercloseBtn.sd_layout.leftSpaceToView(backV, (YScreenW - 620 * thisScale) * 0.5 + 620 * thisScale - 67 * thisScale).topSpaceToView(backV, (YScreenH - 516 * thisScale) * 0.5 - 27 * thisScale).widthIs(94 * thisScale).heightEqualToWidth();
+    [anothercloseBtn addTarget:self action:@selector(anothercloseClick) forControlEvents:UIControlEventTouchUpInside];
 }
 
 //复制

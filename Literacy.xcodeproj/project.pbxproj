@@ -11,6 +11,7 @@
 		DA008660256F39D000E01904 /* YFGIFImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA00865D256F39D000E01904 /* YFGIFImageView.m */; };
 		DA008661256F39D000E01904 /* UIImageView+PlayGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = DA00865E256F39D000E01904 /* UIImageView+PlayGIF.m */; };
 		DA008679256F51A300E01904 /* ren.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = DA008678256F51A300E01904 /* ren.mp4 */; };
+		DA1A75F92575D7B000B047FC /* FuxiPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A75F82575D7B000B047FC /* FuxiPlayViewController.m */; };
 		DA1C63AC2566690D00E23AE8 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1C63A92566690D00E23AE8 /* BaseViewController.m */; };
 		DA1C63AD2566690D00E23AE8 /* YLNavgationController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1C63AA2566690D00E23AE8 /* YLNavgationController.m */; };
 		DA4274D2255E7B9400610D12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA4274C6255E7B9300610D12 /* Assets.xcassets */; };
@@ -18,6 +19,7 @@
 		DA4274D4255E7B9400610D12 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4274CB255E7B9300610D12 /* main.m */; };
 		DA4274D6255E7B9400610D12 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4274CF255E7B9300610D12 /* AppDelegate.m */; };
 		DA4274F02562781200610D12 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4274EF2562781200610D12 /* MainViewController.m */; };
+		DA45773C257917110086392D /* YLwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA45773B257917110086392D /* YLwebViewController.m */; };
 		DA712C0E25709FB5000DB9BD /* huatong.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C0D25709FB4000DB9BD /* huatong.gif */; };
 		DA712C1125709FBC000DB9BD /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C1025709FBC000DB9BD /* loading.gif */; };
 		DA8184352574837500190F38 /* FuxiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8184342574837500190F38 /* FuxiViewController.m */; };
@@ -84,6 +86,8 @@
 		DA00865E256F39D000E01904 /* UIImageView+PlayGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayGIF.m"; sourceTree = "<group>"; };
 		DA00865F256F39D000E01904 /* UIImageView+PlayGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayGIF.h"; sourceTree = "<group>"; };
 		DA008678256F51A300E01904 /* ren.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = ren.mp4; sourceTree = "<group>"; };
+		DA1A75F72575D7AF00B047FC /* FuxiPlayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FuxiPlayViewController.h; sourceTree = "<group>"; };
+		DA1A75F82575D7B000B047FC /* FuxiPlayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuxiPlayViewController.m; sourceTree = "<group>"; };
 		DA1C63A82566690D00E23AE8 /* YLNavgationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YLNavgationController.h; sourceTree = "<group>"; };
 		DA1C63A92566690D00E23AE8 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		DA1C63AA2566690D00E23AE8 /* YLNavgationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLNavgationController.m; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 		DA4274CF255E7B9300610D12 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		DA4274EE2562781200610D12 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		DA4274EF2562781200610D12 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		DA45773A257917110086392D /* YLwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YLwebViewController.h; sourceTree = "<group>"; };
+		DA45773B257917110086392D /* YLwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLwebViewController.m; sourceTree = "<group>"; };
 		DA712C0D25709FB4000DB9BD /* huatong.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = huatong.gif; sourceTree = "<group>"; };
 		DA712C1025709FBC000DB9BD /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
 		DA8184332574837500190F38 /* FuxiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FuxiViewController.h; sourceTree = "<group>"; };
@@ -317,6 +323,8 @@
 		DA4274EC256277DA00610D12 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				DA45773A257917110086392D /* YLwebViewController.h */,
+				DA45773B257917110086392D /* YLwebViewController.m */,
 				DA1C63AB2566690D00E23AE8 /* BaseViewController.h */,
 				DA1C63A92566690D00E23AE8 /* BaseViewController.m */,
 				DA1C63A82566690D00E23AE8 /* YLNavgationController.h */,
@@ -338,6 +346,8 @@
 				DAF31F6F256E2B2B0056435B /* FunViewController.m */,
 				DA8184332574837500190F38 /* FuxiViewController.h */,
 				DA8184342574837500190F38 /* FuxiViewController.m */,
+				DA1A75F72575D7AF00B047FC /* FuxiPlayViewController.h */,
+				DA1A75F82575D7B000B047FC /* FuxiPlayViewController.m */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -712,6 +722,7 @@
 				DAF5E4F7256366D700003A85 /* NSObject+FileManager.m in Sources */,
 				DAF5E504256366D700003A85 /* MSSAutoresizeLabelFlow.m in Sources */,
 				DAF5E4E8256366D700003A85 /* UIButton+CenterImageAndTitle.m in Sources */,
+				DA1A75F92575D7B000B047FC /* FuxiPlayViewController.m in Sources */,
 				DAF5E506256366D700003A85 /* MSSAutoresizeLabelFlowCell.m in Sources */,
 				DA008661256F39D000E01904 /* UIImageView+PlayGIF.m in Sources */,
 				DAF5E4ED256366D700003A85 /* OSAddressPickerView.m in Sources */,
@@ -755,6 +766,7 @@
 				DAF5E4F1256366D700003A85 /* UIImage+GradientColor.m in Sources */,
 				DAF5E4FD256366D700003A85 /* UIImage+Common.m in Sources */,
 				DAF5E4FB256366D700003A85 /* NSString+correctPhone.m in Sources */,
+				DA45773C257917110086392D /* YLwebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

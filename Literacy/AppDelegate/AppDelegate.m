@@ -8,6 +8,7 @@
 #import "AppDelegate.h"
 #import <IQKeyboardManager/IQKeyboardManager.h>
 #import "MainViewController.h"
+#import "FuxiViewController.h"
 
 @interface AppDelegate ()
 
@@ -21,6 +22,7 @@
     
     //界面布局
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//    FuxiViewController *mainVc = [[FuxiViewController alloc] init];
     MainViewController *mainVc = [[MainViewController alloc] init];
     YLNavgationController *navC = [[YLNavgationController alloc] initWithRootViewController:mainVc];
 

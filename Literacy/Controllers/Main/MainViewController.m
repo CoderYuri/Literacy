@@ -14,7 +14,6 @@
 #import "UIImage+GIF.h"
 #import "YFGIFImageView.h"
 
-#define Transformtimeinterval 1.0
 @interface MainViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>{
     UIView *backV;
     
@@ -77,9 +76,15 @@
 //
     //    ,@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十"
     
-    for (int i = 0; i < ziArr.count; i++) {
+//    for (int i = 0; i < ziArr.count; i++) {
+//        AllModel *mod = [AllModel new];
+//        mod.title = ziArr[i];
+//        [dataArr addObject:mod];
+//    }
+
+    for (int i = 0; i < 1000; i++) {
         AllModel *mod = [AllModel new];
-        mod.title = ziArr[i];
+        mod.title = @"人";
         [dataArr addObject:mod];
     }
 
@@ -125,11 +130,11 @@
     
     for (int i = 0 ; i < dataArr.count; i++) {
         UIView *v = [UIView new];
-        v.tag = 10000 + i;
         v.backgroundColor = ClearColor;
         [scrollV addSubview:v];
         v.frame = CGRectMake(320 * YScaleHeight + 256 * YScaleHeight * i, 0, 256 * YScaleHeight, 384 * YScaleHeight);
         v.mj_y = YScreenH - 196 * YScaleWidth - 384 * YScaleHeight + 42 * YScaleWidth;
+        v.tag = 10000 + i;
 
 //        if(isPad){
 //        }
@@ -146,18 +151,28 @@
 
         AllModel *mod = dataArr[i];
         
-        UILabel *ziL = [UILabel new];
-        ziL.text = mod.title;
-        ziL.font = [UIFont fontWithName:@"kaiti" size:70 * YScaleHeight];
-        ziL.textColor = BlackColor;
-        ziL.textAlignment = NSTextAlignmentCenter;
-        [v addSubview:ziL];
-        ziL.sd_layout.centerXEqualToView(v).topSpaceToView(v, 192 * YScaleHeight).widthIs(73 * YScaleHeight).heightIs(70 * YScaleHeight);
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btn setTitle:mod.title forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont fontWithName:@"kaiti" size:70 * YScaleHeight];
+        [btn setTitleColor:BlackColor forState:UIControlStateNormal];
+        [v addSubview:btn];
+        btn.sd_layout.centerXEqualToView(v).topSpaceToView(v, 192 * YScaleHeight).widthIs(73 * YScaleHeight).heightIs(70 * YScaleHeight);
+        [btn addTarget:self action:@selector(caozuoClick:) forControlEvents:UIControlEventTouchUpInside];
         
-        v.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(caozuoClick:)];
-        tap.numberOfTapsRequired = 1;
-        [v addGestureRecognizer:tap];
+        
+//        UILabel *ziL = [UILabel new];
+//        ziL.text = mod.title;
+//        ziL.font = [UIFont fontWithName:@"kaiti" size:70 * YScaleHeight];
+//        ziL.textColor = BlackColor;
+//        ziL.textAlignment = NSTextAlignmentCenter;
+//        [v addSubview:ziL];
+//        ziL.sd_layout.centerXEqualToView(v).topSpaceToView(v, 192 * YScaleHeight).widthIs(73 * YScaleHeight).heightIs(70 * YScaleHeight);
+//        ziL.tag = 10000 + i;
+
+//        ziL.userInteractionEnabled = YES;
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(caozuoClick:)];
+//        tap.numberOfTapsRequired = 1;
+//        [ziL addGestureRecognizer:tap];
 
     }
      
@@ -191,7 +206,7 @@
     */
     
     selectIndex = -1;
-    gifCenterX = 267 * YScaleHeight * 0.5;
+    gifCenterX = 363 * YScaleHeight;   //初始位置
 //    gifView = [[UIImageView alloc] init];
     NSString *filePath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"shaonv" ofType:@"gif"];
     NSData *imageData = [NSData dataWithContentsOfFile:filePath];
@@ -221,7 +236,7 @@
     
     [self setshangV];  //YScaleWidth
     
-    [UIView animateWithDuration:1
+    [UIView animateWithDuration:Transformtimeinterval
                      animations:^{
         self->gifView.centerX = gifCenterX;
     }];
@@ -287,8 +302,8 @@
 }
 
 #pragma mark - click
-- (void)caozuoClick:(UITapGestureRecognizer *)tap{
-    NSInteger ziIndex = tap.view.tag - 10000;
+- (void)caozuoClick:(UIButton *)b{
+    NSInteger ziIndex = b.superview.tag - 10000;
     YLog(@"%ld",ziIndex)
 
     //不同字的时候  才开始动画
@@ -296,7 +311,7 @@
         [gifView startAnimating];
 
     for (UIView *v in scrollV.subviews) {
-        if (v.tag == tap.view.tag)
+        if (v.tag == b.superview.tag)
         {
             
             if(gifView.centerX > v.centerX - scrollV.contentOffset.x){

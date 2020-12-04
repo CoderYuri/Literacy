@@ -6,11 +6,11 @@
 //
 
 #import "FunViewController.h"
-#define Transformtimeinterval 1.0
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
+#define scrollTimeInterval 1.0
 
 //AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:url] options:nil];// url：网络视频的连接
 //
@@ -162,7 +162,8 @@
     
     
     //初始进入页面  开始认  动画
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(scrollTimeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
         [UIView animateWithDuration:Transformtimeinterval animations:^{
             self->gifView.centerX = 250 * YScaleWidth;
 
@@ -283,7 +284,7 @@
 
         leftL.hidden = NO;
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 
             //延迟0.5s  开始消失
             [rightL.layer addAnimation:anim forKey:nil];
@@ -291,7 +292,7 @@
 
             
             //动画完成之后  开始页面消失
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 
                 [UIView animateWithDuration:1 animations:^{
                     [self->dianshiV removeFromSuperview];
@@ -329,20 +330,31 @@
 //进入读页面
 - (void)ducaozuo{
     
+
+
     [UIView animateWithDuration:Transformtimeinterval animations:^{
-        [self->scrollV setContentOffset:CGPointMake(YScreenW, 0)];
-        self->yidongV.mj_x = 55 * YScaleWidth;
+        self->gifView.centerX =  - 134 * YScaleWidth + YScreenW;
+    } completion:^(BOOL finished) {
         
-    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:scrollTimeInterval animations:^{
+            
+            [self->scrollV setContentOffset:CGPointMake(YScreenW, 0)];
+            self->yidongV.mj_x = 55 * YScaleWidth;
+            
+        } completion:^(BOOL finished) {
+            
 
-    }];
+            [UIView animateWithDuration:Transformtimeinterval animations:^{
+                self->gifView.centerX =  250 * YScaleWidth + YScreenW;
+            } completion:^(BOOL finished) {
+                [gifView stopAnimating];
+                //读的画面操作
+                [self duVjiazai];
 
-    [UIView animateWithDuration:2 animations:^{
-        self->gifView.centerX = 250 * YScaleWidth + YScreenW;
-    } completion:^(BOOL finished) {
-        [gifView stopAnimating];
-        //读的画面操作
-        [self duVjiazai];
+            }];
+            
+            
+        }];
     }];
 
 
@@ -441,20 +453,28 @@
 #pragma mark -- 玩 页面操作
 
 - (void)wancaozuo{
+    
     [UIView animateWithDuration:Transformtimeinterval animations:^{
+        self->gifView.centerX =  - 134 * YScaleWidth + YScreenW * 2;
+    } completion:^(BOOL finished) {
         
-        [self->scrollV setContentOffset:CGPointMake(YScreenW * 2, 0)];
-        self->yidongV.mj_x = 105 * YScaleWidth;
+        [UIView animateWithDuration:scrollTimeInterval animations:^{
+            
+            [self->scrollV setContentOffset:CGPointMake(YScreenW * 2, 0)];
+            self->yidongV.mj_x = 105 * YScaleWidth;
 
-    } completion:^(BOOL finished) {
+        } completion:^(BOOL finished) {
+            
 
-    }];
+            [UIView animateWithDuration:Transformtimeinterval animations:^{
+                self->gifView.centerX = 100 * YScaleWidth + YScreenW * 2;
+            } completion:^(BOOL finished) {
+                [gifView stopAnimating];
 
-    [UIView animateWithDuration:2 animations:^{
-        self->gifView.centerX = 100 * YScaleWidth + YScreenW * 2;
-    } completion:^(BOOL finished) {
-        [gifView stopAnimating];
-
+            }];
+            
+            
+        }];
     }];
 
 }
@@ -462,22 +482,29 @@
 
 
 - (void)successCaozuo{
+    
     [UIView animateWithDuration:Transformtimeinterval animations:^{
-        
-        [self->scrollV setContentOffset:CGPointMake(YScreenW * 3, 0)];
-
-    } completion:^(BOOL finished) {
-
-    }];
-
-    [UIView animateWithDuration:3 animations:^{
-        self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 3;
+        self->gifView.centerX =  - 134 * YScaleWidth + YScreenW * 3;
     } completion:^(BOOL finished) {
         
-        //成功之后操作  调用接口  返回。。
-        [gifView stopAnimating];
+        [UIView animateWithDuration:scrollTimeInterval animations:^{
+            
+            [self->scrollV setContentOffset:CGPointMake(YScreenW * 3, 0)];
 
+        } completion:^(BOOL finished) {
+            
+
+            [UIView animateWithDuration:Transformtimeinterval animations:^{
+                self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 3;
+            } completion:^(BOOL finished) {
+                [gifView stopAnimating];
+
+            }];
+            
+            
+        }];
     }];
+
 
 }
 

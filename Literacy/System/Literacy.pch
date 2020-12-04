@@ -81,7 +81,7 @@
 
 #define knickname   @"knickname"
 #define kheadIcon   @"kheadIcon"
-
+#define Transformtimeinterval 2.0
 
 #define localPhone @"18012485542"
 #define localweChat @"idphoto2017"
