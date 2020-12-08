@@ -25,11 +25,11 @@
     //设置请求头
     [mgr.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
-    [mgr.requestSerializer setValue:Appkey forHTTPHeaderField:@"App-Key"];
-    [mgr.requestSerializer setValue:SoftwareVersion forHTTPHeaderField:@"Software-Version"];
-    [mgr.requestSerializer setValue:ClientType forHTTPHeaderField:@"Client-Type"];
-    [mgr.requestSerializer setValue:[YUserDefaults objectForKey:kuserkey] forHTTPHeaderField:@"User-Key"];
-    
+//    [mgr.requestSerializer setValue:Appkey forHTTPHeaderField:@"App-Key"];
+//    [mgr.requestSerializer setValue:SoftwareVersion forHTTPHeaderField:@"Software-Version"];
+//    [mgr.requestSerializer setValue:ClientType forHTTPHeaderField:@"Client-Type"];
+//    [mgr.requestSerializer setValue:[YUserDefaults objectForKey:kuserkey] forHTTPHeaderField:@"User-Key"];
+    [mgr.requestSerializer setValue:[YUserDefaults objectForKey:ktoken] forHTTPHeaderField:@"token"];
     
     //设置接受方式
     mgr.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/plain",@"text/html",@"image/png", @"application/javascript",nil];
@@ -69,10 +69,12 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
     //设置请求头
-    [manager.requestSerializer setValue:Appkey forHTTPHeaderField:@"App-Key"];
-    [manager.requestSerializer setValue:SoftwareVersion forHTTPHeaderField:@"Software-Version"];
-    [manager.requestSerializer setValue:ClientType forHTTPHeaderField:@"Client-Type"];
-    [manager.requestSerializer setValue:[YUserDefaults objectForKey:kuserkey] forHTTPHeaderField:@"User-Key"];
+//    [manager.requestSerializer setValue:Appkey forHTTPHeaderField:@"App-Key"];
+//    [manager.requestSerializer setValue:SoftwareVersion forHTTPHeaderField:@"Software-Version"];
+//    [manager.requestSerializer setValue:ClientType forHTTPHeaderField:@"Client-Type"];
+//    [manager.requestSerializer setValue:[YUserDefaults objectForKey:kuserkey] forHTTPHeaderField:@"User-Key"];
+    [manager.requestSerializer setValue:[YUserDefaults objectForKey:ktoken] forHTTPHeaderField:@"token"];
+
     
     [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
     manager.requestSerializer.timeoutInterval = 15.f;

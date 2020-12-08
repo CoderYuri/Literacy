@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) UIImageView *bgImg;
 
+@property (nonatomic,strong) UIImageView *lockImg;
+
+@property(nonatomic,strong)AllModel *mod;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,18 +20,19 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    //界面布局
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-//    FuxiViewController *mainVc = [[FuxiViewController alloc] init];
-    MainViewController *mainVc = [[MainViewController alloc] init];
-    YLNavgationController *navC = [[YLNavgationController alloc] initWithRootViewController:mainVc];
-
-    [self.window setRootViewController:navC];
-    
-    [self.window makeKeyAndVisible];
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
+    
+    if([YUserDefaults objectForKey:kuserid]){
+        [NSThread sleepForTimeInterval:2.0];
+       [self gotoMainVC];
+    }
+    else{
+        [NSThread sleepForTimeInterval:8];
+        [self netWorkChangeEvent];
+    }
+    
     //iOS 11 适配
     if (@available(iOS 11.0,*)) {
         UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -61,6 +62,87 @@
     
     return YES;
 }
+
+
+-(void)netWorkChangeEvent
+{
+    
+    NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:url];
+    self.netWorkStatesCode =AFNetworkReachabilityStatusUnknown;
+    [manager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        self.netWorkStatesCode = status;
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                NSLog(@"当前使用的是流量模式");
+                [self getuserID];
+                break;
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                NSLog(@"当前使用的是wifi模式");
+                [self getuserID];
+
+                break;
+            case AFNetworkReachabilityStatusNotReachable:
+                NSLog(@"断网了");
+                break;
+            case AFNetworkReachabilityStatusUnknown:
+                NSLog(@"变成了未知网络状态");
+                break;
+                
+            default:
+                break;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"netWorkChangeEventNotification" object:@(status)];
+    }];
+    [manager.reachabilityManager startMonitoring];
+}
+
+#pragma mark - 释放应用
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"netWorkChangeEventNotification" object:nil];
+}
+
+
+- (void)getuserID{
+                
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    
+    YLog(@"%@",[NSString getBaseUrl:_URL_userID withparam:param])
+    
+//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [YLHttpTool GET:_URL_userID parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            
+            NSDictionary *d = dic[@"data"];
+            [YUserDefaults setObject:d[@"user_id"] forKey:kuserid];
+            [self gotoMainVC];
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+
+        
+}
+
+- (void)gotoMainVC{
+    //界面布局
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//    FuxiViewController *mainVc = [[FuxiViewController alloc] init];
+    MainViewController *mainVc = [[MainViewController alloc] init];
+    YLNavgationController *navC = [[YLNavgationController alloc] initWithRootViewController:mainVc];
+
+    [self.window setRootViewController:navC];
+    
+    [self.window makeKeyAndVisible];
+}
+
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations

@@ -40,56 +40,84 @@
 
 @implementation MainViewController
 
-- (void)forceToOrientation:(UIDeviceOrientation)orientation
-{
-    NSNumber *orientationUnknown = [NSNumber numberWithInt:0];
-    [[UIDevice currentDevice] setValue:orientationUnknown forKey:@"orientation"];
+- (void)fetch{
     
-    NSNumber *orientationTarget = [NSNumber numberWithInt:orientation];
-    [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
+    NSArray *arr = [YUserDefaults objectForKey:kziKu];
+    if(arr.count){
+        dataArr = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+        [self setupView];
+
+    }
+    else{
+        
+        //网络请求数据
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+        YLog(@"%@",[NSString getBaseUrl:_URL_words withparam:param])
+                
+        [YLHttpTool GET:_URL_words parameters:param progress:^(NSProgress *progress) {
+            
+        } success:^(id dic) {
+
+            if([dic[@"code"] integerValue] == 200){
+                
+                NSDictionary *d = dic[@"data"];
+                NSArray *array = d[@"words"];
+                self->dataArr = [AllModel mj_objectArrayWithKeyValuesArray:array];
+                [YUserDefaults setObject:array forKey:kziKu];
+                
+                [YUserDefaults setInteger:[d[@"free_words_num"]integerValue] forKey:kfree_words_num];
+                [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
+
+                YLog(@"%@",dic)
+                [self setupView];
+
+            }
+            
+            YLog(@"%@",dic);
+        } failure:^(NSError *error) {
+            //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        }];
+
+        
+    }
+
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    if([YUserDefaults objectForKey:kusername]){
+        
+        self->nameL.text = [YUserDefaults objectForKey:kusername];
+        if([YUserDefaults boolForKey:kis_member]){
+            self->vipImg.image = [UIImage imageNamed:@"vip"];
+            self->vipL.text = @"有效期至2021.11.30";
+            vipL.alpha = 1;
+            self->vipL.textColor = [JKUtil getColor:@"FF6112"];
 
-//- (void)viewDidAppear:(BOOL)animated{
-//    [super viewDidAppear:animated];
-//
-//    if(ifNoanimation){
-//        [gifView stopAnimating];
-//    }
-//    ifNoanimation = NO;
-////    [gifView stopAnimating];
-//}
+        }
+        else{
+            self->vipImg.image = [UIImage imageNamed:@"notvip"];
+            self->vipL.text = @"当前未开通会员";
+            vipL.alpha = 0.8;
+            self->vipL.textColor = [JKUtil getColor:@"17449C"];
+        }
+    }
+
+
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
     dataArr = [NSMutableArray array];
-    
-    NSArray *ziArr = @[@"一",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十"];
-        
+
+    [self fetch];
     
     NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
     [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
-    
-//    [[SDAnimatedImagePlayer alloc] initWithProvider:]
-//
-    //    ,@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十",@"二",@"三",@"四",@"五",@"六",@"七",@"八",@"九",@"十"
-    
-//    for (int i = 0; i < ziArr.count; i++) {
-//        AllModel *mod = [AllModel new];
-//        mod.title = ziArr[i];
-//        [dataArr addObject:mod];
-//    }
-
-    for (int i = 0; i < 1000; i++) {
-        AllModel *mod = [AllModel new];
-        mod.title = @"人";
-        [dataArr addObject:mod];
-    }
-
-    
-    [self setupView];
 }
 
 
@@ -145,20 +173,31 @@
 //            v.mj_y = 72 * YScaleWidth;
 //        }
 
-        UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"lightdoff"]];
+        AllModel *mod = dataArr[i];
+
+        UIImageView *img = [[UIImageView alloc] init];
         [v addSubview:img];
         img.sd_layout.leftEqualToView(v).rightEqualToView(v).topEqualToView(v).bottomEqualToView(v);
 
-        AllModel *mod = dataArr[i];
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setTitle:mod.title forState:UIControlStateNormal];
+        [btn setTitle:mod.word forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont fontWithName:@"kaiti" size:70 * YScaleHeight];
-        [btn setTitleColor:BlackColor forState:UIControlStateNormal];
         [v addSubview:btn];
         btn.sd_layout.centerXEqualToView(v).topSpaceToView(v, 192 * YScaleHeight).widthIs(73 * YScaleHeight).heightIs(70 * YScaleHeight);
         [btn addTarget:self action:@selector(caozuoClick:) forControlEvents:UIControlEventTouchUpInside];
         
+        
+        if(mod.is_learn){
+            img.image = [UIImage imageNamed:@"lightoff"];
+            [btn setTitleColor:BlackColor forState:UIControlStateNormal];
+        }
+        else{
+            img.image = [UIImage imageNamed:@"lighton"];
+            [btn setTitleColor:WhiteColor forState:UIControlStateNormal];
+        }
+
+
         
 //        UILabel *ziL = [UILabel new];
 //        ziL.text = mod.title;
@@ -269,7 +308,7 @@
     vipImg.sd_layout.bottomSpaceToView(headV, 3 * YScaleWidth).leftSpaceToView(headV, 59 * YScaleWidth).widthIs(28 * YScaleWidth).heightEqualToWidth();
     
     nameL = [UILabel new];
-    nameL.text = @"宝宝0000";
+    nameL.text = @"未登录";
     nameL.font = YSystemFont(14 * YScaleWidth);
     nameL.textColor = WhiteColor;
     [headV addSubview:nameL];
@@ -322,17 +361,29 @@
                 gifView.transform = CGAffineTransformMakeScale(1.0, 1.0);//水平翻转
             }
             
+//            CGFloat timeInterval;
+//            if(ziIndex == 0){
+//                timeInterval = 0;;
+//            }
+//            else{
+//                timeInterval = Transformtimeinterval;
+//            }
+            
+            //确定在图 左边还是右边
+            if(selectIndex < ziIndex){
+                self->gifCenterX = v.centerX - 85 * YScaleHeight;
+            }
+            else if(selectIndex > ziIndex){
+                self->gifCenterX = v.centerX + 85 * YScaleHeight;
+            }
+            
+            CGFloat huadongjuli = self->gifCenterX - self->scrollV.contentOffset.x;
+        
+//            * fabs(huadongjuli - gifView.centerX )/ 1080
             [UIView animateWithDuration:Transformtimeinterval animations:^{
                 
-                if(selectIndex < ziIndex){
-                    self->gifCenterX = v.centerX - 85 * YScaleHeight;
-                }
-                else if(selectIndex > ziIndex){
-                    self->gifCenterX = v.centerX + 85 * YScaleHeight;
-                }
-                self->gifView.centerX = self->gifCenterX- self->scrollV.contentOffset.x;
-//                [gifView startGIF];
-
+                self->gifView.centerX = huadongjuli;
+                
             } completion:^(BOOL finished) {
                 
                 selectIndex = ziIndex;
@@ -342,12 +393,7 @@
                 vc.selectedMod = self->dataArr[selectIndex];
                 vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
                 vc.modalPresentationStyle = UIModalPresentationFullScreen;
-                vc.xuanzhongIndex = selectIndex;
-
-//                UIModalTransitionStyleCoverVertical = 0,
-                //         self->       UIModalTransitionStyleFlipHorizontal API_UNAVAILABLE(tvos),
-//                UIModalTransitionStyleCrossDissolve,
-//                UIModalTransitionStylePartialCurl
+                vc.xuanzhongIndex =self-> selectIndex;
                 vc.callBack = ^(NSInteger xuanzhongIndex) {
 //                    self->ifNoanimation = YES;
                     YLog(@"%ld",xuanzhongIndex)
@@ -383,18 +429,25 @@
 
 - (void)ziClick{
     WordsViewController *vc = [[WordsViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+//    [self.navigationController pushViewController:vc animated:YES];
+//    vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
+    vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)tapAction{
     MeViewController *meVc = [[MeViewController alloc] init];
-    [self.navigationController pushViewController:meVc animated:YES];
+//    [self.navigationController pushViewController:meVc animated:YES];
+    meVc.modalPresentationStyle = UIModalPresentationFullScreen;
+    meVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:meVc animated:YES completion:nil];
 }
 
 #pragma mark ————— scrollView代理方法 —————
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
 
-    
+    gifView.centerX = gifCenterX - scrollView.contentOffset.x;
 
     if(gifView.centerX < -256 * YScaleHeight * 0.5){
         gifView.centerX = -256 * YScaleHeight * 0.5;
@@ -403,13 +456,7 @@
     else if(gifView.centerX > YScreenW + 256 * YScaleHeight * 0.5){
         gifView.centerX = YScreenW + 256 * YScaleHeight * 0.5;
     }
-    else{
-        //对人物调整
-        gifView.centerX = gifCenterX - scrollView.contentOffset.x;
-    }
     
-    
-    YLog(@"%f---%f----%f----%f",gifView.centerX,gifCenterX,256 * YScaleHeight * dataArr.count + 640 * YScaleHeight,256 * YScaleHeight * dataArr.count + 640 * YScaleHeight-YScreenW)
     
     //在滑动范围内操作
     if((scrollView.contentOffset.x >= 0) && (scrollView.contentOffset.x <= (256 * YScaleHeight * dataArr.count + 640 * YScaleHeight - YScreenW - 1))){

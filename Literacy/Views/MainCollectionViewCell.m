@@ -14,7 +14,7 @@
 
         self.contentView.backgroundColor = ClearColor;
         
-        self.bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"lightdoff"]];
+        self.bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"lightoff"]];
         [self.contentView addSubview:self.bgImg];
         self.bgImg.sd_layout.leftEqualToView(self.contentView).rightEqualToView(self.contentView).topEqualToView(self.contentView).bottomEqualToView(self.contentView);
 
@@ -32,7 +32,7 @@
 }
 
 - (void)setMod:(AllModel *)mod{
-    self.ziLabel.text = mod.title;
+    self.ziLabel.text = mod.word;
 }
 
 

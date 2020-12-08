@@ -20,6 +20,8 @@
 #define kmebluecolor [JKUtil getColor:@"1D69FF"]
 
 
+#define yonghuxieyi @"http://huabanche.club/shizi_user_agreement"
+#define yincexieyi  @"http://huabanche.club/shizi_privacy"
 
 @interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate>{
     UIView *backV;
@@ -43,7 +45,8 @@
     UICollectionView *collectionView;
     UILabel *leftL;
     UILabel *rightL;
-    
+    NSMutableArray *dataArr;
+
     //关闭按钮 登录页面
     UIView *blackV;
     UIView *dengluV;
@@ -70,6 +73,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    dataArr = [NSMutableArray array];
+    NSArray *arr = [YUserDefaults objectForKey:kziKu];
+    if(arr.count){
+        dataArr = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+        [self setupView];
+
+    }
+
     
     [self setupView];
     [self setupDengluV];
@@ -217,6 +229,8 @@
     [backV addSubview:backBtn];
     backBtn.sd_layout.leftSpaceToView(backV, 27 * YScaleWidth).topSpaceToView(backV, 27 * YScaleWidth).widthIs(66 * YScaleHeight).heightEqualToWidth();
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    [backBtn setEnlargeEdgeWithTop:20 right:20 bottom:20 left:20];
+
     
     UIView *midV = [UIView new];
     [backV addSubview:midV];
@@ -239,14 +253,21 @@
     vipImg.sd_layout.leftSpaceToView(leftV, 45 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight + 35 * YScaleWidth).widthIs(18 * YScaleWidth).heightEqualToWidth();
     
     nameL = [UILabel new];
-    nameL.text = @"宝宝0000";
+    nameL.text = @"未登录";
     nameL.font = YSystemFont(16 * YScaleWidth);
     nameL.textColor = [JKUtil getColor:@"2A2D34"];
     [leftV addSubview:nameL];
     nameL.sd_layout.leftSpaceToView(leftV, 70 * YScaleWidth).topSpaceToView(leftV , 35 * YScaleHeight).heightIs(22 * YScaleWidth).widthIs(88 * YScaleWidth);
     
-//    17449C  当前未开通会员
-//    FF5E18  有效期至2021.11.30
+    NoHighBtn *changeNameBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [changeNameBtn setBackgroundImage:[UIImage imageNamed:@"elementedit"] forState:UIControlStateNormal];
+    [changeNameBtn addTarget:self action:@selector(changeClick) forControlEvents:UIControlEventTouchUpInside];
+    [leftV addSubview:changeNameBtn];
+    changeNameBtn.sd_layout.centerYEqualToView(nameL).rightSpaceToView(leftV, 20 * YScaleWidth).widthIs(10 * YScaleWidth).heightEqualToWidth();
+    [changeNameBtn setEnlargeEdgeWithTop:20 right:20 bottom:20 left:20];
+    
+//    17449C  当前未开通会员   A6A6A6
+//    FF5E18  有效期至2021.11.30   当前未开通会员
     
 
     vipL = [UILabel new];
@@ -256,6 +277,24 @@
     vipL.font = YSystemFont(11 * YScaleWidth);
     [leftV addSubview:vipL];
     vipL.sd_layout.leftEqualToView(nameL).topSpaceToView(nameL, 3 * YScaleHeight).heightIs(16 * YScaleWidth).widthIs(108 * YScaleWidth);
+    
+    if([YUserDefaults objectForKey:kusername]){
+        self->nameL.text = [YUserDefaults objectForKey:kusername];
+        if([YUserDefaults boolForKey:kis_member]){
+            self->vipImg.image = [UIImage imageNamed:@"vip"];
+            self->vipL.text = @"有效期至2021.11.30";
+            self->vipL.textColor = [JKUtil getColor:@"FF6112"];
+
+        }
+        else{
+            self->vipImg.image = [UIImage imageNamed:@"notvip"];
+            self->vipL.text = @"当前未开通会员";
+            self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
+        }
+    }
+
+    
+    
     
     NSArray *namearr = @[@"购买方案",@"识字情况",@"联系客服",@"关于我们"];
     ///操作按钮
@@ -298,6 +337,75 @@
     [rightV addSubview:goumaiV];
     goumaiV.sd_layout.centerXEqualToView(rightV).centerYEqualToView(rightV).widthIs(806 * YScaleWidth).heightIs(600 * YScaleHeight);
     
+    UIImageView *hintimg1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon1"]];
+    [goumaiV addSubview:hintimg1];
+    hintimg1.sd_layout.leftSpaceToView(goumaiV, 53 * YScaleWidth).topSpaceToView(goumaiV, 32 * YScaleHeight).widthIs(20 * YScaleWidth).heightEqualToWidth();
+    
+    UILabel *hintL1 = [UILabel new];
+    hintL1.text = @"可支持两台设备同时登录";
+    hintL1.textColor = [JKUtil getColor:@"FF0000"];
+    hintL1.font = YSystemFont(18 * YScaleWidth);
+    [goumaiV addSubview:hintL1];
+    hintL1.sd_layout.leftSpaceToView(hintimg1, 10 * YScaleWidth).centerYEqualToView(hintimg1).widthIs(300 * YScaleWidth).heightIs(25 * YScaleWidth);
+
+    UIImageView *hintimg2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon2"]];
+    [goumaiV addSubview:hintimg2];
+    hintimg2.sd_layout.leftSpaceToView(goumaiV, 53 * YScaleWidth).topSpaceToView(hintimg1, 9 * YScaleHeight).widthIs(20 * YScaleWidth).heightEqualToWidth();
+    
+    UILabel *hintL2 = [UILabel new];
+    hintL2.text = @"没有虚折扣价，欢迎全网比效果比价";
+    hintL2.textColor = [JKUtil getColor:@"FF0000"];
+    hintL2.font = YSystemFont(18 * YScaleWidth);
+    [goumaiV addSubview:hintL2];
+    hintL2.sd_layout.leftSpaceToView(hintimg2, 10 * YScaleWidth).centerYEqualToView(hintimg2).widthIs(300 * YScaleWidth).heightIs(25 * YScaleWidth);
+
+    UIView *topV = [UIView new];
+    topV.backgroundColor = [JKUtil getColor:@"EEF8FF"];
+    [goumaiV addSubview:topV];
+    topV.sd_layout.leftEqualToView(goumaiV).rightEqualToView(goumaiV).topSpaceToView(hintL2, 31 * YScaleHeight).heightIs(60 * YScaleWidth);
+    
+    NSArray *shangArr = @[@"1580个",@"3160个",@"1500个",@"不限次数"];
+    NSArray *xiaArr = @[@"部编版汉字",@"常用词语",@"创意字卡",@"重新免费学习"];
+
+    
+    for (int j = 0; j < shangArr.count; j++) {
+        UIView *vv = [UIView new];
+        vv.backgroundColor = [JKUtil getColor:@"EEF8FF"];
+        [topV addSubview:vv];
+        vv.frame = CGRectMake(53 * YScaleWidth + 186 * YScaleWidth * (j % 4), 9 * YScaleWidth, 144 * YScaleWidth, 42 * YScaleWidth);
+        
+        UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"card%i",j]]];
+        [vv addSubview:img];
+        img.sd_layout.leftEqualToView(vv).centerYEqualToView(vv).widthIs(42 * YScaleWidth).heightEqualToWidth();
+        
+        UILabel *shangL = [UILabel new];
+        shangL.text = shangArr[j];
+        shangL.textColor = [JKUtil getColor:@"677A9F"];
+        shangL.font = YSystemFont(16 * YScaleWidth);
+        [vv addSubview:shangL];
+        shangL.sd_layout.leftSpaceToView(img, 10 * YScaleWidth).topEqualToView(img).rightEqualToView(vv).heightIs(22 * YScaleWidth);
+        
+        UILabel *xiaL = [UILabel new];
+        xiaL.text = xiaArr[j];
+        xiaL.textColor = [JKUtil getColor:@"2E4476"];
+        xiaL.font = YSystemFont(12 * YScaleWidth);
+        [vv addSubview:xiaL];
+        xiaL.sd_layout.leftSpaceToView(img, 10 * YScaleWidth).bottomEqualToView(img).rightEqualToView(vv).heightIs(22 * YScaleWidth);
+
+    }
+    
+    UIView *zhongjianV = [UIView new];
+    zhongjianV.backgroundColor = ClearColor;
+    [goumaiV addSubview:zhongjianV];
+    zhongjianV.sd_layout.leftEqualToView(goumaiV).rightEqualToView(goumaiV).topSpaceToView(topV, 50 * YScaleHeight).heightIs(178 * YScaleWidth);
+    
+    NSArray *nameArr = @[@"永久卡",@"年卡",@"月卡"];
+    NSArray *monArr = @[@"68",@"45",@"8"];
+    NSArray *shixiaoArr = @[@"终身有效",@"自动订阅",@"自动订阅"];
+
+    
+    
+    /*
     UIImageView *hintimg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconhint"]];
     [goumaiV addSubview:hintimg];
     hintimg.sd_layout.leftSpaceToView(goumaiV, 24 * YScaleWidth).topSpaceToView(goumaiV, 32 * YScaleHeight).widthIs(20 * YScaleWidth).heightEqualToWidth();
@@ -328,7 +436,7 @@
     lineV.sd_layout.centerXEqualToView(goumaiV).bottomSpaceToView(payBtn, 51 * YScaleHeight).widthIs(760 * YScaleWidth).heightIs(1);
     
     NSArray *nameA = @[@"月卡会员：",@"永久会员："];
-    NSArray *shangArr = @[@"1500+",@"3000+",@"1500+",@"不限次数"];
+    NSArray *shangArr = @[@"1580个",@"3160个",@"1500个",@"不限次数"];
     NSArray *xiaArr = @[@"部编版汉字",@"常用词语",@"创意字卡",@"重新免费学习"];
     NSArray *numArr = @[@"8",@"45"];
     
@@ -405,6 +513,7 @@
         
         
     }
+    */
     
 }
 
@@ -419,8 +528,11 @@
     [qingkuangV addSubview:leftImg];
     leftImg.sd_layout.leftSpaceToView(qingkuangV, 94 * YScaleWidth).topSpaceToView(qingkuangV, 10 * YScaleHeight).widthIs(38 * YScaleWidth).heightEqualToWidth();
     
+    NSInteger yixuexiCounts = [YUserDefaults integerForKey:khas_learn_num];
+    NSInteger weixuexiCounts = dataArr.count - yixuexiCounts;
+
     leftL = [UILabel new];
-    leftL.text = @"已学习（1个）";
+    leftL.text = [NSString stringWithFormat:@"已学习（%ld个）",yixuexiCounts];;
     leftL.textColor = [JKUtil getColor:@"3F4D6C"];
     leftL.font = YSystemFont(12 * YScaleWidth);
     [qingkuangV addSubview:leftL];
@@ -431,7 +543,7 @@
     rightImg.sd_layout.leftSpaceToView(leftImg, 110 * YScaleWidth).centerYEqualToView(leftImg).widthIs(38 * YScaleWidth).heightEqualToWidth();
     
     rightL = [UILabel new];
-    rightL.text = @"未学习（1499个）";
+    rightL.text = [NSString stringWithFormat:@"未学习（%ld个）",weixuexiCounts];;
     rightL.textColor = [JKUtil getColor:@"3F4D6C"];
     rightL.font = YSystemFont(12 * YScaleWidth);
     [qingkuangV addSubview:rightL];
@@ -453,8 +565,9 @@
     collectionView.dataSource = self;
     [qingkuangV addSubview:collectionView];
         
-    
-    for (int i = 0; i < 10; i++) {
+    NSInteger numCounts = dataArr.count / 10;
+
+    for (int i = 0; i < numCounts; i++) {
         UILabel *label = [UILabel new];
         label.text = [NSString stringWithFormat:@"%d",(i + 1) * 10];
         label.textColor = [JKUtil getColor:@"1D69FF"];
@@ -602,7 +715,26 @@
     _YLwkwebView.navigationDelegate = self;
     _YLwkwebView.UIDelegate = self;
 
-    [_YLwkwebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.baidu.com"]]];
+    
+    if(aboutIndex == 0){
+        
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"yonghuxieyi" ofType:@"html" inDirectory:@"yonghuxieyi"];
+
+        [_YLwkwebView loadFileURL:[NSURL fileURLWithPath:filePath] allowingReadAccessToURL:[NSURL fileURLWithPath:[NSBundle mainBundle].bundlePath]];
+
+    }
+    else if(aboutIndex == 1){
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"yinsixieyi" ofType:@"html" inDirectory:@"yinsixieyi"];
+
+        [_YLwkwebView loadFileURL:[NSURL fileURLWithPath:filePath] allowingReadAccessToURL:[NSURL fileURLWithPath:[NSBundle mainBundle].bundlePath]];
+    }
+    else{
+        [_YLwkwebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://id-photo-verify.com/leqi/"]]];
+    }
+    
+
+    
+    
 
     [aboutV addSubview:_YLwkwebView];
     _YLwkwebView.sd_layout.leftSpaceToView(aboutV, 14 * YScaleHeight).rightSpaceToView(aboutV, 14 * YScaleHeight).topSpaceToView(aboutV, 14 * YScaleHeight).bottomSpaceToView(aboutV, 14 * YScaleHeight);
@@ -625,7 +757,8 @@
 }
 
 - (void)back{
-    [self.navigationController popViewControllerAnimated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)caozuoClick:(UIButton *)Btn{
@@ -689,6 +822,12 @@
     
 }
 
+//换名字点击
+- (void)changeClick{
+    YLogFunc
+}
+
+//支付点击
 - (void)payClick{
     YLogFunc
     
@@ -707,16 +846,40 @@
 
 //获取验证码
 - (void)huoquclick{
-    huoquBtn.enabled = NO;
-//    NSString *warnS = [NSString valiMobile:mobileTextF.text];
-//    if(warnS.length){
-//        YLog(@"%@",warnS)
-////        [self.view makeToast:warnS duration:2 position:@"center"];
-//        return;
-//    }
+    NSString *warnS = [NSString valiMobile:mobileTextF.text];
+    if(warnS.length){
+//        [self.view makeToast:warnS duration:2 position:@"center"];
+        [SVProgressHUD showErrorWithStatus:warnS];
+        return;
+    }
     
+    huoquBtn.enabled = NO;
     [self setRestTime];
-    //网络请求
+
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"phone"] = mobileTextF.text;
+    
+    YLog(@"%@",[NSString getBaseUrl:_URL_code withparam:param])
+    
+//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [YLHttpTool GET:_URL_code parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+
+
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+
+    
+    
 
 }
 
@@ -735,10 +898,10 @@
                 self->huoquBtn.enabled = YES;
             });
         }else{
-            self->huoquBtn.enabled = NO;
             int seconds = timeout % 60;
             NSString *strTime = [NSString stringWithFormat:@"重新发送（%.2ds）", seconds];
             dispatch_async(dispatch_get_main_queue(), ^{
+                self->huoquBtn.enabled = NO;
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:1];
                 [self->huoquBtn setTitle:[NSString stringWithFormat:@"%@",strTime] forState:UIControlStateDisabled];
@@ -754,38 +917,83 @@
 
 //登录
 - (void)dengluClick{
-    YLogFunc
+    NSString *warnS = [NSString valiMobile:mobileTextF.text];
+    if(warnS.length){
+//        [self.view makeToast:warnS duration:2 position:@"center"];
+        [SVProgressHUD showErrorWithStatus:warnS];
+        return;
+    }
+    
+    
+    if(!codeTextF.text.length){
+        [SVProgressHUD showErrorWithStatus:@"请输入验证码"];
+        return;;
+    }
+    
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"phone"] = mobileTextF.text;
+    param[@"captcha"] = codeTextF.text;
+    param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+    
+    YLog(@"%@",[NSString getBaseUrl:_URL_login withparam:param])
+        
+    [YLHttpTool POST:_URL_login parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            
+            NSDictionary *d = dic[@"data"];
+            [YUserDefaults setObject:d[@"name"] forKey:kusername];
+            [YUserDefaults setObject:d[@"token"] forKey:ktoken];
+            [YUserDefaults setBool:[d[@"is_member"] boolValue] forKey:kis_member];
+            
+            self->nameL.text = [YUserDefaults objectForKey:kusername];
+            if([YUserDefaults boolForKey:kis_member]){
+                self->vipImg.image = [UIImage imageNamed:@"vip"];
+                self->vipL.text = @"有效期至2021.11.30";
+                self->vipL.textColor = [JKUtil getColor:@"FF6112"];
+
+            }
+            else{
+                self->vipImg.image = [UIImage imageNamed:@"notvip"];
+                self->vipL.text = @"当前未开通会员";
+                self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
+            }
+            
+            [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
 }
 
 //用户协议
 - (void)xieyiclick{
-    YLogFunc
-    
-//    YLwebViewController *vc = [[YLwebViewController alloc]init];
-//    vc.urlString = @"http://www.id-photo-verify.com/treaty/";
-//    vc.titleString = @"长宽快照用户协议";
-//    [self presentViewController:vc animated:YES completion:^{
-//
-//    }];
-
-    [self makewebViewWithurl:@"http://www.id-photo-verify.com/treaty/"];
+    [self makewebViewWithurl:@"yonghuxieyi"];
 }
 
 //隐私政策
 - (void)yinsiclick{
-    YLogFunc
-    
-    [self makewebViewWithurl:@"http://www.id-photo-verify.com/treaty/"];
+    [self makewebViewWithurl:@"yinsixieyi"];
 }
 
-- (void)makewebViewWithurl:(NSString *)url{
+- (void)makewebViewWithurl:(NSString *)xieyidizhi{
     _YLwkwebView = [[WKWebView alloc]init];
     _YLwkwebView.backgroundColor = kstandardColor;
     _YLwkwebView.navigationDelegate = self;
     _YLwkwebView.UIDelegate = self;
 
-    [_YLwkwebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+//    [_YLwkwebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:xieyidizhi ofType:@"html" inDirectory:xieyidizhi];
+
+    [_YLwkwebView loadFileURL:[NSURL fileURLWithPath:filePath] allowingReadAccessToURL:[NSURL fileURLWithPath:[NSBundle mainBundle].bundlePath]];
+
+    
     [dengluV addSubview:_YLwkwebView];
     _YLwkwebView.sd_layout.leftEqualToView(dengluV).rightEqualToView(dengluV).topEqualToView(dengluV).bottomEqualToView(dengluV);
 
@@ -830,13 +1038,13 @@
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 100;
+    return dataArr.count;
 }
 
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     WordCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([WordCollectionViewCell class]) forIndexPath:indexPath];
-    
+    cell.mod = dataArr[indexPath.item];
     return cell;
 }
 

@@ -31,4 +31,9 @@
     return self;
 }
 
+- (void)setMod:(AllModel *)mod{
+    self.ziLabel.text = mod.word;
+}
+
+
 @end

@@ -12,13 +12,14 @@
 
 @property (nonatomic, assign) NSInteger ID;
 
-@property (nonatomic, copy)NSString *title;
+@property (nonatomic, copy)NSString *word;
+
+@property(nonatomic,assign) BOOL is_learn;
 
 @property (nonatomic, copy)NSString *content;
 
 @property(nonatomic,copy) NSString *detail;
 
-@property(nonatomic,assign) BOOL ifselected;
 
 
 /*

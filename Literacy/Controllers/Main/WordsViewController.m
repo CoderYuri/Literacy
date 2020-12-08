@@ -13,6 +13,7 @@
     
     UILabel *leftL;
     UILabel *rightL;
+    NSMutableArray *dataArr;
     
     UICollectionView *collectionView;
 }
@@ -24,8 +25,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    [self setupView];
+    dataArr = [NSMutableArray array];
+    NSArray *arr = [YUserDefaults objectForKey:kziKu];
+    if(arr.count){
+        dataArr = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+        [self setupView];
+
+    }
 }
 
 - (void)setupView{
@@ -46,6 +52,8 @@
     [topV addSubview:backBtn];
     backBtn.sd_layout.leftSpaceToView(topV, 27 * YScaleWidth).centerYEqualToView(topV).widthIs(66 * YScaleHeight).heightEqualToWidth();
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    [backBtn setEnlargeEdgeWithTop:20 right:20 bottom:20 left:20];
+
     
     UIView *midV = [UIView new];
     midV.backgroundColor = WhiteColor;
@@ -56,8 +64,11 @@
     [midV addSubview:leftImg];
     leftImg.sd_layout.leftSpaceToView(midV, 160 * YScaleWidth).centerYEqualToView(midV).widthIs(38 * YScaleWidth).heightEqualToWidth();
     
+    NSInteger yixuexiCounts = [YUserDefaults integerForKey:khas_learn_num];
+    NSInteger weixuexiCounts = dataArr.count - yixuexiCounts;
+    
     leftL = [UILabel new];
-    leftL.text = @"已学习（1个）";
+    leftL.text = [NSString stringWithFormat:@"已学习（%ld个）",yixuexiCounts];
     leftL.textColor = [JKUtil getColor:@"3F4D6C"];
     leftL.font = YSystemFont(12 * YScaleWidth);
     [midV addSubview:leftL];
@@ -68,7 +79,7 @@
     rightImg.sd_layout.leftSpaceToView(leftImg, 110 * YScaleWidth).centerYEqualToView(midV).widthIs(38 * YScaleWidth).heightEqualToWidth();
     
     rightL = [UILabel new];
-    rightL.text = @"未学习（1499个）";
+    rightL.text = [NSString stringWithFormat:@"未学习（%ld个）",weixuexiCounts];
     rightL.textColor = [JKUtil getColor:@"3F4D6C"];
     rightL.font = YSystemFont(12 * YScaleWidth);
     [midV addSubview:rightL];
@@ -91,8 +102,9 @@
     collectionView.dataSource = self;
     [backV addSubview:collectionView];
     
+    NSInteger numCounts = dataArr.count / 10;
     
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < numCounts; i++) {
         UILabel *label = [UILabel new];
         label.text = [NSString stringWithFormat:@"%d",(i + 1) * 10];
         label.textColor = [JKUtil getColor:@"1D69FF"];
@@ -100,7 +112,7 @@
         label.textAlignment = NSTextAlignmentRight;
         
         [collectionView addSubview:label];
-        label.frame = CGRectMake( - 86 * YScaleWidth, 197 * YScaleWidth + 304 * YScaleWidth * i, 50 * YScaleWidth, 30 * YScaleWidth);
+        label.frame = CGRectMake( - 86 * YScaleWidth, 197 * YScaleWidth + 304 * YScaleWidth * i, 55 * YScaleWidth, 30 * YScaleWidth);
         
     }
     
@@ -113,12 +125,13 @@
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 100;
+    return dataArr.count;
 }
 
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     WordCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([WordCollectionViewCell class]) forIndexPath:indexPath];
+    cell.mod = dataArr[indexPath.item];
     
     return cell;
 }
@@ -139,7 +152,8 @@
 
 #pragma mark - click
 - (void)back{
-    [self.navigationController popViewControllerAnimated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /*

@@ -23,6 +23,8 @@
 		DA712C0E25709FB5000DB9BD /* huatong.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C0D25709FB4000DB9BD /* huatong.gif */; };
 		DA712C1125709FBC000DB9BD /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C1025709FBC000DB9BD /* loading.gif */; };
 		DA8184352574837500190F38 /* FuxiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8184342574837500190F38 /* FuxiViewController.m */; };
+		DA9E2B6C257F496300CE95FA /* yinsixieyi in Resources */ = {isa = PBXBuildFile; fileRef = DA9E2B6B257F496300CE95FA /* yinsixieyi */; };
+		DA9E2B6F257F4AB900CE95FA /* yonghuxieyi in Resources */ = {isa = PBXBuildFile; fileRef = DA9E2B6E257F4AB900CE95FA /* yonghuxieyi */; };
 		DA9FD80625676BD40048D870 /* kaiti.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA9FD80525676BD40048D870 /* kaiti.ttf */; };
 		DA9FD819256790C60048D870 /* shaonv.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA9FD818256790C50048D870 /* shaonv.gif */; };
 		DA9FD83F25679E190048D870 /* MainCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9FD83E25679E190048D870 /* MainCollectionViewCell.m */; };
@@ -107,6 +109,8 @@
 		DA712C1025709FBC000DB9BD /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
 		DA8184332574837500190F38 /* FuxiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FuxiViewController.h; sourceTree = "<group>"; };
 		DA8184342574837500190F38 /* FuxiViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuxiViewController.m; sourceTree = "<group>"; };
+		DA9E2B6B257F496300CE95FA /* yinsixieyi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = yinsixieyi; sourceTree = "<group>"; };
+		DA9E2B6E257F4AB900CE95FA /* yonghuxieyi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = yonghuxieyi; sourceTree = "<group>"; };
 		DA9FD80525676BD40048D870 /* kaiti.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = kaiti.ttf; sourceTree = "<group>"; };
 		DA9FD818256790C50048D870 /* shaonv.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = shaonv.gif; sourceTree = "<group>"; };
 		DA9FD83D25679E190048D870 /* MainCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainCollectionViewCell.h; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 		DA9FD8462567B3940048D870 /* WordCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WordCollectionViewCell.m; sourceTree = "<group>"; };
 		DA9FD8492567C0F30048D870 /* MeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeViewController.h; sourceTree = "<group>"; };
 		DA9FD84A2567C0F30048D870 /* MeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MeViewController.m; sourceTree = "<group>"; };
+		DABD4E3B257B7697001F6CF6 /* HeaderUrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeaderUrl.h; sourceTree = "<group>"; };
 		DAEA2F0C256CFD3A00F8081F /* AllModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllModel.h; sourceTree = "<group>"; };
 		DAEA2F0D256CFD3A00F8081F /* AllModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllModel.m; sourceTree = "<group>"; };
 		DAF31F6E256E2B2B0056435B /* FunViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunViewController.h; sourceTree = "<group>"; };
@@ -260,6 +265,8 @@
 		DA4274C5255E7B9300610D12 /* Literacy */ = {
 			isa = PBXGroup;
 			children = (
+				DA9E2B6E257F4AB900CE95FA /* yonghuxieyi */,
+				DA9E2B6B257F496300CE95FA /* yinsixieyi */,
 				DA4274C6255E7B9300610D12 /* Assets.xcassets */,
 				DA4274C8255E7B9300610D12 /* LaunchScreen.storyboard */,
 				DAF5E45D256366D600003A85 /* Vender */,
@@ -287,6 +294,7 @@
 				DA4274CB255E7B9300610D12 /* main.m */,
 				DA4274CC255E7B9300610D12 /* Info.plist */,
 				DAF5E45C2563655E00003A85 /* Literacy.pch */,
+				DABD4E3B257B7697001F6CF6 /* HeaderUrl.h */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -514,9 +522,9 @@
 			isa = PBXGroup;
 			children = (
 				DAF5E4CC256366D600003A85 /* YLHttpTool.h */,
-				DAF5E4CD256366D600003A85 /* JKUtil.m */,
 				DAF5E4CE256366D600003A85 /* YLHttpTool.m */,
 				DAF5E4CF256366D600003A85 /* JKUtil.h */,
+				DAF5E4CD256366D600003A85 /* JKUtil.m */,
 			);
 			path = "HTTP TOOL";
 			sourceTree = "<group>";
@@ -665,6 +673,8 @@
 				DA9FD819256790C60048D870 /* shaonv.gif in Resources */,
 				DAF5E50C256366D700003A85 /* UMSocialSDKResources.bundle in Resources */,
 				DAF5E50A256366D700003A85 /* leqidata_black_list.plist in Resources */,
+				DA9E2B6F257F4AB900CE95FA /* yonghuxieyi in Resources */,
+				DA9E2B6C257F496300CE95FA /* yinsixieyi in Resources */,
 				DA712C1125709FBC000DB9BD /* loading.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
