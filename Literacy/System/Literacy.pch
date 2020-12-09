@@ -44,6 +44,7 @@
 #import "UIImage+GradientColor.h"
 #import <TZImagePickerController/TZImagePickerController.h>
 #import "MainViewController.h"
+#import "FunViewController.h"
 
 //网络请求头
 #import "YLHttpTool.h"

@@ -17,7 +17,8 @@
 #define kbackColor [JKUtil getColor:@"F4FAFF"]
 #define klcolor [JKUtil getColor:@"E5EEFD"]
 #define kocolor [JKUtil getColor:@"FF6112"]
-#define kmebluecolor [JKUtil getColor:@"1D69FF"]
+#define chuziColor [JKUtil getColor:@"2E4476"]
+#define xuanziColor [JKUtil getColor:@"1D69FF"]
 
 
 #define yonghuxieyi @"http://huabanche.club/shizi_user_agreement"
@@ -82,6 +83,13 @@
 
     }
 
+    if(isPad){
+        thisScale = YScaleWidth;
+    }
+    else{
+        thisScale = YScaleWidth * 0.8;
+    }
+
     
     [self setupView];
     [self setupDengluV];
@@ -93,14 +101,7 @@
     blackV.alpha = 0.55;
     [backV addSubview:blackV];
     blackV.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
-    
-    if(isPad){
-        thisScale = YScaleWidth;
-    }
-    else{
-        thisScale = YScaleWidth * 0.8;
-    }
-    
+        
     dengluV = [UIView new];
     dengluV.backgroundColor = WhiteColor;
     [backV addSubview:dengluV];
@@ -339,7 +340,7 @@
     
     UIImageView *hintimg1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon1"]];
     [goumaiV addSubview:hintimg1];
-    hintimg1.sd_layout.leftSpaceToView(goumaiV, 53 * YScaleWidth).topSpaceToView(goumaiV, 32 * YScaleHeight).widthIs(20 * YScaleWidth).heightEqualToWidth();
+    hintimg1.sd_layout.leftSpaceToView(goumaiV, 53 * YScaleWidth).widthIs(20 * YScaleWidth).heightEqualToWidth();
     
     UILabel *hintL1 = [UILabel new];
     hintL1.text = @"可支持两台设备同时登录";
@@ -362,7 +363,7 @@
     UIView *topV = [UIView new];
     topV.backgroundColor = [JKUtil getColor:@"EEF8FF"];
     [goumaiV addSubview:topV];
-    topV.sd_layout.leftEqualToView(goumaiV).rightEqualToView(goumaiV).topSpaceToView(hintL2, 31 * YScaleHeight).heightIs(60 * YScaleWidth);
+    topV.sd_layout.leftEqualToView(goumaiV).rightEqualToView(goumaiV).heightIs(60 * YScaleWidth);
     
     NSArray *shangArr = @[@"1580个",@"3160个",@"1500个",@"不限次数"];
     NSArray *xiaArr = @[@"部编版汉字",@"常用词语",@"创意字卡",@"重新免费学习"];
@@ -387,7 +388,7 @@
         
         UILabel *xiaL = [UILabel new];
         xiaL.text = xiaArr[j];
-        xiaL.textColor = [JKUtil getColor:@"2E4476"];
+        xiaL.textColor = chuziColor;
         xiaL.font = YSystemFont(12 * YScaleWidth);
         [vv addSubview:xiaL];
         xiaL.sd_layout.leftSpaceToView(img, 10 * YScaleWidth).bottomEqualToView(img).rightEqualToView(vv).heightIs(22 * YScaleWidth);
@@ -397,11 +398,145 @@
     UIView *zhongjianV = [UIView new];
     zhongjianV.backgroundColor = ClearColor;
     [goumaiV addSubview:zhongjianV];
-    zhongjianV.sd_layout.leftEqualToView(goumaiV).rightEqualToView(goumaiV).topSpaceToView(topV, 50 * YScaleHeight).heightIs(178 * YScaleWidth);
+    zhongjianV.sd_layout.centerXEqualToView(goumaiV).widthIs(700 * YScaleWidth).heightIs(178 * thisScale);
     
     NSArray *nameArr = @[@"永久卡",@"年卡",@"月卡"];
     NSArray *monArr = @[@"68",@"45",@"8"];
     NSArray *shixiaoArr = @[@"终身有效",@"自动订阅",@"自动订阅"];
+    
+    CGFloat margin = (700 * YScaleWidth - 600 * thisScale)/2.0;
+    for (int i = 0; i < nameArr.count; i++) {
+        UIView *v = [UIView new];
+        [zhongjianV addSubview:v];
+        v.layer.borderColor = [JKUtil getColor:@"C6D9FF"].CGColor;
+        v.layer.borderWidth = 1;
+        v.layer.cornerRadius = 4;
+        v.layer.masksToBounds = YES;
+        v.backgroundColor = WhiteColor;
+        v.frame = CGRectMake((200 * thisScale + margin) * i, 0, 200 * thisScale, 178 * thisScale);
+        
+        UILabel *nameL = [UILabel new];
+        nameL.text = nameArr[i];
+        nameL.font = [UIFont fontWithName:@"Helvetica-Bold" size: 26 * thisScale];
+        nameL.textColor = [JKUtil getColor:@"677A9F"];
+        [v addSubview:nameL];
+        nameL.backgroundColor = [JKUtil getColor:@"EEF8FF"];
+        nameL.layer.cornerRadius = 4;
+        nameL.layer.masksToBounds = YES;
+        nameL.textAlignment = NSTextAlignmentCenter;
+        nameL.sd_layout.leftEqualToView(v).topEqualToView(v).rightEqualToView(v).heightIs(62 * thisScale);
+        
+        
+        NSString *monS = monArr[i];
+        UILabel *monL = [UILabel new];
+        NSMutableAttributedString * attributedStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"￥%@",monS]];
+        
+//        [attributedStr addAttribute:NSFontAttributeName
+//                              value:[UIFont systemFontOfSize:30 * thisScale]
+//                              range:NSMakeRange(0, 1)];
+
+//        [attributedStr addAttribute:NSFontAttributeName
+//                              value:[UIFont systemFontOfSize:60 * thisScale]
+//                              range:NSMakeRange(1, monS.length)];
+         
+        
+        //富文本的属性通过字典的形式传入
+        NSDictionary *attributeDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [UIFont fontWithName:@"Helvetica-Bold" size:30 * thisScale],NSFontAttributeName,//字体
+                                       nil];
+        
+        NSDictionary *attributeDict1 = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [UIFont fontWithName:@"Helvetica-Bold" size:60 * thisScale],NSFontAttributeName,//字体
+                                       nil];
+
+        [attributedStr addAttributes:attributeDict range:NSMakeRange(0, 1)];
+        [attributedStr addAttributes:attributeDict1 range:NSMakeRange(1, monS.length)];
+
+        monL.attributedText = attributedStr;
+        monL.textAlignment = NSTextAlignmentCenter;
+        [v addSubview:monL];
+        monL.sd_layout.leftSpaceToView(v, 0).topSpaceToView(nameL, 8 * thisScale).rightSpaceToView(v, 30 * thisScale).heightIs(70 * thisScale);
+        
+//        _monL = [NudeIn make:^(NUDTextMaker *make) {
+//            make.text(@"￥").fontName(@"Helvetica-Bold",30 * thisScale).color(chuziColor).attach();
+//            make.text(monArr[i]).fontName(@"Helvetica-Bold",60 * thisScale).color(chuziColor).attach();
+//        }];
+//        _monL.textAlignment = NSTextAlignmentCenter;
+//        [v addSubview:_monL];
+//        _monL.userInteractionEnabled = YES;
+//        _monL.sd_layout.centerXEqualToView(v).topSpaceToView(nameL, 8 * thisScale).widthIs(200 * thisScale).heightIs(70 * thisScale);
+        
+        UILabel *detailL = [UILabel new];
+        detailL.text = shixiaoArr[i];
+        detailL.font = YSystemFont(14 * thisScale);
+        detailL.textColor = chuziColor;
+        [v addSubview:detailL];
+        detailL.textAlignment = NSTextAlignmentCenter;
+        detailL.sd_layout.leftEqualToView(v).bottomSpaceToView(v, 5 * thisScale).rightEqualToView(v).heightIs(20 * thisScale);
+        
+        UIView *lineV = [UIView new];
+        lineV.backgroundColor = klcolor;
+        [v addSubview:lineV];
+        lineV.sd_layout.centerXEqualToView(v).widthIs(180 * thisScale).heightIs(1).bottomSpaceToView(detailL, 5 * thisScale);
+
+        v.userInteractionEnabled = YES;
+        v.tag = i;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+        tap.numberOfTapsRequired = 1;
+        [v addGestureRecognizer:tap];
+
+        if(i == 0){
+            [self tapAction:tap];
+        }
+        
+    }
+
+    
+    NoHighBtn *payBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [payBtn setTitle:@"立即购买" forState:UIControlStateNormal];
+    [payBtn setBackgroundColor:kocolor];
+    [payBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
+    payBtn.titleLabel.font = YSystemFont(24 * thisScale);
+    payBtn.layer.cornerRadius = 30 * thisScale;
+    payBtn.layer.masksToBounds = YES;
+    [goumaiV addSubview:payBtn];
+    payBtn.sd_layout.centerXEqualToView(goumaiV).widthIs(446 * thisScale).heightIs(60 * thisScale);
+    [payBtn addTarget:self action:@selector(payClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *lineV = [UIView new];
+    lineV.backgroundColor = klcolor;
+    [goumaiV addSubview:lineV];
+    lineV.sd_layout.centerXEqualToView(goumaiV).widthIs(760 * YScaleWidth).heightIs(1);
+
+    
+///iPad  iPhone适配
+    if(isPad){
+        lineV.hidden = NO;
+        payBtn.sd_layout.bottomSpaceToView(goumaiV, 48 * YScaleHeight);
+        lineV.sd_layout.topSpaceToView(zhongjianV, 49 * YScaleHeight);
+        
+        hintimg1.sd_layout.topSpaceToView(goumaiV, 32 * YScaleHeight);
+        topV.sd_layout.topSpaceToView(hintL2, 31 * YScaleHeight);
+        zhongjianV.sd_layout.topSpaceToView(topV, 50 * YScaleHeight);
+    }
+    else{
+        
+        if(Height_Bottom){
+            lineV.hidden = YES;
+            payBtn.sd_layout.bottomSpaceToView(goumaiV, 10 * YScaleHeight);
+        }
+        else{
+            lineV.hidden = NO;
+            lineV.sd_layout.topSpaceToView(zhongjianV, 49 * YScaleHeight);
+            payBtn.sd_layout.bottomSpaceToView(goumaiV, 48 * YScaleHeight);
+        }
+        
+        hintimg1.sd_layout.topSpaceToView(goumaiV, 16 * YScaleHeight);
+        topV.sd_layout.topSpaceToView(hintL2, 15 * YScaleHeight);
+        zhongjianV.sd_layout.topSpaceToView(topV, 25 * YScaleHeight);
+
+    }
+
 
     
     
@@ -570,7 +705,8 @@
     for (int i = 0; i < numCounts; i++) {
         UILabel *label = [UILabel new];
         label.text = [NSString stringWithFormat:@"%d",(i + 1) * 10];
-        label.textColor = [JKUtil getColor:@"1D69FF"];
+        label.textColor = xuanziColor;
+        label.alpha = 0.3;
         label.font = YSystemFont(20 * YScaleWidth);
         label.textAlignment = NSTextAlignmentRight;
         
@@ -599,13 +735,13 @@
     dixiaL.sd_layout.bottomSpaceToView(kefuV, 20 * YScaleHeight).widthIs(460 * YScaleWidth).centerXEqualToView(kefuV).heightIs(26 * YScaleWidth);
     
     UILabel *shangL = [UILabel new];
-    shangL.textColor = kmebluecolor;
+    shangL.textColor = xuanziColor;
     shangL.text = @"服务时间：工作日8:30-17:30";
     shangL.backgroundColor = kbackColor;
     shangL.font = YSystemFont(20 * YScaleWidth);
     shangL.textAlignment = NSTextAlignmentCenter;
     shangL.layer.cornerRadius = 4;
-    shangL.layer.borderColor = kmebluecolor.CGColor;
+    shangL.layer.borderColor = xuanziColor.CGColor;
     shangL.layer.borderWidth = 1;
     [kefuV addSubview:shangL];
     shangL.sd_layout.centerXEqualToView(kefuV).topSpaceToView(kefuV, 200 * YScaleHeight).widthIs(356 * YScaleWidth).heightIs(50 * YScaleWidth);
@@ -654,8 +790,8 @@
         b.titleLabel.font = YSystemFont(18 * YScaleWidth);
         b.layer.cornerRadius = 4;
         [b setBackgroundColor:ClearColor];
-        [b setTitleColor:kmebluecolor forState:UIControlStateNormal];
-        b.layer.borderColor = kmebluecolor.CGColor;
+        [b setTitleColor:xuanziColor forState:UIControlStateNormal];
+        b.layer.borderColor = xuanziColor.CGColor;
         b.layer.borderWidth = 1;
         b.layer.masksToBounds = YES;
         [aboutV addSubview:b];
@@ -672,7 +808,7 @@
     UILabel *huanbanL = [UILabel new];
     huanbanL.text = @"滑板车系列产品";
     huanbanL.font = YSystemFont(24 * YScaleWidth);
-    huanbanL.textColor = [JKUtil getColor:@"2E4476"];
+    huanbanL.textColor = chuziColor;
     [aboutV addSubview:huanbanL];
     huanbanL.sd_layout.leftSpaceToView(aboutV, 34 * YScaleWidth).widthIs(175 * YScaleWidth).heightIs(33 * YScaleWidth).topSpaceToView(lineV, 19 * YScaleWidth);
     
@@ -1016,14 +1152,31 @@
     
     if(v != selectedV){
         
-        v.layer.borderColor = kocolor.CGColor;
+        v.layer.borderColor = xuanziColor.CGColor;
         
         UILabel *label = v.subviews.firstObject;
-        label.textColor = kocolor;
+        label.textColor = WhiteColor;
+        label.backgroundColor = xuanziColor;
+        
+        UILabel *monlabel = v.subviews[1];
+        monlabel.textColor = xuanziColor;
+        
+        UILabel *xial = v.subviews[2];
+        xial.textColor = xuanziColor;
+
         
         if(selectedV){
             UILabel *selectL = selectedV.subviews.firstObject;
-            selectL.textColor = [JKUtil getColor:@"2E4476"];
+            selectL.textColor = chuziColor;
+            selectL.backgroundColor = [JKUtil getColor:@"EEF8FF"];
+            
+            UILabel *monlabell = selectedV.subviews[1];
+            monlabell.textColor = chuziColor;
+            
+            UILabel *xiall = selectedV.subviews[2];
+            xiall.textColor = chuziColor;
+
+            
             selectedV.layer.borderColor = [JKUtil getColor:@"C6D9FF"].CGColor;
         }
         
@@ -1056,11 +1209,69 @@
 
 
 
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
-    YLogFunc
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    AllModel *selectedMod = dataArr[indexPath.item];
+
+    if(selectedMod.is_learn){
+
+        //网络请求数据
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+        param[@"word"] = selectedMod.word;
+        param[@"id"] = [NSNumber numberWithInteger:selectedMod.ID];
+
+        YLog(@"%@",[NSString getBaseUrl:_URL_fun withparam:param])
+
+
+        [YLHttpTool POST:_URL_fun parameters:param progress:^(NSProgress *progress) {
+
+        } success:^(id dic) {
+
+            if([dic[@"code"] integerValue] == 200){
+
+                NSDictionary *dict = dic[@"data"];
+
+
+                FunViewController *vc = [[FunViewController alloc] init];
+                vc.selectedMod = selectedMod;
+                vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                vc.modalPresentationStyle = UIModalPresentationFullScreen;
+                vc.xuanzhongIndex = indexPath.item;
+
+                vc.combine_words = dict[@"combine_words"];
+                vc.similar_words = dict[@"similar_words"];
+    //            vc.word_image = dict[@"word_image"];
+    //            vc.word_video = dict[@"word_video"];
+
+
+                vc.callBack = ^(NSInteger xuanzhongIndex) {
+
+                };
+
+                [self presentViewController:vc animated:YES completion:^{
+
+                }];
+
+
+
+
+            }
+
+            else{
+                [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
+                [SVProgressHUD dismissWithDelay:1.0];
+            }
+
+            YLog(@"%@",dic);
+        } failure:^(NSError *error) {
+            //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        }];
+
+
+    }
+
 }
-
-
 /*
 #pragma mark - Navigation
 

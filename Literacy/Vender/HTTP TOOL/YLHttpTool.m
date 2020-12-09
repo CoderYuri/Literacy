@@ -32,9 +32,10 @@
     [mgr.requestSerializer setValue:[YUserDefaults objectForKey:ktoken] forHTTPHeaderField:@"token"];
     
     //设置接受方式
-    mgr.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/plain",@"text/html",@"image/png", @"application/javascript",nil];
+    mgr.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",nil];
 
-
+//    @"text/plain",@"text/html",@"image/png", @"application/javascript",
+    
     [mgr POST:URLString parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
         if (progress) {
             progress(uploadProgress);
@@ -47,8 +48,8 @@
         if (failure) {
             // 打印下错误信息
             YLog(@"---打印错误信息---%@",error.description);
-            [SVProgressHUD showErrorWithStatus:@"网络连接失败"];
-            [SVProgressHUD dismissWithDelay:1];
+//            [SVProgressHUD showErrorWithStatus:@"网络连接失败"];
+//            [SVProgressHUD dismissWithDelay:1];
 
             failure(error);
         }

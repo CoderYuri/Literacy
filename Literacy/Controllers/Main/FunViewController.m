@@ -38,11 +38,13 @@
     UIView *wanV;
     UIView *okV1;
     UIView *okV2;
-    NSInteger successIndex;
+    NSInteger successIndex;  //成功个数
+    NSInteger rightIndex;    //正确字的位置
     
     UIView *successV;
     CGFloat roadH;
     CGFloat ludengY;
+    
 }
 
 @end
@@ -54,8 +56,8 @@
     // Do any additional setup after loading the view.
     
     [self setupView];
-    
 }
+
 
 - (void)setupView{
     backV = self.view;
@@ -171,7 +173,6 @@
             [self->gifView stopAnimating];
             //加载电视机 放动画  完成之后进入下个页面
             [self dianshiVjiazai];
-//            [self wancaozuo];
             
         }];
 
@@ -215,12 +216,12 @@
     avPlayerVC.view.sd_layout.centerXEqualToView(dianshiV).topSpaceToView(dianshiV, 128 * YScaleHeight).widthIs(656 * YScaleHeight).heightIs(492 * YScaleHeight);
     
     UILabel *leftL = [self setZiLabel];
-    leftL.text = @"人类";
+    leftL.text = self.combine_words.firstObject;
     [dianshiV addSubview:leftL];
     leftL.sd_layout.leftSpaceToView(dianshiV, 81 * YScaleHeight).bottomSpaceToView(dianshiV, 145 * YScaleHeight).widthIs(345 * YScaleHeight).heightIs(126 * YScaleHeight);
     
     UILabel *rightL = [self setZiLabel];
-    rightL.text = @"人物";
+    rightL.text = self.combine_words.lastObject;
     [dianshiV addSubview:rightL];
     rightL.sd_layout.rightSpaceToView(dianshiV, 81 * YScaleHeight).bottomSpaceToView(dianshiV, 145 * YScaleHeight).widthIs(345 * YScaleHeight).heightIs(126 * YScaleHeight);
     
@@ -375,17 +376,17 @@
     
     UILabel *ziL = [self setZiLabel];
     ziL.font = [UIFont fontWithName:@"kaiti" size:200 * YScaleHeight];
-    ziL.text = @"人";
+    ziL.text = self.selectedMod.word;
     [cikaV addSubview:ziL];
     ziL.sd_layout.rightSpaceToView(cikaV, 76 * YScaleHeight).topSpaceToView(cikaV, 90 * YScaleHeight).widthIs(300 * YScaleHeight).heightIs(200 * YScaleHeight);
     
     UILabel *leftL = [self setZiLabel];
-    leftL.text = @"人类";
+    leftL.text = self.combine_words.firstObject;
     [cikaV addSubview:leftL];
     leftL.sd_layout.leftSpaceToView(cikaV, 59 * YScaleHeight).bottomSpaceToView(cikaV, 75 * YScaleHeight).widthIs(340 * YScaleHeight).heightIs(90 * YScaleHeight);
     
     UILabel *rightL = [self setZiLabel];
-    rightL.text = @"人物";
+    rightL.text = self.combine_words.lastObject;
     [cikaV addSubview:rightL];
     rightL.sd_layout.rightSpaceToView(cikaV, 59 * YScaleHeight).bottomSpaceToView(cikaV, 75 * YScaleHeight).widthIs(340 * YScaleHeight).heightIs(90 * YScaleHeight);
     
@@ -498,7 +499,9 @@
                 self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 3;
             } completion:^(BOOL finished) {
                 [gifView stopAnimating];
-
+                
+                //成功接口
+                [self successFetch];
             }];
             
             
@@ -508,14 +511,57 @@
 
 }
 
-#pragma mark -- View init
+- (void)successFetch{
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+    param[@"word"] = self.selectedMod.word;
+    param[@"id"] = [NSNumber numberWithInteger:self.selectedMod.ID];
 
+    YLog(@"%@",[NSString getBaseUrl:_URL_Success withparam:param])
+    
+//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [YLHttpTool POST:_URL_Success parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            
+            NSArray *arr = [YUserDefaults objectForKey:kziKu];
+            NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+            AllModel *mod = array[self.xuanzhongIndex];
+            mod.is_learn = YES;
+            [array replaceObjectAtIndex:self.xuanzhongIndex withObject:mod];
+            
+            NSArray *dictArr = [AllModel mj_keyValuesArrayWithObjectArray:array];
+            [YUserDefaults setObject:dictArr forKey:kziKu];
+            
+            //播放语音
+            [YUserDefaults setInteger:(self.xuanzhongIndex + 1) forKey:khas_learn_num];
+            
+            if(self.callBack){
+                self.callBack(self.xuanzhongIndex);
+            }
+            [self dismissViewControllerAnimated:YES completion:nil];
+
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+
+}
+
+
+#pragma mark -- View init
 - (void)setRenV{
     renV = [UIView new];
     [scrollV addSubview:renV];
     renV.frame = CGRectMake(0, 0, YScreenW, YScreenH);
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg7"]];
     [renV addSubview:img];
     
     if(isPad){
@@ -543,7 +589,7 @@
     [scrollV addSubview:duV];
     duV.frame = CGRectMake(YScreenW, 0, YScreenW, YScreenH);
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg8"]];
     [duV addSubview:img];
     
     if(isPad){
@@ -570,7 +616,7 @@
     [scrollV addSubview:wanV];
     wanV.frame = CGRectMake(YScreenW * 2, 0, YScreenW, YScreenH);
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg1"]];
     [wanV addSubview:img];
     
     if(isPad){
@@ -587,13 +633,38 @@
     [wanV addSubview:roadImg];
     roadImg.frame = CGRectMake(0, roadH, 529 * YScaleWidth, 237 * YScaleWidth);
     
+    NSString *qianS = self.combine_words.firstObject;
     
-    UIView *fankunV = [self fangkuiVwithName:@"人" andifnormal:NO];
+    NSString *s1 = [qianS substringWithRange:NSMakeRange(0, 1)];
+    
+    UIView *fankunV;
+    if([s1 isEqualToString:self.selectedMod.word]){
+        fankunV = [self fangkuiVwithName:s1 andifnormal:NO];
+        
+        okV1 = fankunV;
+        okV1.hidden = YES;
+    }
+    else{
+        fankunV = [self fangkuiVwithName:s1 andifnormal:YES];
+    }
+    
     //217  377  676 836
     [wanV addSubview:fankunV];
     fankunV.sd_layout.leftSpaceToView(wanV, 217 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
 
-    UIView *fankunV1 = [self fangkuiVwithName:@"们" andifnormal:YES];
+//    UIView *fankunV1 = [self fangkuiVwithName:@"们" andifnormal:YES];
+    NSString *s2 = [qianS substringWithRange:NSMakeRange(1, 1)];
+    
+    UIView *fankunV1;
+    if([s2 isEqualToString:self.selectedMod.word]){
+        fankunV1 = [self fangkuiVwithName:s2 andifnormal:NO];
+        
+        okV1 = fankunV1;
+        okV1.hidden = YES;
+    }
+    else{
+        fankunV1 = [self fangkuiVwithName:s2 andifnormal:YES];
+    }
     [wanV addSubview:fankunV1];
     fankunV1.sd_layout.leftSpaceToView(wanV, 377 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
 
@@ -607,12 +678,42 @@
     [wanV addSubview:roadImg3];
     roadImg3.frame = CGRectMake(718 * YScaleWidth, roadH, 270 * YScaleWidth, 237 * YScaleWidth);
     
-    UIView *fankunV2 = [self fangkuiVwithName:@"人" andifnormal:NO];
+    NSString *houS = self.combine_words.lastObject;
+
+    NSString *s3 = [houS substringWithRange:NSMakeRange(0, 1)];
+    
+    UIView *fankunV2;
+    if([s3 isEqualToString:self.selectedMod.word]){
+        fankunV2 = [self fangkuiVwithName:s3 andifnormal:NO];
+        
+        okV2 = fankunV2;
+        okV2.hidden = YES;
+    }
+    else{
+        fankunV2 = [self fangkuiVwithName:s3 andifnormal:YES];
+    }
+
+    
     //133  237 415 501
     [wanV addSubview:fankunV2];
     fankunV2.sd_layout.leftSpaceToView(wanV, 676 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
 
-    UIView *fankunV3 = [self fangkuiVwithName:@"民" andifnormal:YES];
+//    UIView *fankunV3 = [self fangkuiVwithName:@"民" andifnormal:YES];
+    NSString *s4 = [houS substringWithRange:NSMakeRange(1, 1)];
+    
+    UIView *fankunV3;
+    if([s4 isEqualToString:self.selectedMod.word]){
+        fankunV3 = [self fangkuiVwithName:s4 andifnormal:NO];
+        
+        okV2 = fankunV3;
+        okV2.hidden = YES;
+
+    }
+    else{
+        fankunV3 = [self fangkuiVwithName:s4 andifnormal:YES];
+    }
+
+    
     [wanV addSubview:fankunV3];
     fankunV3.sd_layout.leftSpaceToView(wanV, 836 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
 
@@ -622,10 +723,6 @@
     [wanV addSubview:roadImg4];
     roadImg4.frame = CGRectMake(988 * YScaleWidth, roadH, 92 * YScaleWidth, 237 * YScaleWidth);
     
-    okV1 = fankunV;
-    okV2 = fankunV2;
-    okV1.hidden = YES;
-    okV2.hidden = YES;
     
     
     NSInteger counts = 4;
@@ -633,6 +730,11 @@
     [wanV addSubview:ziBackV];
     ziBackV.backgroundColor = ClearColor;
     ziBackV.sd_layout.topSpaceToView(wanV, 137 * YScaleHeight).centerXEqualToView(wanV).widthIs(counts * 156 * YScaleWidth + (counts - 1) * 48 * YScaleWidth).heightIs(156 * YScaleWidth);
+    
+    rightIndex = arc4random_uniform(4);
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.similar_words];
+    [arr insertObject:self.selectedMod.word atIndex:rightIndex];
+    
     
     for (int i = 0; i < counts; i++) {
         UIView *v = [UIView new];
@@ -651,7 +753,7 @@
         img.sd_layout.leftEqualToView(v).rightEqualToView(v).topEqualToView(v).bottomEqualToView(v);
 
         UILabel *label = [UILabel new];
-        label.text = @"人";
+        label.text = arr[i];
         label.textColor = WhiteColor;
         label.font = [UIFont fontWithName:@"kaiti" size:80 * YScaleWidth];
         [v addSubview:label];
@@ -668,7 +770,7 @@
 
     NSInteger ziIndex = tap.view.tag;
     
-    if(ziIndex != 1){
+    if(ziIndex != rightIndex){
         YLogFunc
         //选错提示音
         return;
@@ -679,11 +781,11 @@
     }
     
     
-    NSInteger counts = 3;
+    NSInteger counts = 4;
     CGFloat leftMargin = (YScreenW -  (counts * 158 * YScaleWidth + (counts - 1) * 48 * YScaleWidth))/2;
 
     UIView *v = [UIView new];
-    v.frame = CGRectMake(204 * YScaleWidth * ziIndex + leftMargin, 137 * YScaleWidth, 156 * YScaleWidth, 156 * YScaleWidth);
+    v.frame = CGRectMake(204 * YScaleWidth * ziIndex + leftMargin, 137 * YScaleHeight, 156 * YScaleWidth, 156 * YScaleWidth);
     [wanV addSubview:v];
 
     UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"wanbackground"]];
@@ -691,7 +793,7 @@
     img.sd_layout.leftEqualToView(v).rightEqualToView(v).topEqualToView(v).bottomEqualToView(v);
 
     UILabel *label = [UILabel new];
-    label.text = @"人";
+    label.text = self.selectedMod.word;
     label.textColor = WhiteColor;
     label.font = [UIFont fontWithName:@"kaiti" size:80 * YScaleWidth];
     [v addSubview:label];
@@ -759,11 +861,8 @@
     else{
         img.image = [UIImage imageNamed:@"wanpre"];
         label.textColor = WhiteColor;
+    
     }
-
-    
-    
-
     return zhanweiV;;
 }
 
@@ -772,7 +871,7 @@
     [scrollV addSubview:successV];
     successV.frame = CGRectMake(YScreenW * 3, 0, YScreenW, YScreenH);
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg2"]];
     [successV addSubview:img];
     
 
@@ -800,11 +899,7 @@
 
 #pragma mark - click
 - (void)back{
-    
-    if(self.callBack){
-        self.callBack(self.xuanzhongIndex);
-    }
-    
+
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

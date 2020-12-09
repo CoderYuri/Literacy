@@ -33,6 +33,15 @@
 
 - (void)setMod:(AllModel *)mod{
     self.ziLabel.text = mod.word;
+    
+    if(mod.is_learn){
+        self.ziLabel.textColor = WhiteColor;
+        self.bgImg.image = [UIImage imageNamed:@"wordcardpre"];
+    }
+    else{
+        self.ziLabel.textColor = kblackColor;
+        self.bgImg.image = [UIImage imageNamed:@"wordcarddefault"];
+    }
 }
 
 

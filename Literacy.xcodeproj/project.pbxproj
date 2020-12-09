@@ -352,8 +352,8 @@
 				DA9FD84A2567C0F30048D870 /* MeViewController.m */,
 				DAF31F6E256E2B2B0056435B /* FunViewController.h */,
 				DAF31F6F256E2B2B0056435B /* FunViewController.m */,
-				DA8184332574837500190F38 /* FuxiViewController.h */,
 				DA8184342574837500190F38 /* FuxiViewController.m */,
+				DA8184332574837500190F38 /* FuxiViewController.h */,
 				DA1A75F72575D7AF00B047FC /* FuxiPlayViewController.h */,
 				DA1A75F82575D7B000B047FC /* FuxiPlayViewController.m */,
 			);

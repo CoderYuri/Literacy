@@ -108,6 +108,7 @@
         UILabel *label = [UILabel new];
         label.text = [NSString stringWithFormat:@"%d",(i + 1) * 10];
         label.textColor = [JKUtil getColor:@"1D69FF"];
+        label.alpha = 0.3;
         label.font = YSystemFont(22 * YScaleWidth);
         label.textAlignment = NSTextAlignmentRight;
         
@@ -142,11 +143,70 @@
 //  return UIEdgeInsetsMake(32 * YScaleWidth,0,0,40 * YScaleWidth);
 //}
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    AllModel *selectedMod = dataArr[indexPath.item];
+
+    if(selectedMod.is_learn){
+
+        //网络请求数据
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+        param[@"word"] = selectedMod.word;
+        param[@"id"] = [NSNumber numberWithInteger:selectedMod.ID];
+
+        YLog(@"%@",[NSString getBaseUrl:_URL_fun withparam:param])
 
 
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
-    YLog(@"%ld",indexPath.item)
+        [YLHttpTool POST:_URL_fun parameters:param progress:^(NSProgress *progress) {
+
+        } success:^(id dic) {
+
+            if([dic[@"code"] integerValue] == 200){
+
+                NSDictionary *dict = dic[@"data"];
+
+
+                FunViewController *vc = [[FunViewController alloc] init];
+                vc.selectedMod = selectedMod;
+                vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                vc.modalPresentationStyle = UIModalPresentationFullScreen;
+                vc.xuanzhongIndex = indexPath.item;
+
+                vc.combine_words = dict[@"combine_words"];
+                vc.similar_words = dict[@"similar_words"];
+    //            vc.word_image = dict[@"word_image"];
+    //            vc.word_video = dict[@"word_video"];
+
+
+                vc.callBack = ^(NSInteger xuanzhongIndex) {
+
+                };
+
+                [self presentViewController:vc animated:YES completion:^{
+
+                }];
+
+
+
+
+            }
+
+            else{
+                [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
+                [SVProgressHUD dismissWithDelay:1.0];
+            }
+
+            YLog(@"%@",dic);
+        } failure:^(NSError *error) {
+            //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        }];
+
+
+    }
+
 }
+
 
 
 

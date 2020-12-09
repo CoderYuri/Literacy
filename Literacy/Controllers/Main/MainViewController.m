@@ -9,7 +9,6 @@
 #import "MainCollectionViewCell.h"
 #import "WordsViewController.h"
 #import "MeViewController.h"
-#import "FunViewController.h"
 
 #import "UIImage+GIF.h"
 #import "YFGIFImageView.h"
@@ -138,7 +137,9 @@
     NSInteger bgCounts = 1 + zongchangdu / YScreenW;
     
     for (int i = 0 ; i < bgCounts; i++) {
-        UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg"]];
+        
+        
+        UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"bg%d",(i%8)+1]]];
         [scrollV addSubview:img];
         
         if(isPad){
@@ -189,12 +190,12 @@
         
         
         if(mod.is_learn){
-            img.image = [UIImage imageNamed:@"lightoff"];
-            [btn setTitleColor:BlackColor forState:UIControlStateNormal];
-        }
-        else{
             img.image = [UIImage imageNamed:@"lighton"];
             [btn setTitleColor:WhiteColor forState:UIControlStateNormal];
+        }
+        else{
+            img.image = [UIImage imageNamed:@"lightoff"];
+            [btn setTitleColor:BlackColor forState:UIControlStateNormal];
         }
 
 
@@ -244,8 +245,12 @@
     [scrollV addSubview:collectionView];
     */
     
+    NSInteger hasLearnCount = [YUserDefaults integerForKey:khas_learn_num] - 1;
+    YLog(@"%ld",hasLearnCount)
+    scrollV.contentOffset = CGPointMake(256 * YScaleHeight * hasLearnCount, 0);
+    
     selectIndex = -1;
-    gifCenterX = 363 * YScaleHeight;   //初始位置
+    gifCenterX = 363 * YScaleHeight + 256 * YScaleHeight * hasLearnCount;   //初始位置
 //    gifView = [[UIImageView alloc] init];
     NSString *filePath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"shaonv" ofType:@"gif"];
     NSData *imageData = [NSData dataWithContentsOfFile:filePath];
@@ -277,7 +282,7 @@
     
     [UIView animateWithDuration:Transformtimeinterval
                      animations:^{
-        self->gifView.centerX = gifCenterX;
+        self->gifView.centerX = 363 * YScaleHeight;
     }];
     
 }
@@ -344,88 +349,145 @@
 - (void)caozuoClick:(UIButton *)b{
     NSInteger ziIndex = b.superview.tag - 10000;
     YLog(@"%ld",ziIndex)
+    
+    
+    AllModel *selectedMod = dataArr[ziIndex];
 
-    //不同字的时候  才开始动画
-    if(ziIndex != selectIndex)
-        [gifView startAnimating];
-
-    for (UIView *v in scrollV.subviews) {
-        if (v.tag == b.superview.tag)
-        {
-            
-            if(gifView.centerX > v.centerX - scrollV.contentOffset.x){
-                gifView.transform = CGAffineTransformMakeScale(-1.0, 1.0);//水平翻转
-            }
-
-            else{
-                gifView.transform = CGAffineTransformMakeScale(1.0, 1.0);//水平翻转
-            }
-            
-//            CGFloat timeInterval;
-//            if(ziIndex == 0){
-//                timeInterval = 0;;
-//            }
-//            else{
-//                timeInterval = Transformtimeinterval;
-//            }
-            
-            //确定在图 左边还是右边
-            if(selectIndex < ziIndex){
-                self->gifCenterX = v.centerX - 85 * YScaleHeight;
-            }
-            else if(selectIndex > ziIndex){
-                self->gifCenterX = v.centerX + 85 * YScaleHeight;
-            }
-            
-            CGFloat huadongjuli = self->gifCenterX - self->scrollV.contentOffset.x;
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+    param[@"word"] = selectedMod.word;
+    param[@"id"] = [NSNumber numberWithInteger:selectedMod.ID];
         
-//            * fabs(huadongjuli - gifView.centerX )/ 1080
-            [UIView animateWithDuration:Transformtimeinterval animations:^{
-                
-                self->gifView.centerX = huadongjuli;
-                
-            } completion:^(BOOL finished) {
-                
-                selectIndex = ziIndex;
-                [gifView stopAnimating];
+    YLog(@"%@",[NSString getBaseUrl:_URL_fun withparam:param])
+    
+    
+    [YLHttpTool POST:_URL_fun parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
 
-                FunViewController *vc = [[FunViewController alloc] init];
-                vc.selectedMod = self->dataArr[selectIndex];
-                vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-                vc.modalPresentationStyle = UIModalPresentationFullScreen;
-                vc.xuanzhongIndex =self-> selectIndex;
-                vc.callBack = ^(NSInteger xuanzhongIndex) {
-//                    self->ifNoanimation = YES;
-                    YLog(@"%ld",xuanzhongIndex)
-                };
-                
-                [self presentViewController:vc animated:YES completion:^{
+        if([dic[@"code"] integerValue] == 200){
+            
+            NSDictionary *dict = dic[@"data"];
+        
+            
+            //不同字的时候  才开始动画
+            if(ziIndex != selectIndex)
+                [gifView startAnimating];
 
-                }];
-            }];
+
+            for (UIView *v in scrollV.subviews) {
+                if (v.tag == b.superview.tag)
+                {
+                    
+                    if(gifView.centerX > v.centerX - scrollV.contentOffset.x){
+                        gifView.transform = CGAffineTransformMakeScale(-1.0, 1.0);//水平翻转
+                    }
+
+                    else{
+                        gifView.transform = CGAffineTransformMakeScale(1.0, 1.0);//水平翻转
+                    }
+                    
+        //            CGFloat timeInterval;
+        //            if(ziIndex == 0){
+        //                timeInterval = 0;;
+        //            }
+        //            else{
+        //                timeInterval = Transformtimeinterval;
+        //            }
+                    
+                    //确定在图 左边还是右边
+                    if(selectIndex < ziIndex){
+                        self->gifCenterX = v.centerX - 85 * YScaleHeight;
+                    }
+                    else if(selectIndex > ziIndex){
+                        self->gifCenterX = v.centerX + 85 * YScaleHeight;
+                    }
+                    
+                    CGFloat huadongjuli = self->gifCenterX - self->scrollV.contentOffset.x;
+                
+        //            * fabs(huadongjuli - gifView.centerX )/ 1080
+                    [UIView animateWithDuration:Transformtimeinterval animations:^{
+                        
+                        self->gifView.centerX = huadongjuli;
+                        
+                    } completion:^(BOOL finished) {
+                        
+                        selectIndex = ziIndex;
+                        [gifView stopAnimating];
+
+                        FunViewController *vc = [[FunViewController alloc] init];
+                        vc.selectedMod = selectedMod;
+                        vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                        vc.modalPresentationStyle = UIModalPresentationFullScreen;
+                        vc.xuanzhongIndex =self-> selectIndex;
+                        
+                        vc.combine_words = dict[@"combine_words"];
+                        vc.similar_words = dict[@"similar_words"];
+            //            vc.word_image = dict[@"word_image"];
+            //            vc.word_video = dict[@"word_video"];
+
+                        
+                        vc.callBack = ^(NSInteger xuanzhongIndex) {
+                    //                    self->ifNoanimation = YES;
+                            [self ludengdianliang:xuanzhongIndex + 10000];
+                        };
+                        
+                        [self presentViewController:vc animated:YES completion:^{
+
+                        }];
+
+                    }];
+                    
+
+                    
+
+                }
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
 
+        }
+        
+        else{
+            [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
+            [SVProgressHUD dismissWithDelay:1.0];
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+
+ 
+}
+
+- (void)ludengdianliang:(NSInteger)index{
+    
+    
+    //点亮路灯
+    for (UIView *v in scrollV.subviews) {
+        if (v.tag == index)
+        {
+            UIImageView *img = v.subviews.firstObject;
+            img.image = [UIImage imageNamed:@"lighton"];
+
+            UIButton *b = v.subviews.lastObject;
+            [b setTitleColor:WhiteColor forState:UIControlStateNormal];
 
         }
     }
-
-    //变亮
-//    for (UIView *v in scrollV.subviews) {
-//        if (v.tag == tap.view.tag)
-//        {
-//            UILabel *label = v.subviews[1];
-//            label.textColor = WhiteColor;
-//
-//            UIImageView *img = v.subviews.firstObject;
-//            img.image = [UIImage imageNamed:@"lighton"];
-//
-//
-//        }
-//    }
-    
     
 }
-
 
 - (void)ziClick{
     WordsViewController *vc = [[WordsViewController alloc] init];

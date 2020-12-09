@@ -14,6 +14,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,assign) NSInteger xuanzhongIndex;
 @property (nonatomic, strong) void(^callBack)(NSInteger xuanzhongIndex);
+
+@property(nonatomic,strong) NSArray *similar_words;
+
+@property(nonatomic,strong) NSArray *combine_words;
+
+@property(nonatomic,copy) NSString *word_image;
+
+@property(nonatomic,copy) NSString *word_video;
+
 @end
 
 NS_ASSUME_NONNULL_END

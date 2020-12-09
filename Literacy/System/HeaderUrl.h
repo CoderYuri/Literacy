@@ -8,21 +8,25 @@
 #ifndef HeaderUrl_h
 #define HeaderUrl_h
 
-#define BaseUrl @"http://101.133.149.129:8000/index/"
+#define BaseUrl @"http://101.133.149.129:8000/"
 
 //getuserID
-#define _URL_userID [NSString stringWithFormat:@"%@%@",BaseUrl,@"userid"]
+#define _URL_userID [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/userid"]
 
 //字库
-#define _URL_words [NSString stringWithFormat:@"%@%@",BaseUrl,@"words"]
+#define _URL_words [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/words"]
 
 //获取验证码
-#define _URL_code [NSString stringWithFormat:@"%@%@",BaseUrl,@"captcha"]
+#define _URL_code [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/captcha"]
 
 //登录
-#define _URL_login [NSString stringWithFormat:@"%@%@",BaseUrl,@"login"]
+#define _URL_login [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/login"]
 
-//
+//认读玩
+#define _URL_fun [NSString stringWithFormat:@"%@%@",BaseUrl,@"main/literacy"]
+
+//完成学习
+#define _URL_Success [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/word/achieve"]
 
 
 #endif /* HeaderUrl_h */
