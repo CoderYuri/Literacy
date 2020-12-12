@@ -11,10 +11,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-/*
- 当前的网络状态
- */
-@property(nonatomic,assign)int netWorkStatesCode;
-
+- (void)gotoMainVC;
+- (void)gotoWelcome;
 @end
 

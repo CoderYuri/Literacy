@@ -23,14 +23,16 @@
 
 #define yonghuxieyi @"http://huabanche.club/shizi_user_agreement"
 #define yincexieyi  @"http://huabanche.club/shizi_privacy"
+#define kefuHaoma @"HBCshizi"
 
-@interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate>{
+@interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate,UITextFieldDelegate>{
     UIView *backV;
     
     UIImageView *vipImg;
     
-    UILabel *nameL;
+    UITextField *nameTextF;
     UILabel *vipL;
+    
     
     UIButton *selectedBtn;
     UIView *selectedV;
@@ -92,7 +94,7 @@
 
     
     [self setupView];
-    [self setupDengluV];
+//    [self setupDengluV];
 }
 
 - (void)setupDengluV{
@@ -116,9 +118,7 @@
     [backV addSubview:closeBtn];
     closeBtn.sd_layout.leftSpaceToView(backV, (YScreenW - 620 * thisScale) * 0.5 + 620 * thisScale - 67 * thisScale).topSpaceToView(backV, (YScreenH - 516 * thisScale) * 0.5 - 27 * thisScale).widthIs(94 * thisScale).heightEqualToWidth();
     [closeBtn addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self closeClick];
-    
+        
     UILabel *shangzL = [UILabel new];
     shangzL.text = @"手机号快捷登录";
     shangzL.font = YSystemFont(32 * thisScale);
@@ -147,7 +147,8 @@
     mobileTextF.placeholder = @"请输入手机号";
     [backV1 addSubview:mobileTextF];
     mobileTextF.sd_layout.centerYEqualToView(backV1).leftSpaceToView(backV1, 24 * thisScale).rightSpaceToView(backV1, 24 * thisScale).heightIs(25 * thisScale);
-    
+    [mobileTextF addTarget:self action:@selector(textFiledDidChange:) forControlEvents:UIControlEventEditingChanged];
+
     UIView *backV2 = [UIView new];
     [dengluV addSubview:backV2];
     backV2.backgroundColor = [JKUtil getColor:@"EBF3F6"];
@@ -214,7 +215,7 @@
     textF.backgroundColor = ClearColor;
     textF.font = YSystemFont(18 * thisScale);
     textF.tintColor = kblackColor;
-//    textF.delegate = self;
+    textF.delegate = self;
     textF.keyboardType = UIKeyboardTypeNumberPad;
 
     return textF;
@@ -249,22 +250,31 @@
     [leftV addSubview:userIcon];
     userIcon.sd_layout.leftSpaceToView(leftV, 11 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight).widthIs(50 * YScaleWidth).heightEqualToWidth();
     
+    UIButton *userBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [leftV addSubview:userBtn];
+    [userBtn addTarget:self action:@selector(setupDengluV) forControlEvents:UIControlEventTouchUpInside];
+    userBtn.sd_layout.leftSpaceToView(leftV, 11 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight).widthIs(50 * YScaleWidth).heightEqualToWidth();
+    
     vipImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notvip"]];
     [leftV addSubview:vipImg];
     vipImg.sd_layout.leftSpaceToView(leftV, 45 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight + 35 * YScaleWidth).widthIs(18 * YScaleWidth).heightEqualToWidth();
     
-    nameL = [UILabel new];
-    nameL.text = @"未登录";
-    nameL.font = YSystemFont(16 * YScaleWidth);
-    nameL.textColor = [JKUtil getColor:@"2A2D34"];
-    [leftV addSubview:nameL];
-    nameL.sd_layout.leftSpaceToView(leftV, 70 * YScaleWidth).topSpaceToView(leftV , 35 * YScaleHeight).heightIs(22 * YScaleWidth).widthIs(88 * YScaleWidth);
+    nameTextF = [self textF];
+    nameTextF.keyboardType = UIKeyboardTypeDefault;
+    nameTextF.text = @"未登录";
+    nameTextF.font = YSystemFont(14 * YScaleWidth);
+    nameTextF.textColor = [JKUtil getColor:@"2A2D34"];
+    [leftV addSubview:nameTextF];
+    nameTextF.enabled = NO;
+    nameTextF.sd_layout.leftSpaceToView(leftV, 70 * YScaleWidth).topSpaceToView(leftV , 35 * YScaleHeight).heightIs(22 * YScaleWidth).widthIs(88 * YScaleWidth);
+    [nameTextF addTarget:self action:@selector(textFiledDidChange:) forControlEvents:UIControlEventEditingChanged];
+
     
     NoHighBtn *changeNameBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
     [changeNameBtn setBackgroundImage:[UIImage imageNamed:@"elementedit"] forState:UIControlStateNormal];
     [changeNameBtn addTarget:self action:@selector(changeClick) forControlEvents:UIControlEventTouchUpInside];
     [leftV addSubview:changeNameBtn];
-    changeNameBtn.sd_layout.centerYEqualToView(nameL).rightSpaceToView(leftV, 20 * YScaleWidth).widthIs(10 * YScaleWidth).heightEqualToWidth();
+    changeNameBtn.sd_layout.centerYEqualToView(nameTextF).rightSpaceToView(leftV, 10 * YScaleWidth).widthIs(10 * YScaleWidth).heightEqualToWidth();
     [changeNameBtn setEnlargeEdgeWithTop:20 right:20 bottom:20 left:20];
     
 //    17449C  当前未开通会员   A6A6A6
@@ -277,13 +287,13 @@
     
     vipL.font = YSystemFont(11 * YScaleWidth);
     [leftV addSubview:vipL];
-    vipL.sd_layout.leftEqualToView(nameL).topSpaceToView(nameL, 3 * YScaleHeight).heightIs(16 * YScaleWidth).widthIs(108 * YScaleWidth);
+    vipL.sd_layout.leftEqualToView(nameTextF).topSpaceToView(nameTextF, 3 * YScaleHeight).heightIs(16 * YScaleWidth).widthIs(108 * YScaleWidth);
     
     if([YUserDefaults objectForKey:kusername]){
-        self->nameL.text = [YUserDefaults objectForKey:kusername];
+        nameTextF.text = [YUserDefaults objectForKey:kusername];
         if([YUserDefaults boolForKey:kis_member]){
             self->vipImg.image = [UIImage imageNamed:@"vip"];
-            self->vipL.text = @"有效期至2021.11.30";
+            self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
             self->vipL.textColor = [JKUtil getColor:@"FF6112"];
 
         }
@@ -718,7 +728,6 @@
     
 }
 
-
 //联系客服
 - (void)setupView3{
     kefuV = [UIView new];
@@ -727,7 +736,7 @@
     kefuV.sd_layout.centerXEqualToView(rightV).centerYEqualToView(rightV).widthIs(806 * YScaleWidth).heightIs(600 * YScaleHeight);
     
     UILabel *dixiaL = [UILabel new];
-    dixiaL.text = @"联系方式：点击复制微信号， 打开微信添加客服为好友";
+    dixiaL.text = @"联系方式：点击复制公众号， 打开微信添加客服为好友";
     dixiaL.font = YSystemFont(16 * YScaleWidth);
     dixiaL.textColor = [JKUtil getColor:@"B0BBD4"];
     dixiaL.textAlignment = NSTextAlignmentCenter;
@@ -757,7 +766,7 @@
     img.sd_layout.leftSpaceToView(midV, 33 * YScaleWidth).centerYEqualToView(midV).widthIs(40 * YScaleWidth).heightIs(32 * YScaleWidth);
     
     UILabel *detailL = [UILabel new];
-    detailL.text = @"客服：123456789";
+    detailL.text = [NSString stringWithFormat:@"客服：%@",kefuHaoma];
     detailL.textAlignment = NSTextAlignmentCenter;
     detailL.textColor = [JKUtil getColor:@"616E8D"];
     detailL.font = YSystemFont(20 * YScaleWidth);
@@ -832,6 +841,107 @@
     
 }
 
+
+#pragma mark textfieldDelegate
+//例如要设置字数限制为10：
+//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+//{
+//
+//    NSMutableString *addS = [NSMutableString stringWithFormat:@"%@",textField.text];
+//    if(string.length){
+//        [addS appendString:string];
+//    }
+//    else{
+//        if(textField.text.length)
+//            [addS deleteCharactersInRange:NSMakeRange(textField.text.length - 1, 1)];
+//        else{
+//            addS = @"";
+//        }
+//    }
+//
+//    if (textField == nameTextF) {
+//        if (textField.text.length > 6 && ![string isEqualToString:@""]) {
+//
+//            return NO;
+//        }
+//
+//    }
+//
+//    if (textField == mobileTextF) {
+//        if (textField.text.length > 6 && ![string isEqualToString:@""]) {
+//            return NO;
+//        }
+//    }
+//
+//
+//    return YES;
+//}
+
+#pragma mark - 判断输入框字符串的长度
+- (void)textFiledDidChange:(UITextField *)textField
+{
+//    NSLog(@"%@", textField.text);
+    int length = [self convertToInt:textField.text];
+    //如果输入框中的文字大于10，就截取前10个作为输入框的文字
+    if (textField == nameTextF) {
+        if (length > 6) {
+            textField.text = [textField.text substringToIndex:6];
+        }
+    }else if (textField == mobileTextF){
+        
+        if (length > 11) {
+            textField.text = [textField.text substringToIndex:11];
+        }
+    }
+}
+
+//下面这个方法主要是为了判断textField中汉字的个数
+- (int)convertToInt:(NSString *)strtemp//判断中英混合的的字符串长度
+{
+    int strlength = 0;
+    for (int i=0; i< [strtemp length]; i++) {
+        int a = [strtemp characterAtIndex:i];
+        if( a > 0x4e00 && a < 0x9fff) { //判断是否为中文
+            strlength += 1;
+        }else{
+            strlength += 1;
+        }
+    }
+    return strlength;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    if (textField == nameTextF) {
+        nameTextF.enabled = NO;
+    }
+    
+    //调用修改名字接口
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"nickname"] = nameTextF.text;
+    
+    YLog(@"%@",[NSString getBaseUrl:_URL_nickname withparam:param])
+    
+//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [YLHttpTool POST:_URL_nickname parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            
+            NSDictionary *d = dic[@"data"];
+            [YUserDefaults setObject:d[@"nickname"] forKey:kusername];
+//            nameTextF.text = [YUserDefaults objectForKey:kusername];
+
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+    
+}
 
 
 #pragma mark - click
@@ -960,22 +1070,68 @@
 
 //换名字点击
 - (void)changeClick{
-    YLogFunc
+    
+    //已登录
+    if([YUserDefaults objectForKey:kusername]){
+        
+        //已会员 才能修改昵称
+        nameTextF.enabled = YES;
+        [nameTextF becomeFirstResponder];
+
+    }
+    
+    else{
+        [self setupDengluV];
+    }
+
+    
 }
 
 //支付点击
 - (void)payClick{
-    YLogFunc
     
-    blackV.hidden = NO;
-    closeBtn.hidden = NO;
-    dengluV.hidden = NO;
+    //已登录
+    if([YUserDefaults objectForKey:kusername]){
+        
+        //已会员
+        if([YUserDefaults boolForKey:kis_member]){
+            [SVProgressHUD showSuccessWithStatus:@"当前已是会员"];
+            [SVProgressHUD dismissWithDelay:1];
+        }
+        //不是会员  跳内购
+        else{
+            YLogFunc
+        }
+    }
+    
+    else{
+        [self setupDengluV];
+    }
+    
 }
 
+//- (void)denlguchuxian{
+//    blackV.hidden = NO;
+//    closeBtn.hidden = NO;
+//    dengluV.hidden = NO;
+    
+//    [self setupDengluV];
+//}
+
 - (void)closeClick{
-    blackV.hidden = YES;
-    closeBtn.hidden = YES;
-    dengluV.hidden = YES;
+//    blackV.hidden = YES;
+//    closeBtn.hidden = YES;
+//    dengluV.hidden = YES;
+    
+    [blackV removeFromSuperview];
+    blackV = nil;
+    
+    [dengluV removeFromSuperview];
+    dengluV = nil;
+    
+    [closeBtn removeFromSuperview];
+    closeBtn = nil;
+
 
     [self.view endEditing:YES];
 }
@@ -1079,18 +1235,20 @@
     } success:^(id dic) {
 
         if([dic[@"code"] integerValue] == 200){
-            
+            [self closeClick];
+
             NSDictionary *d = dic[@"data"];
             [YUserDefaults setObject:d[@"name"] forKey:kusername];
             [YUserDefaults setObject:d[@"token"] forKey:ktoken];
             [YUserDefaults setBool:[d[@"is_member"] boolValue] forKey:kis_member];
+            [YUserDefaults setObject:d[@"expire_time"] forKey:kexpiretime];
+
             
-            self->nameL.text = [YUserDefaults objectForKey:kusername];
+            nameTextF.text = [YUserDefaults objectForKey:kusername];
             if([YUserDefaults boolForKey:kis_member]){
                 self->vipImg.image = [UIImage imageNamed:@"vip"];
-                self->vipL.text = @"有效期至2021.11.30";
+                self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
                 self->vipL.textColor = [JKUtil getColor:@"FF6112"];
-
             }
             else{
                 self->vipImg.image = [UIImage imageNamed:@"notvip"];
@@ -1098,7 +1256,16 @@
                 self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
             }
             
+            [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
+
             [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+            [SVProgressHUD dismissWithDelay:1];
+            
+            [self xiugaiziku];
+            
+//            [self refreshData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"refresh" object:self];
+
         }
         
         YLog(@"%@",dic);
@@ -1106,6 +1273,52 @@
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
     }];
 }
+
+- (void)xiugaiziku{
+    //修改字库数据
+    NSArray *arr = [YUserDefaults objectForKey:kziKu];
+    NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+    
+    for (int i = 0; i < [YUserDefaults integerForKey:khas_learn_num]; i++) {
+        AllModel *mod = array[i];
+        mod.is_learn = YES;
+        [array replaceObjectAtIndex:i withObject:mod];
+    }
+    
+    NSArray *dictArr = [AllModel mj_keyValuesArrayWithObjectArray:array];
+    [YUserDefaults setObject:dictArr forKey:kziKu];
+}
+
+
+/*
+- (void)refreshData{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+//    param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+    YLog(@"%@",[NSString getBaseUrl:_URL_words withparam:param])
+    
+    [YLHttpTool GET:_URL_words parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            
+            NSDictionary *d = dic[@"data"];
+            NSArray *array = d[@"words"];
+            self->dataArr = [AllModel mj_objectArrayWithKeyValuesArray:array];
+            [YUserDefaults setObject:array forKey:kziKu];
+            
+            [YUserDefaults setInteger:[d[@"free_words_num"]integerValue] forKey:kfree_words_num];
+            [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
+
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+
+}
+*/
 
 //用户协议
 - (void)xieyiclick{
@@ -1143,7 +1356,12 @@
 
 //复制
 - (void)copyClick{
-    YLogFunc
+    UIPasteboard*pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = kefuHaoma;
+    
+    [SVProgressHUD showSuccessWithStatus:@"复制成功"];
+    [SVProgressHUD dismissWithDelay:1];
+
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap{
@@ -1241,8 +1459,8 @@
 
                 vc.combine_words = dict[@"combine_words"];
                 vc.similar_words = dict[@"similar_words"];
-    //            vc.word_image = dict[@"word_image"];
-    //            vc.word_video = dict[@"word_video"];
+                vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
+                vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
 
 
                 vc.callBack = ^(NSInteger xuanzhongIndex) {

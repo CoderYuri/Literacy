@@ -7,11 +7,13 @@
 
 #import "AppDelegate.h"
 #import <IQKeyboardManager/IQKeyboardManager.h>
-#import "MainViewController.h"
+//#import "MainViewController.h"
+#import "WelcomeViewController.h"
 #import "FuxiViewController.h"
 
-@interface AppDelegate ()
-
+@interface AppDelegate (){
+    WelcomeViewController *welcomeVc;
+}
 @end
 
 @implementation AppDelegate
@@ -22,16 +24,16 @@
     
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    
     if([YUserDefaults objectForKey:kuserid]){
-        [NSThread sleepForTimeInterval:2.0];
-       [self gotoMainVC];
+        [self gotoMainVC];
     }
     else{
-        [NSThread sleepForTimeInterval:8];
-        [self netWorkChangeEvent];
+        [self getuserID];
     }
+  
+//    [self gotoWelcome];
     
     //iOS 11 适配
     if (@available(iOS 11.0,*)) {
@@ -63,48 +65,7 @@
     return YES;
 }
 
-
--(void)netWorkChangeEvent
-{
-    
-    NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
-    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:url];
-    self.netWorkStatesCode =AFNetworkReachabilityStatusUnknown;
-    [manager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        self.netWorkStatesCode = status;
-        switch (status) {
-            case AFNetworkReachabilityStatusReachableViaWWAN:
-                NSLog(@"当前使用的是流量模式");
-                [self getuserID];
-                break;
-            case AFNetworkReachabilityStatusReachableViaWiFi:
-                NSLog(@"当前使用的是wifi模式");
-                [self getuserID];
-
-                break;
-            case AFNetworkReachabilityStatusNotReachable:
-                NSLog(@"断网了");
-                break;
-            case AFNetworkReachabilityStatusUnknown:
-                NSLog(@"变成了未知网络状态");
-                break;
-                
-            default:
-                break;
-        }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"netWorkChangeEventNotification" object:@(status)];
-    }];
-    [manager.reachabilityManager startMonitoring];
-}
-
-#pragma mark - 释放应用
--(void)dealloc{
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"netWorkChangeEventNotification" object:nil];
-}
-
-
 - (void)getuserID{
-                
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     
@@ -120,7 +81,10 @@
             
             NSDictionary *d = dic[@"data"];
             [YUserDefaults setObject:d[@"user_id"] forKey:kuserid];
+            
             [self gotoMainVC];
+            
+
         }
         
         YLog(@"%@",dic);
@@ -131,38 +95,28 @@
         
 }
 
-- (void)gotoMainVC{
-    //界面布局
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-//    FuxiViewController *mainVc = [[FuxiViewController alloc] init];
-    MainViewController *mainVc = [[MainViewController alloc] init];
-    YLNavgationController *navC = [[YLNavgationController alloc] initWithRootViewController:mainVc];
 
-    [self.window setRootViewController:navC];
+- (void)gotoMainVC{
+//    UIViewController *weakRoot = [UIApplication sharedApplication].delegate.window.rootViewController;
     
+    //释放rootVc中的资源，否则可能出现内存泄露
+//    for (UIView *subView in welcomeVc.view.subviews)
+//        [subView removeFromSuperview];
+//    welcomeVc = nil;
+    
+    //界面布局
+    MainViewController *mainVc = [[MainViewController alloc] init];
+    [self.window setRootViewController:mainVc];
+    [self.window makeKeyAndVisible];
+
+
+}
+
+- (void)gotoWelcome{
+    welcomeVc = [[WelcomeViewController alloc] init];
+    [self.window setRootViewController:welcomeVc];
     [self.window makeKeyAndVisible];
 }
-
-
--(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    //只支持横屏
-    if(UIInterfaceOrientationIsLandscape(interfaceOrientation))
-    {
-        return YES;
-    }
-    /*else//只支持竖屏
-     if(UIInterfaceOrientationIsPortrait(interfaceOrientation))
-     {
-     return YES;
-    
-     }
-     */
-    return NO;
-}
-
-
 
 
 @end

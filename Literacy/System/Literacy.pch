@@ -63,13 +63,16 @@
 
 #define SoftwareVersion  [[[NSBundle mainBundle] infoDictionary]objectForKey:@"CFBundleShortVersionString"]
 
-#define kusername   @"kuser_name"
-#define kuserid     @"kuser_id"
-#define ktoken      @"ktoken"
-#define kis_member  @"kismember"
+#define kusername         @"kuser_name"
+#define kuserid           @"kuser_id"
+#define ktoken            @"ktoken"
+#define kis_member        @"kismember"
 #define kfree_words_num   @"kfree_words_num"
 #define khas_learn_num    @"khas_learn_num"
-#define kziKu       @"kziku"
+#define kziKu             @"kziku"
+#define kexpiretime       @"kexpiretime"
+
+
 #define weixinappid @"wx02362430224788af"
 #define appstoreId  @"1523616454"
 #define kxieyi      @"kxieyi"

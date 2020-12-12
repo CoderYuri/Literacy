@@ -27,6 +27,7 @@ platform :ios, '9.0'
   # 支付SDK
   #pod 'AlipaySDK-iOS'
   #pod 'WechatOpenSDK'
+#  pod 'ZFPlayer', '~> 4.0'
 
   #相册
   pod 'TZImagePickerController'

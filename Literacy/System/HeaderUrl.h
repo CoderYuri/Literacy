@@ -28,5 +28,9 @@
 //完成学习
 #define _URL_Success [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/word/achieve"]
 
+//修改昵称
+#define _URL_nickname [NSString stringWithFormat:@"%@%@",BaseUrl,@"indivi/nickname"]
+
+
 
 #endif /* HeaderUrl_h */

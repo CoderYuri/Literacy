@@ -33,6 +33,9 @@
     
     NSInteger selectIndex;
     BOOL ifNoanimation;
+    
+    //gif加载
+    UIView *LoadingBackV;
 }
 
 @end
@@ -49,14 +52,18 @@
     }
     else{
         
+        [self loading];
+        
         //网络请求数据
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
         YLog(@"%@",[NSString getBaseUrl:_URL_words withparam:param])
-                
+        
         [YLHttpTool GET:_URL_words parameters:param progress:^(NSProgress *progress) {
             
         } success:^(id dic) {
+            
+            [self removeLoading];
 
             if([dic[@"code"] integerValue] == 200){
                 
@@ -75,6 +82,7 @@
             
             YLog(@"%@",dic);
         } failure:^(NSError *error) {
+            [self removeLoading];
             //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         }];
 
@@ -91,9 +99,12 @@
         self->nameL.text = [YUserDefaults objectForKey:kusername];
         if([YUserDefaults boolForKey:kis_member]){
             self->vipImg.image = [UIImage imageNamed:@"vip"];
-            self->vipL.text = @"有效期至2021.11.30";
+            self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
             vipL.alpha = 1;
             self->vipL.textColor = [JKUtil getColor:@"FF6112"];
+            
+            //把所有的锁  去掉
+
 
         }
         else{
@@ -108,25 +119,78 @@
 }
 
 
+- (void)dealloc
+{
+    // 移除监听器
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)plusClick:(NSNotification *)note{
+
+    //对数据列表进行刷新
+    YLogFunc
+    
+    for (int i = 0; i < [YUserDefaults integerForKey:khas_learn_num]; i++) {
+        
+        for (UIView *v in scrollV.subviews) {
+            if (v.tag == i + 10000)
+            {
+                UIImageView *img = v.subviews.firstObject;
+                img.image = [UIImage imageNamed:@"lighton"];
+
+                UIButton *b = v.subviews[1];
+                [b setTitleColor:WhiteColor forState:UIControlStateNormal];
+            }
+        }
+
+    }
+    
+    NSInteger hasLearnCount = [YUserDefaults integerForKey:khas_learn_num];
+    YLog(@"%ld",hasLearnCount)
+    
+    
+    //学了0-1个字的时候  都是在初始0的位置
+    if(hasLearnCount){
+        hasLearnCount -= 1;
+    }
+    
+    selectIndex = hasLearnCount;
+    
+    scrollV.contentOffset = CGPointMake(256 * YScaleHeight * hasLearnCount, 0);
+    gifCenterX = 363 * YScaleHeight + 256 * YScaleHeight * hasLearnCount;
+    
+    [UIView animateWithDuration:Transformtimeinterval animations:^{
+        self->gifView.centerX = 363 * YScaleHeight;
+    } completion:^(BOOL finished) {
+    }];
+
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
+    [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
+
     dataArr = [NSMutableArray array];
+
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+   [center addObserver:self selector:@selector(plusClick:) name:@"refresh" object:nil];
+
 
     [self fetch];
     
-    NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
-    [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
 }
 
 
 - (void)setupView{
     backV = self.view;
-    
 
     scrollV = [[UIScrollView alloc] init];
     scrollV.showsVerticalScrollIndicator = NO;
     scrollV.showsHorizontalScrollIndicator = NO;
+    scrollV.backgroundColor = RedColor;
     scrollV.delegate = self;
     double zongchangdu = 256 * YScaleHeight * dataArr.count + 640 * YScaleHeight;
     scrollV.contentSize = CGSizeMake(zongchangdu , YScreenH);
@@ -156,6 +220,8 @@
         
     }
     
+    BOOL ifmemeber = [YUserDefaults boolForKey:kis_member];
+    NSInteger mianfeiCounts = [YUserDefaults integerForKey:kfree_words_num];
     
     for (int i = 0 ; i < dataArr.count; i++) {
         UIView *v = [UIView new];
@@ -198,7 +264,17 @@
             [btn setTitleColor:BlackColor forState:UIControlStateNormal];
         }
 
+        
+        //锁的页面
+        if(!ifmemeber){
+            if(i > (mianfeiCounts - 1)){
+                UIImageView *lockImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"lock"]];
+                [v addSubview:lockImg];
+                lockImg.sd_layout.centerXEqualToView(v).topSpaceToView(v, 171 * YScaleHeight).widthIs(112 * YScaleHeight).heightEqualToWidth();
+            }
+        }
 
+        
         
 //        UILabel *ziL = [UILabel new];
 //        ziL.text = mod.title;
@@ -245,15 +321,22 @@
     [scrollV addSubview:collectionView];
     */
     
-    NSInteger hasLearnCount = [YUserDefaults integerForKey:khas_learn_num] - 1;
+    NSInteger hasLearnCount = [YUserDefaults integerForKey:khas_learn_num];
     YLog(@"%ld",hasLearnCount)
-    scrollV.contentOffset = CGPointMake(256 * YScaleHeight * hasLearnCount, 0);
     
-    selectIndex = -1;
+    
+    //学了0-1个字的时候  都是在初始0的位置
+    if(hasLearnCount){
+        hasLearnCount -= 1;
+    }
+    
+    selectIndex = hasLearnCount;
+    
+    scrollV.contentOffset = CGPointMake(256 * YScaleHeight * hasLearnCount, 0);
     gifCenterX = 363 * YScaleHeight + 256 * YScaleHeight * hasLearnCount;   //初始位置
 //    gifView = [[UIImageView alloc] init];
-    NSString *filePath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"shaonv" ofType:@"gif"];
-    NSData *imageData = [NSData dataWithContentsOfFile:filePath];
+//    NSString *filePath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"shaonv" ofType:@"gif"];
+//    NSData *imageData = [NSData dataWithContentsOfFile:filePath];
 //    gifView.image = [UIImage sd_imageWithGIFData:imageData];
     
 //    gifView = [[YFGIFImageView alloc] init];
@@ -280,11 +363,11 @@
     
     [self setshangV];  //YScaleWidth
     
-    [UIView animateWithDuration:Transformtimeinterval
-                     animations:^{
+    [UIView animateWithDuration:Transformtimeinterval animations:^{
         self->gifView.centerX = 363 * YScaleHeight;
+    } completion:^(BOOL finished) {
     }];
-    
+        
 }
 
 
@@ -345,11 +428,40 @@
     
 }
 
+- (void)loading{
+    LoadingBackV = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    LoadingBackV.backgroundColor =  [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    UIWindow *keywindow = [[UIApplication sharedApplication] keyWindow];
+    [keywindow addSubview:LoadingBackV];
+
+    NSString *filepath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"loading"ofType:@"gif"];
+    NSData *imagedata = [NSData dataWithContentsOfFile:filepath];
+    UIImageView *loadImg = [[UIImageView alloc] init];
+    loadImg.image= [UIImage sd_imageWithGIFData:imagedata];
+    [LoadingBackV addSubview:loadImg];
+    loadImg.sd_layout.centerYEqualToView(LoadingBackV).centerXEqualToView(LoadingBackV).widthIs(330 * YScaleHeight).heightIs(140 * YScaleHeight);
+
+}
+
+- (void)removeLoading{
+    [LoadingBackV removeFromSuperview];
+    LoadingBackV = nil;
+}
+
 #pragma mark - click
 - (void)caozuoClick:(UIButton *)b{
     NSInteger ziIndex = b.superview.tag - 10000;
     YLog(@"%ld",ziIndex)
     
+    //不是会员
+    if(![YUserDefaults boolForKey:kis_member]){
+        //未学习的字
+        if(ziIndex > ([YUserDefaults integerForKey:kfree_words_num] - 1)){
+            
+            [self tapAction];
+            return;
+        }
+    }
     
     AllModel *selectedMod = dataArr[ziIndex];
 
@@ -365,6 +477,10 @@
     [YLHttpTool POST:_URL_fun parameters:param progress:^(NSProgress *progress) {
         
     } success:^(id dic) {
+        
+//        [LoadingBackV removeFromSuperview];
+//        LoadingBackV = nil;
+
 
         if([dic[@"code"] integerValue] == 200){
             
@@ -406,6 +522,7 @@
                     
                     CGFloat huadongjuli = self->gifCenterX - self->scrollV.contentOffset.x;
                 
+                    scrollV.scrollEnabled = NO;
         //            * fabs(huadongjuli - gifView.centerX )/ 1080
                     [UIView animateWithDuration:Transformtimeinterval animations:^{
                         
@@ -413,6 +530,7 @@
                         
                     } completion:^(BOOL finished) {
                         
+                        scrollV.scrollEnabled = YES;
                         selectIndex = ziIndex;
                         [gifView stopAnimating];
 
@@ -424,8 +542,8 @@
                         
                         vc.combine_words = dict[@"combine_words"];
                         vc.similar_words = dict[@"similar_words"];
-            //            vc.word_image = dict[@"word_image"];
-            //            vc.word_video = dict[@"word_video"];
+                        vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
+                        vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
 
                         
                         vc.callBack = ^(NSInteger xuanzhongIndex) {
@@ -438,7 +556,7 @@
                         }];
 
                     }];
-                    
+
 
                     
 
@@ -466,6 +584,10 @@
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        
+//        [LoadingBackV removeFromSuperview];
+//        LoadingBackV = nil;
+
     }];
 
  
@@ -481,7 +603,7 @@
             UIImageView *img = v.subviews.firstObject;
             img.image = [UIImage imageNamed:@"lighton"];
 
-            UIButton *b = v.subviews.lastObject;
+            UIButton *b = v.subviews[1];
             [b setTitleColor:WhiteColor forState:UIControlStateNormal];
 
         }
@@ -543,8 +665,6 @@
         
         
     }
-        
-    
     
     
     YLog(@"%f",scrollView.contentOffset.x)

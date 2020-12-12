@@ -175,8 +175,8 @@
 
                 vc.combine_words = dict[@"combine_words"];
                 vc.similar_words = dict[@"similar_words"];
-    //            vc.word_image = dict[@"word_image"];
-    //            vc.word_video = dict[@"word_video"];
+                vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
+                vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
 
 
                 vc.callBack = ^(NSInteger xuanzhongIndex) {
