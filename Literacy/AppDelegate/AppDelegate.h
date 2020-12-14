@@ -12,6 +12,12 @@
 @property (strong, nonatomic) UIWindow *window;
 
 - (void)gotoMainVC;
-- (void)gotoWelcome;
+//- (void)gotoWelcome;
+
+/*
+ 当前的网络状态
+ */
+@property(nonatomic,assign)int netWorkStatesCode;
+
 @end
 

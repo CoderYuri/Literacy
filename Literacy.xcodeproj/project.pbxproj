@@ -13,6 +13,16 @@
 		DA1A75F92575D7B000B047FC /* FuxiPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A75F82575D7B000B047FC /* FuxiPlayViewController.m */; };
 		DA1C63AC2566690D00E23AE8 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1C63A92566690D00E23AE8 /* BaseViewController.m */; };
 		DA1C63AD2566690D00E23AE8 /* YLNavgationController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1C63AA2566690D00E23AE8 /* YLNavgationController.m */; };
+		DA41A3D825876812001C2C51 /* 组成词语.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */; };
+		DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */; };
+		DA41A3DA25876812001C2C51 /* 认.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D025876810001C2C51 /* 认.mp3 */; };
+		DA41A3DB25876812001C2C51 /* 跟我读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D125876810001C2C51 /* 跟我读.mp3 */; };
+		DA41A3DC25876812001C2C51 /* 按顺序学习.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D225876810001C2C51 /* 按顺序学习.mp3 */; };
+		DA41A3DD25876812001C2C51 /* 开始今天的学习吧2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D325876811001C2C51 /* 开始今天的学习吧2.mp3 */; };
+		DA41A3DE25876812001C2C51 /* 玩.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D425876811001C2C51 /* 玩.mp3 */; };
+		DA41A3DF25876812001C2C51 /* 读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D525876812001C2C51 /* 读.mp3 */; };
+		DA41A3E025876812001C2C51 /* 再读一遍.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D625876812001C2C51 /* 再读一遍.mp3 */; };
+		DA41A3E125876812001C2C51 /* 解锁更多汉字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D725876812001C2C51 /* 解锁更多汉字.mp3 */; };
 		DA4274D2255E7B9400610D12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA4274C6255E7B9300610D12 /* Assets.xcassets */; };
 		DA4274D3255E7B9400610D12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA4274C8255E7B9300610D12 /* LaunchScreen.storyboard */; };
 		DA4274D4255E7B9400610D12 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4274CB255E7B9300610D12 /* main.m */; };
@@ -22,7 +32,6 @@
 		DA712C0E25709FB5000DB9BD /* huatong.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C0D25709FB4000DB9BD /* huatong.gif */; };
 		DA712C1125709FBC000DB9BD /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C1025709FBC000DB9BD /* loading.gif */; };
 		DA8184352574837500190F38 /* FuxiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8184342574837500190F38 /* FuxiViewController.m */; };
-		DA8DA0122584BD4F00A761B5 /* 1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA8DA0112584BD4F00A761B5 /* 1.mp3 */; };
 		DA9132C82583593700D1E8F9 /* welcome.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = DA9132C72583593700D1E8F9 /* welcome.mp4 */; };
 		DA9132CC25835A7400D1E8F9 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9132CB25835A7400D1E8F9 /* WelcomeViewController.m */; };
 		DA9E2B6C257F496300CE95FA /* yinsixieyi in Resources */ = {isa = PBXBuildFile; fileRef = DA9E2B6B257F496300CE95FA /* yinsixieyi */; };
@@ -128,6 +137,16 @@
 		DA1C63A92566690D00E23AE8 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		DA1C63AA2566690D00E23AE8 /* YLNavgationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLNavgationController.m; sourceTree = "<group>"; };
 		DA1C63AB2566690D00E23AE8 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "组成词语.mp3"; sourceTree = "<group>"; };
+		DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "你太棒了.mp3"; sourceTree = "<group>"; };
+		DA41A3D025876810001C2C51 /* 认.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "认.mp3"; sourceTree = "<group>"; };
+		DA41A3D125876810001C2C51 /* 跟我读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "跟我读.mp3"; sourceTree = "<group>"; };
+		DA41A3D225876810001C2C51 /* 按顺序学习.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "按顺序学习.mp3"; sourceTree = "<group>"; };
+		DA41A3D325876811001C2C51 /* 开始今天的学习吧2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "开始今天的学习吧2.mp3"; sourceTree = "<group>"; };
+		DA41A3D425876811001C2C51 /* 玩.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "玩.mp3"; sourceTree = "<group>"; };
+		DA41A3D525876812001C2C51 /* 读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "读.mp3"; sourceTree = "<group>"; };
+		DA41A3D625876812001C2C51 /* 再读一遍.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "再读一遍.mp3"; sourceTree = "<group>"; };
+		DA41A3D725876812001C2C51 /* 解锁更多汉字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "解锁更多汉字.mp3"; sourceTree = "<group>"; };
 		DA4274A6255E576100610D12 /* Literacy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Literacy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA4274C6255E7B9300610D12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DA4274C9255E7B9300610D12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -143,7 +162,6 @@
 		DA712C1025709FBC000DB9BD /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
 		DA8184332574837500190F38 /* FuxiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FuxiViewController.h; sourceTree = "<group>"; };
 		DA8184342574837500190F38 /* FuxiViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuxiViewController.m; sourceTree = "<group>"; };
-		DA8DA0112584BD4F00A761B5 /* 1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 1.mp3; sourceTree = "<group>"; };
 		DA9132C72583593700D1E8F9 /* welcome.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = welcome.mp4; sourceTree = "<group>"; };
 		DA9132CA25835A7400D1E8F9 /* WelcomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
 		DA9132CB25835A7400D1E8F9 /* WelcomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
@@ -821,12 +839,21 @@
 		DAF5E5122563B41400003A85 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				DA41A3D225876810001C2C51 /* 按顺序学习.mp3 */,
+				DA41A3D525876812001C2C51 /* 读.mp3 */,
+				DA41A3D125876810001C2C51 /* 跟我读.mp3 */,
+				DA41A3D725876812001C2C51 /* 解锁更多汉字.mp3 */,
+				DA41A3D325876811001C2C51 /* 开始今天的学习吧2.mp3 */,
+				DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */,
+				DA41A3D025876810001C2C51 /* 认.mp3 */,
+				DA41A3D425876811001C2C51 /* 玩.mp3 */,
+				DA41A3D625876812001C2C51 /* 再读一遍.mp3 */,
+				DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */,
 				DA9132C72583593700D1E8F9 /* welcome.mp4 */,
 				DA712C1025709FBC000DB9BD /* loading.gif */,
 				DA712C0D25709FB4000DB9BD /* huatong.gif */,
 				DA9FD818256790C50048D870 /* shaonv.gif */,
 				DA9FD80525676BD40048D870 /* kaiti.ttf */,
-				DA8DA0112584BD4F00A761B5 /* 1.mp3 */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -890,18 +917,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA4274D2255E7B9400610D12 /* Assets.xcassets in Resources */,
+				DA41A3E025876812001C2C51 /* 再读一遍.mp3 in Resources */,
 				DA712C0E25709FB5000DB9BD /* huatong.gif in Resources */,
-				DA8DA0122584BD4F00A761B5 /* 1.mp3 in Resources */,
 				DA4274D3255E7B9400610D12 /* LaunchScreen.storyboard in Resources */,
 				DA9FD80625676BD40048D870 /* kaiti.ttf in Resources */,
+				DA41A3E125876812001C2C51 /* 解锁更多汉字.mp3 in Resources */,
 				DAF5E501256366D700003A85 /* UMCommonLog.bundle in Resources */,
 				DA9132C82583593700D1E8F9 /* welcome.mp4 in Resources */,
+				DA41A3DF25876812001C2C51 /* 读.mp3 in Resources */,
 				DA9FD819256790C60048D870 /* shaonv.gif in Resources */,
+				DA41A3DA25876812001C2C51 /* 认.mp3 in Resources */,
 				DAF5E50C256366D700003A85 /* UMSocialSDKResources.bundle in Resources */,
 				DAF5E50A256366D700003A85 /* leqidata_black_list.plist in Resources */,
 				DA9E2B6F257F4AB900CE95FA /* yonghuxieyi in Resources */,
+				DA41A3DC25876812001C2C51 /* 按顺序学习.mp3 in Resources */,
+				DA41A3DE25876812001C2C51 /* 玩.mp3 in Resources */,
+				DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */,
+				DA41A3DB25876812001C2C51 /* 跟我读.mp3 in Resources */,
+				DA41A3D825876812001C2C51 /* 组成词语.mp3 in Resources */,
 				DAF363CB2582399D00BD8C16 /* ZFPlayer.bundle in Resources */,
 				DA9E2B6C257F496300CE95FA /* yinsixieyi in Resources */,
+				DA41A3DD25876812001C2C51 /* 开始今天的学习吧2.mp3 in Resources */,
 				DA712C1125709FBC000DB9BD /* loading.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

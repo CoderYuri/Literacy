@@ -31,6 +31,8 @@
 
     UIView *renV;
     UIView *dianshiV;
+    UILabel *leftCiL;
+    UILabel *rightCiL;
     
     UIView *duV;
     UIView *cikaV;
@@ -189,8 +191,16 @@
     
     
     //初始进入页面  开始认  动画
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
+
+//    });
+
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
     [UIView animateWithDuration:Transformtimeinterval animations:^{
         self->gifView.centerX = 250 * YScaleWidth;
 
@@ -203,18 +213,19 @@
         
     }];
 
-    });
-
+    
 }
+
 
 - (ZFPlayerControlView *)controlView {
     if (!_controlView) {
         _controlView = [ZFPlayerControlView new];
         _controlView.fastViewAnimated = YES;
         _controlView.autoHiddenTimeInterval = 0;
-        _controlView.autoFadeTimeInterval = 2;
+        _controlView.autoFadeTimeInterval = 0.1;
         _controlView.prepareShowLoading = YES;
         _controlView.prepareShowControlView = NO;
+//        _controlView.customDisablePanMovingDirection = YES;
     }
     return _controlView;
 }
@@ -247,11 +258,15 @@
     self.player.pauseWhenAppResignActive = NO;
     [self.controlView showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModeAutomatic];
     
+//    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+//    [center addObserver:self
+//               selector:@selector(applicationDidEnterBackground:)
+//                   name:UIApplicationDidEnterBackgroundNotification
+//                 object:nil];
+    
 }
 
 - (void)dianshiVjiazai{
-    
-    
     /*
     //步骤1：获取视频路径
     //本地视频路径
@@ -293,7 +308,7 @@
                 dianshiV = nil;
 
                 self->renCoverImg.hidden = YES;
-
+                
             } completion:^(BOOL finished) {
                 self.player = nil;
                 self.controlView = nil;
@@ -304,34 +319,56 @@
             }];
 
         };
+        
+        self.player.playerPlayTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
 
+            
+            NSString *currentT = [NSString stringWithFormat:@"%.0f",currentTime];
+            if([currentT integerValue] == 23){
+                
+                YLogFunc
+                CATransition *anim = [CATransition animation];
+                anim.type = @"fade";
+                //        anim.subtype = kCATransitionFromRight;
+                anim.duration = 1;
+                [leftCiL.layer addAnimation:anim forKey:nil];
+            
+                leftCiL.hidden = NO;
+            
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+                    //延迟0.5s  开始消失
+                    [rightCiL.layer addAnimation:anim forKey:nil];
+                    rightCiL.hidden = NO;
+            
+            
+                });
+
+            }
+
+
+
+        };
+        
         
     }
     
-    
-//    ZFAVPlayerManager *manager = (ZFAVPlayerManager *)self.player.currentPlayerManager;
-//    AVPictureInPictureController *vc = [[AVPictureInPictureController alloc] initWithPlayerLayer:manager.avPlayerLayer];
-//    self.vc = vc;
-//
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.vc startPictureInPicture];
-//    });
 
 
     
     
-    UILabel *leftL = [self setZiLabel];
-    leftL.text = self.combine_words.firstObject;
-    [dianshiV addSubview:leftL];
-    leftL.sd_layout.leftSpaceToView(dianshiV, 81 * YScaleHeight).bottomSpaceToView(dianshiV, 145 * YScaleHeight).widthIs(345 * YScaleHeight).heightIs(126 * YScaleHeight);
+    leftCiL = [self setZiLabel];
+    leftCiL.text = self.combine_words.firstObject;
+    [dianshiV addSubview:leftCiL];
+    leftCiL.sd_layout.leftSpaceToView(dianshiV, 81 * YScaleHeight).bottomSpaceToView(dianshiV, 145 * YScaleHeight).widthIs(345 * YScaleHeight).heightIs(126 * YScaleHeight);
     
-    UILabel *rightL = [self setZiLabel];
-    rightL.text = self.combine_words.lastObject;
-    [dianshiV addSubview:rightL];
-    rightL.sd_layout.rightSpaceToView(dianshiV, 81 * YScaleHeight).bottomSpaceToView(dianshiV, 145 * YScaleHeight).widthIs(345 * YScaleHeight).heightIs(126 * YScaleHeight);
+    rightCiL = [self setZiLabel];
+    rightCiL.text = self.combine_words.lastObject;
+    [dianshiV addSubview:rightCiL];
+    rightCiL.sd_layout.rightSpaceToView(dianshiV, 81 * YScaleHeight).bottomSpaceToView(dianshiV, 145 * YScaleHeight).widthIs(345 * YScaleHeight).heightIs(126 * YScaleHeight);
     
-    leftL.hidden = YES;
-    rightL.hidden = YES;
+    leftCiL.hidden = YES;
+    rightCiL.hidden = YES;
 
 
     // 设定为缩放
@@ -359,36 +396,27 @@
     self->renCoverImg.hidden = NO;
 
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [avPlayer play];
-//    });
-    
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(22 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        CATransition *anim = [CATransition animation];
-        anim.type = @"fade";
-        //        anim.subtype = kCATransitionFromRight;
-        anim.duration = 1;
-        [leftL.layer addAnimation:anim forKey:nil];
 
-        leftL.hidden = NO;
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-
-            //延迟0.5s  开始消失
-            [rightL.layer addAnimation:anim forKey:nil];
-            rightL.hidden = NO;
-
-                    
-        });
-
-        
-    });
     
 }
 
 //通知事件
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+//    [self.player enterFullScreen:YES animated:YES];
+    
+//    ZFAVPlayerManager *manager = (ZFAVPlayerManager *)self.player.currentPlayerManager;
+//    AVPictureInPictureController *vc = [[AVPictureInPictureController alloc] initWithPlayerLayer:manager.avPlayerLayer];
+//    self.vc = vc;
+//
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self.vc startPictureInPicture];
+//    });
+
+    
+    YLogFunc
+    
+}
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -492,45 +520,59 @@
     });
     
     
-    //播放录音
-    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"1" ofType:@"mp3"];
+//    播放录音
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"跟我读" ofType:@"mp3"];
     NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
-
-    songItem  = [[AVPlayerItem alloc]initWithURL:localVideoUrl];
-    avPlayer = [[AVPlayer alloc]initWithPlayerItem:songItem];
-    [avPlayer play];
+    
+//    NSString *webVideoPath = self.word_video;
+//    NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+    
+    [self bofangwithUrl:localVideoUrl];
     
     YLog(@"%ld",[self durationWithVideo:localVideoUrl]);
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:songItem];
-
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:self selector:@selector(playbackFinished:) name:AVPlayerItemDidPlayToEndTimeNotification  object:songItem];
 
 
     //加载话筒  上升
-    [UIView animateWithDuration:[self durationWithVideo:localVideoUrl] animations:^{
-
-    } completion:^(BOOL finished) {
-        
-                        
-        [UIView animateWithDuration:1 animations:^{
-            [self->cikaV removeFromSuperview];
-            cikaV = nil;
-
-            self->renCoverImg.hidden = YES;
-            
-
-        } completion:^(BOOL finished) {
-            [gifView startAnimating];
-            [self wancaozuo];
-
-        }];
-
-        
-    }];
+//    [UIView animateWithDuration:[self durationWithVideo:localVideoUrl] animations:^{
+//        YLogFunc
+//
+//    } completion:^(BOOL finished) {
+//
+//
+//        [UIView animateWithDuration:1 animations:^{
+//            [self->cikaV removeFromSuperview];
+//            cikaV = nil;
+//
+//            self->renCoverImg.hidden = YES;
+//
+//
+//        } completion:^(BOOL finished) {
+//            [gifView startAnimating];
+//            [self wancaozuo];
+//
+//        }];
+//
+//
+//    }];
         
     
 
 }
+
+- (void)bofangwithUrl:(NSURL *)url{
+    if(avPlayer){
+        [avPlayer pause];
+        avPlayer = nil;
+    }
+    
+    songItem  = [[AVPlayerItem alloc]initWithURL:url];
+    avPlayer = [[AVPlayer alloc]initWithPlayerItem:songItem];
+    [avPlayer play];
+}
+
 
 - (void)playbackFinished:(NSNotification *)notice {
     YLogFunc
@@ -543,7 +585,22 @@
 
         [UIView animateWithDuration:3 animations:^{
         } completion:^(BOOL finished) {
-            [huatongImg stopAnimating];
+                    [huatongImg stopAnimating];
+            
+                    
+                    [UIView animateWithDuration:1 animations:^{
+                        [self->cikaV removeFromSuperview];
+                        cikaV = nil;
+            
+                        self->renCoverImg.hidden = YES;
+            
+            
+                    } completion:^(BOOL finished) {
+                        [gifView startAnimating];
+                        [self wancaozuo];
+            
+                    }];
+
         }];
         
     }];
@@ -962,14 +1019,13 @@
             //一段成功的音乐
             
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                
+            [UIView animateWithDuration:1 animations:^{
                 [gifView startAnimating];
+
+            } completion:^(BOOL finished) {
                 //缓缓进入  成功页
                 [self successCaozuo];
-
-            });
-            
+            }];
         }];
     }
     
@@ -1042,6 +1098,10 @@
 #pragma mark - click
 - (void)back{
     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if(self.player){
+        self.player = nil;
+    }
 }
 
 

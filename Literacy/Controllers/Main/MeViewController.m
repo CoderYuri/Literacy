@@ -94,7 +94,6 @@
 
     
     [self setupView];
-//    [self setupDengluV];
 }
 
 - (void)setupDengluV{
@@ -252,7 +251,7 @@
     
     UIButton *userBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftV addSubview:userBtn];
-    [userBtn addTarget:self action:@selector(setupDengluV) forControlEvents:UIControlEventTouchUpInside];
+    [userBtn addTarget:self action:@selector(touxiangClick) forControlEvents:UIControlEventTouchUpInside];
     userBtn.sd_layout.leftSpaceToView(leftV, 11 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight).widthIs(50 * YScaleWidth).heightEqualToWidth();
     
     vipImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notvip"]];
@@ -1068,23 +1067,26 @@
     
 }
 
+- (void)touxiangClick{
+    //已登录
+    if(![YUserDefaults objectForKey:kusername]){
+        [self setupDengluV];
+    }
+}
+
 //换名字点击
 - (void)changeClick{
-    
     //已登录
     if([YUserDefaults objectForKey:kusername]){
         
         //已会员 才能修改昵称
         nameTextF.enabled = YES;
         [nameTextF becomeFirstResponder];
-
     }
     
     else{
         [self setupDengluV];
     }
-
-    
 }
 
 //支付点击
@@ -1109,14 +1111,6 @@
     }
     
 }
-
-//- (void)denlguchuxian{
-//    blackV.hidden = NO;
-//    closeBtn.hidden = NO;
-//    dengluV.hidden = NO;
-    
-//    [self setupDengluV];
-//}
 
 - (void)closeClick{
 //    blackV.hidden = YES;

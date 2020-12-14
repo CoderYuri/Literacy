@@ -11,9 +11,7 @@
 #import "WelcomeViewController.h"
 #import "FuxiViewController.h"
 
-@interface AppDelegate (){
-    WelcomeViewController *welcomeVc;
-}
+@interface AppDelegate ()
 @end
 
 @implementation AppDelegate
@@ -23,18 +21,17 @@
     // Override point for customization after application launch.
     
     
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     if([YUserDefaults objectForKey:kuserid]){
         [self gotoMainVC];
     }
     else{
-        [self getuserID];
+        [self netWorkChangeEvent];
     }
   
-//    [self gotoWelcome];
     
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+
     //iOS 11 适配
     if (@available(iOS 11.0,*)) {
         UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -63,6 +60,38 @@
     
     
     return YES;
+}
+
+-(void)netWorkChangeEvent
+{
+    NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:url];
+    self.netWorkStatesCode =AFNetworkReachabilityStatusUnknown;
+    [manager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        self.netWorkStatesCode = status;
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                NSLog(@"当前使用的是流量模式");
+                [self getuserID];
+                break;
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                NSLog(@"当前使用的是wifi模式");
+                [self getuserID];
+
+                break;
+            case AFNetworkReachabilityStatusNotReachable:
+                NSLog(@"断网了");
+                break;
+            case AFNetworkReachabilityStatusUnknown:
+                NSLog(@"变成了未知网络状态");
+                break;
+                
+            default:
+                break;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"netWorkChangeEventNotification" object:@(status)];
+    }];
+    [manager.reachabilityManager startMonitoring];
 }
 
 - (void)getuserID{
@@ -99,24 +128,27 @@
 - (void)gotoMainVC{
 //    UIViewController *weakRoot = [UIApplication sharedApplication].delegate.window.rootViewController;
     
-    //释放rootVc中的资源，否则可能出现内存泄露
-//    for (UIView *subView in welcomeVc.view.subviews)
-//        [subView removeFromSuperview];
-//    welcomeVc = nil;
-    
     //界面布局
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
     MainViewController *mainVc = [[MainViewController alloc] init];
     [self.window setRootViewController:mainVc];
     [self.window makeKeyAndVisible];
 
-
+//    for (UIView *subView in weakRoot.view.subviews)
+//        [subView removeFromSuperview];
+//    [weakRoot removeFromParentViewController];
+//    weakRoot = nil;
 }
 
-- (void)gotoWelcome{
-    welcomeVc = [[WelcomeViewController alloc] init];
-    [self.window setRootViewController:welcomeVc];
-    [self.window makeKeyAndVisible];
-}
+//- (void)gotoWelcome{
+//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//
+//    welcomeVc = [[WelcomeViewController alloc] init];
+//    [self.window setRootViewController:welcomeVc];
+//    [self.window makeKeyAndVisible];
+//    
+//}
 
 
 @end
