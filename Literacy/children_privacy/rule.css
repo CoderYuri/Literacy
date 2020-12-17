@@ -1,0 +1,69 @@
+html {
+	background: #f1f1f1;
+	margin: 0 5px;
+}
+
+body {
+	background: #fff;
+	color: #444;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	margin: 140px auto 25px;
+	padding: 5px 30px 10px 30px;
+	max-width: 800px;
+	-webkit-font-smoothing: subpixel-antialiased;
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.13);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.13);
+}
+
+h1 {
+	border-bottom: 1px solid #ddd;
+	clear: both;
+	color: #2e2e2e;
+    font-weight: 900;
+	font-size: 40px;
+	padding: 0;
+	padding-bottom: 7px;
+}
+
+p.fin{
+	line-height: 1;
+	font-size: 30px;
+	padding-bottom: 0;
+}
+p, li {
+	padding-bottom: 12px;
+	font-size: 36px;
+	line-height: 1.8;
+    text-align: justify;
+}
+
+ul, ol {
+	padding: 5px 30px 5px 30px;
+}
+
+#logo {
+	margin: 6px 0 14px 0;
+	padding: 0 0 7px 0;
+	border-bottom: none;
+	text-align:center
+}
+#logo a {
+	background-image: url(logo.jpg);
+	background-image: none, url(logo.jpg);
+	-webkit-background-size: 84px;
+	background-size: 84px;
+	background-position: center top;
+	background-repeat: no-repeat;
+	height: 84px;
+	font-size: 26px;
+	font-weight: 400;
+	line-height: 1.3em;
+	margin: -130px auto 25px;
+	padding: 0;
+	text-decoration: none;
+	width: 84px;
+	text-indent: -9999px;
+	outline: none;
+	overflow: hidden;
+	display: block;
+}

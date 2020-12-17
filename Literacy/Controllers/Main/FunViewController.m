@@ -10,9 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
-#import "ZFAVPlayerManager.h"
-#import "ZFPlayerControlView.h"
-
 //AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:url] options:nil];// url：网络视频的连接
 //
 //float second = asset.duration.value/asset.duration.timescale;
@@ -49,15 +46,14 @@
     CGFloat ludengY;
     
     //播放器
-    AVPlayer *avPlayer;
-    AVPlayerItem * songItem;
-    AVPlayerViewController *avPlayerVC;
+//    AVPlayer *avPlayer;
+//    AVPlayerItem * songItem;
+//    AVPlayerViewController *avPlayerVC;
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) UIImageView *containerView;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
-@property (nonatomic, strong) AVPictureInPictureController *vc;
 
 
 
@@ -111,14 +107,15 @@
         roadH = YScreenH - 287 * YScaleHeight ;
     }
     
-    
-    
+    renCoverImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"backCover"]];
+    [backV addSubview:renCoverImg];
+    renCoverImg.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
+    renCoverImg.hidden = YES;
     
     [self setRenV];
     [self setduV];
     [self setwanV];
     [self setsuccessV];
-    
     
 //    gifView = [[UIImageView alloc] init];
 //    NSString *filePath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"shaonv" ofType:@"gif"];
@@ -140,11 +137,6 @@
         gifView.mj_y = YScreenH - 282 * YScaleHeight - 218 * YScaleHeight;
     }
 
-    
-    renCoverImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"backCover"]];
-    [backV addSubview:renCoverImg];
-    renCoverImg.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
-    renCoverImg.hidden = YES;
 
     
     NoHighBtn *backBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
@@ -187,7 +179,6 @@
         [youshangV addSubview:label];
     }
     
-    [self renyemian];
     
     
     //初始进入页面  开始认  动画
@@ -209,8 +200,8 @@
         //加载电视机 放动画  完成之后进入下个页面
         
         [self dianshiVjiazai];
-//        [self duVjiazai];
-        
+
+//        [self successCaozuo];
     }];
 
     
@@ -232,39 +223,6 @@
 
 
 #pragma mark -- 认  页面操作
-- (void)renyemian{
-    dianshiV = [UIView new];
-    [backV addSubview:dianshiV];
-    dianshiV.sd_layout.centerXEqualToView(backV).bottomSpaceToView(backV, 5 * YScaleHeight).widthIs(852 * YScaleHeight).heightIs(731 * YScaleHeight);
-    dianshiV.hidden = YES;
-    
-    UIImageView *tvImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementtv"]];
-    [dianshiV addSubview:tvImg];
-    tvImg.sd_layout.leftEqualToView(dianshiV).rightEqualToView(dianshiV).topEqualToView(dianshiV).bottomEqualToView(dianshiV);
-    
-    _containerView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:WhiteColor]];
-    [dianshiV addSubview:_containerView];
-    _containerView.frame = CGRectMake(98 * YScaleHeight, 128 * YScaleHeight, 656 * YScaleHeight, 492 * YScaleHeight);
-
-    ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-//    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
-
-    playerManager.shouldAutoPlay = YES;
-    
-    /// 播放器相关
-    self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
-    self.player.controlView = self.controlView;
-    /// 设置退到后台继续播放
-    self.player.pauseWhenAppResignActive = NO;
-    [self.controlView showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModeAutomatic];
-    
-//    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-//    [center addObserver:self
-//               selector:@selector(applicationDidEnterBackground:)
-//                   name:UIApplicationDidEnterBackgroundNotification
-//                 object:nil];
-    
-}
 
 - (void)dianshiVjiazai{
     /*
@@ -400,24 +358,6 @@
     
 }
 
-//通知事件
-
-- (void)applicationDidEnterBackground:(NSNotification *)notification {
-//    [self.player enterFullScreen:YES animated:YES];
-    
-//    ZFAVPlayerManager *manager = (ZFAVPlayerManager *)self.player.currentPlayerManager;
-//    AVPictureInPictureController *vc = [[AVPictureInPictureController alloc] initWithPlayerLayer:manager.avPlayerLayer];
-//    self.vc = vc;
-//
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.vc startPictureInPicture];
-//    });
-
-    
-    YLogFunc
-    
-}
-
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -460,160 +400,137 @@
 }
 
 - (void)duVjiazai{
-    cikaV = [UIView new];
-    [backV addSubview:cikaV];
-    cikaV.sd_layout.centerXEqualToView(backV).bottomSpaceToView(backV, 120 * YScaleHeight).widthIs(922 * YScaleHeight).heightIs(550 * YScaleHeight);
-    
-    UIImageView *ciImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementbook"]];
-    [cikaV addSubview:ciImg];
-    ciImg.sd_layout.leftEqualToView(cikaV).rightEqualToView(cikaV).topEqualToView(cikaV).bottomEqualToView(cikaV);
-
-    UIView *imgV = [UIView new];
-    [cikaV addSubview:imgV];
-    imgV.frame = CGRectMake(59 * YScaleHeight, 48 * YScaleHeight, 340 * YScaleHeight, 289 * YScaleHeight);
-    
-    UIImageView *leftimg = [[UIImageView alloc] init];
-    [leftimg sd_setImageWithURL:[NSURL URLWithString:self.word_image]];
-    [imgV addSubview:leftimg];
-    leftimg.sd_layout.centerXEqualToView(imgV).centerYEqualToView(imgV).widthIs(340 * YScaleHeight * 1.5).heightIs(289 * YScaleHeight * 1.5);
-    
-//    leftimg.center = imgV.center;
-//    leftimg.size = CGSizeMake(408 * YScaleHeight, 346.8 * YScaleHeight);
-
-    
-    UILabel *ziL = [self setZiLabel];
-    ziL.font = [UIFont fontWithName:@"kaiti" size:200 * YScaleHeight];
-    ziL.text = self.selectedMod.word;
-    [cikaV addSubview:ziL];
-    ziL.sd_layout.rightSpaceToView(cikaV, 76 * YScaleHeight).topSpaceToView(cikaV, 90 * YScaleHeight).widthIs(300 * YScaleHeight).heightIs(200 * YScaleHeight);
-    
-    UILabel *leftL = [self setZiLabel];
-    leftL.text = self.combine_words.firstObject;
-    [cikaV addSubview:leftL];
-    leftL.sd_layout.leftSpaceToView(cikaV, 59 * YScaleHeight).bottomSpaceToView(cikaV, 75 * YScaleHeight).widthIs(340 * YScaleHeight).heightIs(90 * YScaleHeight);
-    
-    UILabel *rightL = [self setZiLabel];
-    rightL.text = self.combine_words.lastObject;
-    [cikaV addSubview:rightL];
-    rightL.sd_layout.rightSpaceToView(cikaV, 59 * YScaleHeight).bottomSpaceToView(cikaV, 75 * YScaleHeight).widthIs(340 * YScaleHeight).heightIs(90 * YScaleHeight);
-    
-    UIImage *image = [YYImage imageNamed:@"huatong.gif"];
-    huatongImg = [[YYAnimatedImageView alloc] initWithImage:image];
-    [cikaV addSubview:huatongImg];
-    huatongImg.frame = CGRectMake(360 * YScaleHeight, 670 * YScaleHeight, 201 * YScaleHeight, 255 * YScaleHeight);
-
-    
-    cikaV.hidden = YES;
-    
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        CATransition *anim = [CATransition animation];
-        anim.type = @"cube";
+    CATransition *anim = [CATransition animation];
+    anim.type = @"cube";
 //        anim.type = kCATransitionFade;
-        anim.duration = 1;
-        [self->cikaV.layer addAnimation:anim forKey:nil];
+    anim.duration = 1;
+    [self->cikaV.layer addAnimation:anim forKey:nil];
+    self->renCoverImg.hidden = NO;
 
-        self->renCoverImg.hidden = NO;
-        self->cikaV.hidden = NO;
-
-    });
-    
-    
-//    播放录音
-    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"跟我读" ofType:@"mp3"];
-    NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
-    
-//    NSString *webVideoPath = self.word_video;
-//    NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
-    
-    [self bofangwithUrl:localVideoUrl];
-    
-    YLog(@"%ld",[self durationWithVideo:localVideoUrl]);
-
-    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    [center addObserver:self selector:@selector(playbackFinished:) name:AVPlayerItemDidPlayToEndTimeNotification  object:songItem];
-
-
-    //加载话筒  上升
-//    [UIView animateWithDuration:[self durationWithVideo:localVideoUrl] animations:^{
-//        YLogFunc
-//
-//    } completion:^(BOOL finished) {
-//
-//
-//        [UIView animateWithDuration:1 animations:^{
-//            [self->cikaV removeFromSuperview];
-//            cikaV = nil;
-//
-//            self->renCoverImg.hidden = YES;
-//
-//
-//        } completion:^(BOOL finished) {
-//            [gifView startAnimating];
-//            [self wancaozuo];
-//
-//        }];
-//
-//
-//    }];
+    [UIView animateWithDuration:1 animations:^{
+        cikaV.alpha = 1;
+    } completion:^(BOOL finished) {
         
-    
+        //    播放录音
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"跟我读" ofType:@"mp3"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+        
+        NSString *webVideoPath = self.word_audio;
+        NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+        
+//        NSURL *localVideoUrl1 = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"玩" ofType:@"mp3"]];
 
+        
+        [self bofangwithUrl:@[localVideoUrl , webVideoUrl]];
+        
+        
+        
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            
+            YLog(@"%ld",self.player.currentPlayIndex)
+            
+            //播放完成
+            if(self.player.currentPlayIndex == 1){
+                [self huatongcaozuo];
+                
+                [self.player stop];
+                self.player = nil;
+            }
+
+            [self.player playTheNext];
+
+        };
+
+    }];
+
+
+    
 }
 
-- (void)bofangwithUrl:(NSURL *)url{
-    if(avPlayer){
-        [avPlayer pause];
-        avPlayer = nil;
+- (void)bofangwithUrl:(NSArray *)urlArr{
+    if(self.player){
+        [self.player stop];
+        self.player  = nil;
     }
-    
-    songItem  = [[AVPlayerItem alloc]initWithURL:url];
-    avPlayer = [[AVPlayer alloc]initWithPlayerItem:songItem];
-    [avPlayer play];
+
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+
+    self.player.assetURLs = urlArr;
+    [self.player playTheIndex:0];
 }
 
 
-- (void)playbackFinished:(NSNotification *)notice {
-    YLogFunc
-    
-    [UIView animateWithDuration:2 animations:^{
+
+- (void)huatongcaozuo{
+    [UIView animateWithDuration:0.7 animations:^{
         self->huatongImg.mj_y = 415 * YScaleHeight;
 
     } completion:^(BOOL finished) {
         [huatongImg startAnimating];
-
-        [UIView animateWithDuration:3 animations:^{
-        } completion:^(BOOL finished) {
-                    [huatongImg stopAnimating];
-            
-                    
-                    [UIView animateWithDuration:1 animations:^{
-                        [self->cikaV removeFromSuperview];
-                        cikaV = nil;
-            
-                        self->renCoverImg.hidden = YES;
-            
-            
-                    } completion:^(BOOL finished) {
-                        [gifView startAnimating];
-                        [self wancaozuo];
-            
-                    }];
-
-        }];
         
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [huatongImg stopAnimating];
+            
+            
+            //    播放录音
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"再读一遍" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            
+            NSString *webVideoPath = self.word_audio;
+            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+            
+//            NSURL *localVideoUrl1 = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"玩" ofType:@"mp3"]];
+
+            
+            [self bofangwithUrl:@[localVideoUrl , webVideoUrl]];
+            
+            
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                
+                YLog(@"%ld",self.player.currentPlayIndex)
+                
+                //播放完成
+                if(self.player.currentPlayIndex == 1){
+                    [self quwan];
+                    
+                    [self.player stop];
+                    self.player = nil;
+
+                }
+
+                [self.player playTheNext];
+
+            };
+
+            
+            
+            
+            
+            
+        });
+
     }];
 
-    
-
-    
-
-    
-    //再放一遍录音
-    
-    
 }
+
+- (void)quwan{
+    [huatongImg startAnimating];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+        [huatongImg stopAnimating];
+
+        [self->cikaV removeFromSuperview];
+        cikaV = nil;
+        self->renCoverImg.hidden = YES;
+        [gifView startAnimating];
+        [self wancaozuo];
+
+    });
+}
+
 
 - (NSUInteger)durationWithVideo:(NSURL *)videoUrl{
     
@@ -629,9 +546,6 @@
 
 - (void)wancaozuo{
     
-//    [UIView animateWithDuration:Transformtimeinterval animations:^{
-//        self->gifView.centerX =  - 134 * YScaleWidth + YScreenW * 2;
-//    } completion:^(BOOL finished) {
         
         [UIView animateWithDuration:Transformtimeinterval animations:^{
             self->gifView.centerX = 100 * YScaleWidth + YScreenW * 2;
@@ -642,34 +556,84 @@
         } completion:^(BOOL finished) {
             [gifView stopAnimating];
             
+            //    播放录音
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"组成词语" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            
+            
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+
+            
         }];
-//    }];
+
+}
+
+- (void)banpingcaozuo{
+    [UIView animateWithDuration:1.5 animations:^{
+        
+        self->gifView.centerX = 582 * YScaleWidth + YScreenW * 2;
+
+    } completion:^(BOOL finished) {
+        
+//        [self->gifView stopAnimating];
+    }];
 
 }
 
 
-
 - (void)successCaozuo{
     
-//    [UIView animateWithDuration:Transformtimeinterval animations:^{
-//        self->gifView.centerX =  - 134 * YScaleWidth + YScreenW * 3;
-//    } completion:^(BOOL finished) {
-       
-        [UIView animateWithDuration:3 animations:^{
-            
-            [self->scrollV setContentOffset:CGPointMake(YScreenW * 3, 0)];
-            self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 3;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        UIImage *image = [YYImage imageNamed:@"success.gif"];
+        
+        YYAnimatedImageView *successImg = [[YYAnimatedImageView alloc] initWithImage:image];
+        [backV addSubview:successImg];
+        successImg.frame = CGRectMake(0, YScreenH - 237 * YScaleWidth - 405 * YScaleWidth,540 * YScaleWidth, 405 * YScaleWidth);
+        [successImg startAnimating];
+        
+        YYAnimatedImageView *successImg1 = [[YYAnimatedImageView alloc] initWithImage:image];
+        [backV addSubview:successImg1];
+        successImg1.frame = CGRectMake(YScreenW - 540 * YScaleWidth, YScreenH - 237 * YScaleWidth - 405 * YScaleWidth,540 * YScaleWidth, 405 * YScaleWidth);
+        successImg1.transform = CGAffineTransformMakeScale(-1.0, 1.0);//水平翻转
+        
+    });
 
-        } completion:^(BOOL finished) {
-            
-            [gifView stopAnimating];
-            //成功接口
-            [self successFetch];
 
-            
-        }];
-//    }];
+    
+    //    播放录音
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"你太棒了" ofType:@"mp3"];
+    NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+    
+    
+    [self bofangwithUrl:@[localVideoUrl]];
+    
+    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        
+        [self.player stop];
+        self.player = nil;
+    };
+    
+    
+    [UIView animateWithDuration:3 animations:^{
+        
+        [self->scrollV setContentOffset:CGPointMake(YScreenW * 3, 0)];
+        self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 3;
 
+    } completion:^(BOOL finished) {
+        
+        [gifView stopAnimating];
+        
+
+        //成功接口
+        [self successFetch];
+        
+    }];
 
 }
 
@@ -751,6 +715,35 @@
     [renV addSubview:roadImg];
     roadImg.frame = CGRectMake(0, roadH, YScreenW, 237 * YScaleWidth);
     
+    dianshiV = [UIView new];
+    [backV addSubview:dianshiV];
+    dianshiV.sd_layout.centerXEqualToView(backV).bottomSpaceToView(backV, 5 * YScaleHeight).widthIs(852 * YScaleHeight).heightIs(731 * YScaleHeight);
+    dianshiV.hidden = YES;
+    
+    UIImageView *tvImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementtv"]];
+    [dianshiV addSubview:tvImg];
+    tvImg.sd_layout.leftEqualToView(dianshiV).rightEqualToView(dianshiV).topEqualToView(dianshiV).bottomEqualToView(dianshiV);
+    
+    _containerView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:WhiteColor]];
+    [dianshiV addSubview:_containerView];
+    _containerView.frame = CGRectMake(98 * YScaleHeight, 128 * YScaleHeight, 656 * YScaleHeight, 492 * YScaleHeight);
+
+    ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
+//    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
+
+    playerManager.shouldAutoPlay = YES;
+    
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+    
+    /// 播放器相关
+    self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
+    self.player.controlView = self.controlView;
+    /// 设置退到后台继续播放
+    self.player.pauseWhenAppResignActive = NO;
+    [self.controlView showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModeAutomatic];
 
 }
 
@@ -778,6 +771,49 @@
     UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad1"]];
     [duV addSubview:roadImg];
     roadImg.frame = CGRectMake(0, roadH, YScreenW, 237 * YScaleWidth);
+    
+    cikaV = [UIView new];
+    [backV addSubview:cikaV];
+    cikaV.sd_layout.centerXEqualToView(backV).bottomSpaceToView(backV, 120 * YScaleHeight).widthIs(922 * YScaleHeight).heightIs(550 * YScaleHeight);
+    cikaV.alpha = 0;
+    
+    UIImageView *ciImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementbook"]];
+    [cikaV addSubview:ciImg];
+    ciImg.sd_layout.leftEqualToView(cikaV).rightEqualToView(cikaV).topEqualToView(cikaV).bottomEqualToView(cikaV);
+
+    UIView *imgV = [UIView new];
+    [cikaV addSubview:imgV];
+    imgV.frame = CGRectMake(59 * YScaleHeight, 48 * YScaleHeight, 340 * YScaleHeight, 289 * YScaleHeight);
+    
+    UIImageView *leftimg = [[UIImageView alloc] init];
+    [leftimg sd_setImageWithURL:[NSURL URLWithString:self.word_image]];
+    [imgV addSubview:leftimg];
+    leftimg.sd_layout.centerXEqualToView(imgV).centerYEqualToView(imgV).widthIs(340 * YScaleHeight * 1.5).heightIs(289 * YScaleHeight * 1.5);
+    
+//    leftimg.center = imgV.center;
+//    leftimg.size = CGSizeMake(408 * YScaleHeight, 346.8 * YScaleHeight);
+
+    UILabel *ziL = [self setZiLabel];
+    ziL.font = [UIFont fontWithName:@"kaiti" size:200 * YScaleHeight];
+    ziL.text = self.selectedMod.word;
+    [cikaV addSubview:ziL];
+    ziL.sd_layout.rightSpaceToView(cikaV, 76 * YScaleHeight).topSpaceToView(cikaV, 90 * YScaleHeight).widthIs(300 * YScaleHeight).heightIs(200 * YScaleHeight);
+    
+    UILabel *leftL = [self setZiLabel];
+    leftL.text = self.combine_words.firstObject;
+    [cikaV addSubview:leftL];
+    leftL.sd_layout.leftSpaceToView(cikaV, 59 * YScaleHeight).bottomSpaceToView(cikaV, 75 * YScaleHeight).widthIs(340 * YScaleHeight).heightIs(90 * YScaleHeight);
+    
+    UILabel *rightL = [self setZiLabel];
+    rightL.text = self.combine_words.lastObject;
+    [cikaV addSubview:rightL];
+    rightL.sd_layout.rightSpaceToView(cikaV, 59 * YScaleHeight).bottomSpaceToView(cikaV, 75 * YScaleHeight).widthIs(340 * YScaleHeight).heightIs(90 * YScaleHeight);
+    
+    UIImage *image = [YYImage imageNamed:@"huatong.gif"];
+    huatongImg = [[YYAnimatedImageView alloc] initWithImage:image];
+    [cikaV addSubview:huatongImg];
+    huatongImg.frame = CGRectMake(360 * YScaleHeight, 670 * YScaleHeight, 201 * YScaleHeight, 255 * YScaleHeight);
+
     
 }
 
@@ -1005,6 +1041,10 @@
         } completion:^(BOOL finished) {
             [v removeFromSuperview];
             self->okV1.hidden = NO;
+            
+            [gifView startAnimating];
+            [self banpingcaozuo];
+
         }];
     }
     
@@ -1018,14 +1058,9 @@
             
             //一段成功的音乐
             
-            
-            [UIView animateWithDuration:1 animations:^{
-                [gifView startAnimating];
+            [gifView startAnimating];
+            [self successCaozuo];
 
-            } completion:^(BOOL finished) {
-                //缓缓进入  成功页
-                [self successCaozuo];
-            }];
         }];
     }
     
@@ -1102,6 +1137,7 @@
     if(self.player){
         self.player = nil;
     }
+
 }
 
 

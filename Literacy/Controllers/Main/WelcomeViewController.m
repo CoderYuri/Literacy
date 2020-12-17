@@ -30,27 +30,27 @@
 
 @implementation WelcomeViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.player.viewControllerDisappear = NO;
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    self.player.viewControllerDisappear = NO;
+//}
+//
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//    self.player.viewControllerDisappear = YES;
+//}
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    self.player.viewControllerDisappear = YES;
-}
-
-- (ZFPlayerControlView *)controlView {
-    if (!_controlView) {
-        _controlView = [ZFPlayerControlView new];
-        _controlView.fastViewAnimated = YES;
-        _controlView.autoHiddenTimeInterval = 0;
-        _controlView.autoFadeTimeInterval = 2;
-        _controlView.prepareShowLoading = YES;
-        _controlView.prepareShowControlView = NO;
-    }
-    return _controlView;
-}
+//- (ZFPlayerControlView *)controlView {
+//    if (!_controlView) {
+//        _controlView = [ZFPlayerControlView new];
+//        _controlView.fastViewAnimated = YES;
+//        _controlView.autoHiddenTimeInterval = 0;
+//        _controlView.autoFadeTimeInterval = 2;
+//        _controlView.prepareShowLoading = YES;
+//        _controlView.prepareShowControlView = NO;
+//    }
+//    return _controlView;
+//}
 
 -(void)netWorkChangeEvent
 {
@@ -107,9 +107,7 @@
             NSDictionary *d = dic[@"data"];
             [YUserDefaults setObject:d[@"user_id"] forKey:kuserid];
             
-            if(fangwan){
-                [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
-            }
+            [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
         }
         
         YLog(@"%@",dic);
@@ -131,8 +129,30 @@
     else{
         [self netWorkChangeEvent];
     }
+    
+    UIImageView *img = [[UIImageView alloc] init];
+    img.image = [UIImage imageNamed:@"launchimage"];
+    img.contentMode = UIViewContentModeScaleAspectFill;
+    [self.view addSubview:img];
+    img.sd_layout.leftEqualToView(self.view).rightEqualToView(self.view).bottomEqualToView(self.view).topEqualToView(self.view);
+    
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"滑板车识字" ofType:@"mp3"];
+    NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
+    __block ZFPlayerController *player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    player.assetURLs = @[localVideoUrl];
+    [player playTheIndex:0];
+
+    player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        [player stop];
+        player = nil;
+        
+        [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
+    };
+
 
     
+    /*
     _containerView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:WhiteColor]];
     [self.view addSubview:_containerView];
     _containerView.frame = CGRectMake(0, 0, YScreenW, YScreenH);
@@ -164,7 +184,7 @@
 //            [self presentViewController:vc animated:YES completion:nil];
         }
     };
-
+     */
     
 }
 

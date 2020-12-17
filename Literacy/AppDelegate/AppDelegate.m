@@ -10,24 +10,26 @@
 //#import "MainViewController.h"
 #import "WelcomeViewController.h"
 #import "FuxiViewController.h"
-
 @interface AppDelegate ()
 @end
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
-    
+        
+    YLogFunc
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    if([YUserDefaults objectForKey:kuserid]){
-        [self gotoMainVC];
-    }
-    else{
-        [self netWorkChangeEvent];
-    }
+    
+    [self gotoWelcome];
+
+//    if([YUserDefaults objectForKey:kuserid]){
+//        [self gotoMainVC];
+//    }
+//    else{
+//        [self netWorkChangeEvent];
+//    }
   
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
@@ -62,6 +64,7 @@
     return YES;
 }
 
+/*
 -(void)netWorkChangeEvent
 {
     NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
@@ -113,7 +116,6 @@
             
             [self gotoMainVC];
             
-
         }
         
         YLog(@"%@",dic);
@@ -123,13 +125,12 @@
 
         
 }
-
+*/
 
 - (void)gotoMainVC{
 //    UIViewController *weakRoot = [UIApplication sharedApplication].delegate.window.rootViewController;
     
     //界面布局
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     MainViewController *mainVc = [[MainViewController alloc] init];
     [self.window setRootViewController:mainVc];
@@ -141,14 +142,11 @@
 //    weakRoot = nil;
 }
 
-//- (void)gotoWelcome{
-//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-//
-//    welcomeVc = [[WelcomeViewController alloc] init];
-//    [self.window setRootViewController:welcomeVc];
-//    [self.window makeKeyAndVisible];
-//    
-//}
+- (void)gotoWelcome{
+    WelcomeViewController *welcomeVc = [[WelcomeViewController alloc] init];
+    [self.window setRootViewController:welcomeVc];
+    [self.window makeKeyAndVisible];
+}
 
 
 @end

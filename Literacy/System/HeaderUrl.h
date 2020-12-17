@@ -31,6 +31,8 @@
 //修改昵称
 #define _URL_nickname [NSString stringWithFormat:@"%@%@",BaseUrl,@"indivi/nickname"]
 
+//获取userInfo
+#define _URL_userInfo [NSString stringWithFormat:@"%@%@",BaseUrl,@"main/user_info"]
 
 
 #endif /* HeaderUrl_h */

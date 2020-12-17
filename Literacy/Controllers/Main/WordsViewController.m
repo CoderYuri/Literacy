@@ -87,7 +87,7 @@
 
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
     layout.itemSize = CGSizeMake(120 * YScaleWidth, 120 * YScaleWidth);
-    layout.minimumInteritemSpacing = 40 * YScaleWidth;
+    layout.minimumInteritemSpacing = 39 * YScaleWidth;
     layout.minimumLineSpacing = 32 * YScaleWidth;
 
     
@@ -177,6 +177,7 @@
                 vc.similar_words = dict[@"similar_words"];
                 vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
                 vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
+                vc.word_audio = [NSString stringWithFormat:@"%@",dict[@"word_audio"]];
 
 
                 vc.callBack = ^(NSInteger xuanzhongIndex) {

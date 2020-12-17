@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,copy) NSString *word_video;
 
+@property(nonatomic,copy) NSString *word_audio;
+
 @end
 
 NS_ASSUME_NONNULL_END

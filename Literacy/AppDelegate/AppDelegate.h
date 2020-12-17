@@ -12,7 +12,6 @@
 @property (strong, nonatomic) UIWindow *window;
 
 - (void)gotoMainVC;
-//- (void)gotoWelcome;
 
 /*
  当前的网络状态

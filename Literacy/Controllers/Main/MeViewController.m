@@ -298,8 +298,15 @@
         }
         else{
             self->vipImg.image = [UIImage imageNamed:@"notvip"];
-            self->vipL.text = @"当前未开通会员";
             self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
+            
+            if([YUserDefaults boolForKey:khas_purchase]){
+                self->vipL.text = @"您的会员已到期";
+            }
+            else{
+                self->vipL.text = @"当前未开通会员";
+            }
+
         }
     }
 
@@ -374,7 +381,7 @@
     [goumaiV addSubview:topV];
     topV.sd_layout.leftEqualToView(goumaiV).rightEqualToView(goumaiV).heightIs(60 * YScaleWidth);
     
-    NSArray *shangArr = @[@"1580个",@"3160个",@"1500个",@"不限次数"];
+    NSArray *shangArr = @[@"1580个",@"3160个",@"1580个",@"不限次数"];
     NSArray *xiaArr = @[@"部编版汉字",@"常用词语",@"创意字卡",@"重新免费学习"];
 
     
@@ -735,7 +742,7 @@
     kefuV.sd_layout.centerXEqualToView(rightV).centerYEqualToView(rightV).widthIs(806 * YScaleWidth).heightIs(600 * YScaleHeight);
     
     UILabel *dixiaL = [UILabel new];
-    dixiaL.text = @"联系方式：点击复制公众号， 打开微信添加客服为好友";
+    dixiaL.text = @"联系方式：点击复制公众号， 打开微信关注公众号留言";
     dixiaL.font = YSystemFont(16 * YScaleWidth);
     dixiaL.textColor = [JKUtil getColor:@"B0BBD4"];
     dixiaL.textAlignment = NSTextAlignmentCenter;
@@ -765,7 +772,7 @@
     img.sd_layout.leftSpaceToView(midV, 33 * YScaleWidth).centerYEqualToView(midV).widthIs(40 * YScaleWidth).heightIs(32 * YScaleWidth);
     
     UILabel *detailL = [UILabel new];
-    detailL.text = [NSString stringWithFormat:@"客服：%@",kefuHaoma];
+    detailL.text = [NSString stringWithFormat:@"公众号：%@",kefuHaoma];
     detailL.textAlignment = NSTextAlignmentCenter;
     detailL.textColor = [JKUtil getColor:@"616E8D"];
     detailL.font = YSystemFont(20 * YScaleWidth);
@@ -1136,9 +1143,11 @@
     if(warnS.length){
 //        [self.view makeToast:warnS duration:2 position:@"center"];
         [SVProgressHUD showErrorWithStatus:warnS];
+        [SVProgressHUD dismissWithDelay:1];
         return;
     }
     
+    [codeTextF becomeFirstResponder];
     huoquBtn.enabled = NO;
     [self setRestTime];
 
@@ -1207,12 +1216,14 @@
     if(warnS.length){
 //        [self.view makeToast:warnS duration:2 position:@"center"];
         [SVProgressHUD showErrorWithStatus:warnS];
+        [SVProgressHUD dismissWithDelay:1];
         return;
     }
     
     
     if(!codeTextF.text.length){
         [SVProgressHUD showErrorWithStatus:@"请输入验证码"];
+        [SVProgressHUD dismissWithDelay:1];
         return;;
     }
     
@@ -1236,6 +1247,8 @@
             [YUserDefaults setObject:d[@"token"] forKey:ktoken];
             [YUserDefaults setBool:[d[@"is_member"] boolValue] forKey:kis_member];
             [YUserDefaults setObject:d[@"expire_time"] forKey:kexpiretime];
+            
+            [YUserDefaults setBool:[d[@"has_purchase"] boolValue] forKey:khas_purchase];
 
             
             nameTextF.text = [YUserDefaults objectForKey:kusername];
@@ -1246,8 +1259,14 @@
             }
             else{
                 self->vipImg.image = [UIImage imageNamed:@"notvip"];
-                self->vipL.text = @"当前未开通会员";
                 self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
+
+                if([YUserDefaults boolForKey:khas_purchase]){
+                    self->vipL.text = @"您的会员已到期";
+                }
+                else{
+                    self->vipL.text = @"当前未开通会员";
+                }
             }
             
             [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
@@ -1260,6 +1279,11 @@
 //            [self refreshData];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"refresh" object:self];
 
+        }
+        
+        else{
+            [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
+            [SVProgressHUD dismissWithDelay:1.0];
         }
         
         YLog(@"%@",dic);
@@ -1455,6 +1479,7 @@
                 vc.similar_words = dict[@"similar_words"];
                 vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
                 vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
+                vc.word_audio = [NSString stringWithFormat:@"%@",dict[@"word_audio"]];
 
 
                 vc.callBack = ^(NSInteger xuanzhongIndex) {
