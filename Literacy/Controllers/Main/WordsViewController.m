@@ -18,9 +18,26 @@
     UICollectionView *collectionView;
 }
 
+@property (nonatomic, strong) ZFPlayerController *player;
+
 @end
 
 @implementation WordsViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.player.viewControllerDisappear = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.player.viewControllerDisappear = YES;
+    
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -201,6 +218,17 @@
             YLog(@"%@",dic);
         } failure:^(NSError *error) {
             //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+            if(error.code == -1009){
+                NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+                NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+                [self bofangwithUrl:@[localVideoUrl]];
+                
+                self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                    [self.player stop];
+                    self.player = nil;
+                };
+            }
+
         }];
 
 
@@ -208,6 +236,17 @@
 
 }
 
+- (void)bofangwithUrl:(NSArray *)urlArr{
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+
+    self.player.assetURLs = urlArr;
+    [self.player playTheIndex:0];
+}
 
 
 

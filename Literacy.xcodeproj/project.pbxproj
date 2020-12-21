@@ -19,11 +19,7 @@
 		DA2D67AC258B93CB008F2143 /* 跟我读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */; };
 		DA41A3D825876812001C2C51 /* 组成词语.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */; };
 		DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */; };
-		DA41A3DA25876812001C2C51 /* 认.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D025876810001C2C51 /* 认.mp3 */; };
-		DA41A3DC25876812001C2C51 /* 按顺序学习.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D225876810001C2C51 /* 按顺序学习.mp3 */; };
 		DA41A3DD25876812001C2C51 /* 开始今天的学习吧.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D325876811001C2C51 /* 开始今天的学习吧.mp3 */; };
-		DA41A3DE25876812001C2C51 /* 玩.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D425876811001C2C51 /* 玩.mp3 */; };
-		DA41A3DF25876812001C2C51 /* 读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D525876812001C2C51 /* 读.mp3 */; };
 		DA41A3E025876812001C2C51 /* 再读一遍.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D625876812001C2C51 /* 再读一遍.mp3 */; };
 		DA41A3E125876812001C2C51 /* 解锁更多汉字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3D725876812001C2C51 /* 解锁更多汉字.mp3 */; };
 		DA4274D2255E7B9400610D12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA4274C6255E7B9300610D12 /* Assets.xcassets */; };
@@ -45,6 +41,9 @@
 		DA9FD8432567A7BE0048D870 /* WordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9FD8422567A7BE0048D870 /* WordsViewController.m */; };
 		DA9FD8472567B3940048D870 /* WordCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9FD8462567B3940048D870 /* WordCollectionViewCell.m */; };
 		DA9FD84B2567C0F30048D870 /* MeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9FD84A2567C0F30048D870 /* MeViewController.m */; };
+		DABF02AF258F79E200D24839 /* 玩.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DABF02AC258F79E200D24839 /* 玩.mp3 */; };
+		DABF02B0258F79E200D24839 /* 读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DABF02AD258F79E200D24839 /* 读.mp3 */; };
+		DABF02B1258F79E200D24839 /* 认.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DABF02AE258F79E200D24839 /* 认.mp3 */; };
 		DAEA2F0E256CFD3B00F8081F /* AllModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DAEA2F0D256CFD3A00F8081F /* AllModel.m */; };
 		DAF31F70256E2B2B0056435B /* FunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF31F6F256E2B2B0056435B /* FunViewController.m */; };
 		DAF3630E2581FF5500BD8C16 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF3630D2581FF5400BD8C16 /* StoreKit.framework */; };
@@ -80,6 +79,9 @@
 		DAF363D02582399D00BD8C16 /* ZFSpeedLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF363AE2582399C00BD8C16 /* ZFSpeedLoadingView.m */; };
 		DAF363D12582399D00BD8C16 /* ZFPortraitControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF363B02582399C00BD8C16 /* ZFPortraitControlView.m */; };
 		DAF363D22582399D00BD8C16 /* UIImageView+ZFCache.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF363B12582399C00BD8C16 /* UIImageView+ZFCache.m */; };
+		DAF3BA16258DE417001C8734 /* 网络.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF3BA15258DE417001C8734 /* 网络.mp3 */; };
+		DAF3BA1A258DF458001C8734 /* 按顺序学习.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF3BA19258DF458001C8734 /* 按顺序学习.mp3 */; };
+		DAF3BA1F258E1D62001C8734 /* BTNoneProgressPlayerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BA1E258E1D62001C8734 /* BTNoneProgressPlayerControlView.m */; };
 		DAF5E4E2256366D700003A85 /* NJCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E460256366D600003A85 /* NJCamera.m */; };
 		DAF5E4E7256366D700003A85 /* NSString+HEX.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E488256366D600003A85 /* NSString+HEX.m */; };
 		DAF5E4E8256366D700003A85 /* UIButton+CenterImageAndTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E48A256366D600003A85 /* UIButton+CenterImageAndTitle.m */; };
@@ -146,11 +148,7 @@
 		DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "跟我读.mp3"; sourceTree = "<group>"; };
 		DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "组成词语.mp3"; sourceTree = "<group>"; };
 		DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "你太棒了.mp3"; sourceTree = "<group>"; };
-		DA41A3D025876810001C2C51 /* 认.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "认.mp3"; sourceTree = "<group>"; };
-		DA41A3D225876810001C2C51 /* 按顺序学习.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "按顺序学习.mp3"; sourceTree = "<group>"; };
 		DA41A3D325876811001C2C51 /* 开始今天的学习吧.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "开始今天的学习吧.mp3"; sourceTree = "<group>"; };
-		DA41A3D425876811001C2C51 /* 玩.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "玩.mp3"; sourceTree = "<group>"; };
-		DA41A3D525876812001C2C51 /* 读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "读.mp3"; sourceTree = "<group>"; };
 		DA41A3D625876812001C2C51 /* 再读一遍.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "再读一遍.mp3"; sourceTree = "<group>"; };
 		DA41A3D725876812001C2C51 /* 解锁更多汉字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "解锁更多汉字.mp3"; sourceTree = "<group>"; };
 		DA4274A6255E576100610D12 /* Literacy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Literacy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,6 +182,9 @@
 		DA9FD8492567C0F30048D870 /* MeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeViewController.h; sourceTree = "<group>"; };
 		DA9FD84A2567C0F30048D870 /* MeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MeViewController.m; sourceTree = "<group>"; };
 		DABD4E3B257B7697001F6CF6 /* HeaderUrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeaderUrl.h; sourceTree = "<group>"; };
+		DABF02AC258F79E200D24839 /* 玩.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "玩.mp3"; sourceTree = "<group>"; };
+		DABF02AD258F79E200D24839 /* 读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "读.mp3"; sourceTree = "<group>"; };
+		DABF02AE258F79E200D24839 /* 认.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "认.mp3"; sourceTree = "<group>"; };
 		DAEA2F0C256CFD3A00F8081F /* AllModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllModel.h; sourceTree = "<group>"; };
 		DAEA2F0D256CFD3A00F8081F /* AllModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllModel.m; sourceTree = "<group>"; };
 		DAF31F6E256E2B2B0056435B /* FunViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunViewController.h; sourceTree = "<group>"; };
@@ -255,6 +256,10 @@
 		DAF363B12582399C00BD8C16 /* UIImageView+ZFCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ZFCache.m"; sourceTree = "<group>"; };
 		DAF363B22582399C00BD8C16 /* ZFNetworkSpeedMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFNetworkSpeedMonitor.h; sourceTree = "<group>"; };
 		DAF363B32582399C00BD8C16 /* ZFLandScapeControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFLandScapeControlView.h; sourceTree = "<group>"; };
+		DAF3BA15258DE417001C8734 /* 网络.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "网络.mp3"; sourceTree = "<group>"; };
+		DAF3BA19258DF458001C8734 /* 按顺序学习.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "按顺序学习.mp3"; sourceTree = "<group>"; };
+		DAF3BA1D258E1D62001C8734 /* BTNoneProgressPlayerControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTNoneProgressPlayerControlView.h; sourceTree = "<group>"; };
+		DAF3BA1E258E1D62001C8734 /* BTNoneProgressPlayerControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTNoneProgressPlayerControlView.m; sourceTree = "<group>"; };
 		DAF5E45C2563655E00003A85 /* Literacy.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Literacy.pch; sourceTree = "<group>"; };
 		DAF5E460256366D600003A85 /* NJCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NJCamera.m; sourceTree = "<group>"; };
 		DAF5E461256366D600003A85 /* NJCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJCamera.h; sourceTree = "<group>"; };
@@ -455,6 +460,8 @@
 		DA4274D1255E7B9300610D12 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				DAF3BA1D258E1D62001C8734 /* BTNoneProgressPlayerControlView.h */,
+				DAF3BA1E258E1D62001C8734 /* BTNoneProgressPlayerControlView.m */,
 				DA9FD83D25679E190048D870 /* MainCollectionViewCell.h */,
 				DA9FD83E25679E190048D870 /* MainCollectionViewCell.m */,
 				DA9FD8452567B3940048D870 /* WordCollectionViewCell.h */,
@@ -846,15 +853,16 @@
 		DAF5E5122563B41400003A85 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				DA41A3D225876810001C2C51 /* 按顺序学习.mp3 */,
+				DABF02AD258F79E200D24839 /* 读.mp3 */,
+				DABF02AE258F79E200D24839 /* 认.mp3 */,
+				DABF02AC258F79E200D24839 /* 玩.mp3 */,
+				DAF3BA19258DF458001C8734 /* 按顺序学习.mp3 */,
+				DAF3BA15258DE417001C8734 /* 网络.mp3 */,
 				DA2D6785258B54DF008F2143 /* 滑板车识字.mp3 */,
-				DA41A3D525876812001C2C51 /* 读.mp3 */,
 				DA41A3D725876812001C2C51 /* 解锁更多汉字.mp3 */,
 				DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */,
 				DA41A3D325876811001C2C51 /* 开始今天的学习吧.mp3 */,
 				DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */,
-				DA41A3D025876810001C2C51 /* 认.mp3 */,
-				DA41A3D425876811001C2C51 /* 玩.mp3 */,
 				DA41A3D625876812001C2C51 /* 再读一遍.mp3 */,
 				DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */,
 				DA9132C72583593700D1E8F9 /* welcome.mp4 */,
@@ -934,20 +942,21 @@
 				DA2316A12589E3E300B444D1 /* children_privacy in Resources */,
 				DAF5E501256366D700003A85 /* UMCommonLog.bundle in Resources */,
 				DA9132C82583593700D1E8F9 /* welcome.mp4 in Resources */,
-				DA41A3DF25876812001C2C51 /* 读.mp3 in Resources */,
 				DA9FD819256790C60048D870 /* shaonv.gif in Resources */,
-				DA41A3DA25876812001C2C51 /* 认.mp3 in Resources */,
 				DA2D6786258B54DF008F2143 /* 滑板车识字.mp3 in Resources */,
 				DAF5E50C256366D700003A85 /* UMSocialSDKResources.bundle in Resources */,
+				DABF02B1258F79E200D24839 /* 认.mp3 in Resources */,
+				DABF02AF258F79E200D24839 /* 玩.mp3 in Resources */,
 				DAF5E50A256366D700003A85 /* leqidata_black_list.plist in Resources */,
 				DA9E2B6F257F4AB900CE95FA /* yonghuxieyi in Resources */,
-				DA41A3DC25876812001C2C51 /* 按顺序学习.mp3 in Resources */,
-				DA41A3DE25876812001C2C51 /* 玩.mp3 in Resources */,
+				DAF3BA16258DE417001C8734 /* 网络.mp3 in Resources */,
 				DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */,
 				DA2D67AC258B93CB008F2143 /* 跟我读.mp3 in Resources */,
 				DA41A3D825876812001C2C51 /* 组成词语.mp3 in Resources */,
 				DAF363CB2582399D00BD8C16 /* ZFPlayer.bundle in Resources */,
+				DAF3BA1A258DF458001C8734 /* 按顺序学习.mp3 in Resources */,
 				DA9E2B6C257F496300CE95FA /* yinsixieyi in Resources */,
+				DABF02B0258F79E200D24839 /* 读.mp3 in Resources */,
 				DA41A3DD25876812001C2C51 /* 开始今天的学习吧.mp3 in Resources */,
 				DA712C1125709FBC000DB9BD /* loading.gif in Resources */,
 				DA2D6783258B49CD008F2143 /* success.gif in Resources */,
@@ -1057,6 +1066,7 @@
 				DAF5E4E2256366D700003A85 /* NJCamera.m in Sources */,
 				DAF363C52582399C00BD8C16 /* ZFAVPlayerManager.m in Sources */,
 				DAF5E507256366D700003A85 /* MSSAutoresizeLabelFlowConfig.m in Sources */,
+				DAF3BA1F258E1D62001C8734 /* BTNoneProgressPlayerControlView.m in Sources */,
 				DA4274D4255E7B9400610D12 /* main.m in Sources */,
 				DAF363B52582399C00BD8C16 /* ZFPlayerController.m in Sources */,
 				DAF5E508256366D700003A85 /* JKUtil.m in Sources */,

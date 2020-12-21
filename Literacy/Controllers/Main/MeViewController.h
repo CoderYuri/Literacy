@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MeViewController : BaseViewController
 
+@property(nonatomic,assign) BOOL ifluyin;
 @end
 
 NS_ASSUME_NONNULL_END

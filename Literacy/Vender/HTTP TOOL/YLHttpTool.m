@@ -7,6 +7,10 @@
 
 #import "YLHttpTool.h"
 
+//@interface YLHttpTool()
+//@property (nonatomic, strong) ZFPlayerController *player;
+//@end
+
 @implementation YLHttpTool
 
 #pragma mark -- POST请求 --
@@ -48,8 +52,22 @@
         if (failure) {
             // 打印下错误信息
             YLog(@"---打印错误信息---%@",error.description);
-//            [SVProgressHUD showErrorWithStatus:@"网络连接失败"];
-//            [SVProgressHUD dismissWithDelay:1];
+            
+            YLog(@"%ld",error.code)
+            
+            if(error.code == -1009){
+                
+                [SVProgressHUD showErrorWithStatus:@"当前无网络，建议检查设备网络状态"];
+                [SVProgressHUD dismissWithDelay:1];
+                
+
+            }
+            else{
+                [SVProgressHUD showErrorWithStatus:@"服务器请求失败,请稍候再试"];
+                [SVProgressHUD dismissWithDelay:1];
+
+            }
+            
 
             failure(error);
         }
@@ -102,14 +120,39 @@
         if (failure) {
             // 打印下错误信息
             YLog(@"---打印错误信息---%@",error.description)
-            [SVProgressHUD showErrorWithStatus:@"网络连接失败"];
-            [SVProgressHUD dismissWithDelay:1];
-            
+            if(error.code == -1009){
+
+                [SVProgressHUD showErrorWithStatus:@"当前无网络，建议检查设备网络状态"];
+                [SVProgressHUD dismissWithDelay:1];
+                
+                //播放录音
+//                NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+//                NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+//
+//                __block ZFPlayerController *player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+//
+//                player.assetURLs = @[localVideoUrl];
+//                [player playTheIndex:0];
+//
+//
+//                player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+//                    [player stop];
+//                    player = nil;
+//                };
+                
+            }
+            else{
+                [SVProgressHUD showErrorWithStatus:@"服务器请求失败,请稍候再试"];
+                [SVProgressHUD dismissWithDelay:1];
+
+            }
+
             failure(error);
         }
     }];
     
 }
+
 
 
 // 苹果系统自带的方法

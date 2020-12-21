@@ -8,7 +8,7 @@
 #ifndef HeaderUrl_h
 #define HeaderUrl_h
 
-#define BaseUrl @"http://101.133.149.129:8000/"
+#define BaseUrl @"https://literacy.huabanche.club/"
 
 //getuserID
 #define _URL_userID [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/userid"]
@@ -33,6 +33,13 @@
 
 //获取userInfo
 #define _URL_userInfo [NSString stringWithFormat:@"%@%@",BaseUrl,@"main/user_info"]
+
+//内购订单
+#define _URL_iOSorder [NSString stringWithFormat:@"%@%@",BaseUrl,@"main/ios/order"]
+
+//支付验证
+#define _URL_iap_verify_receipt [NSString stringWithFormat:@"%@%@",BaseUrl,@"payment/iap_verify_receipt"]
+
 
 
 #endif /* HeaderUrl_h */

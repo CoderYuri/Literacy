@@ -30,15 +30,15 @@
 
 @implementation WelcomeViewController
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//    self.player.viewControllerDisappear = NO;
-//}
-//
-//- (void)viewWillDisappear:(BOOL)animated {
-//    [super viewWillDisappear:animated];
-//    self.player.viewControllerDisappear = YES;
-//}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.player.viewControllerDisappear = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.player.viewControllerDisappear = YES;
+}
 
 //- (ZFPlayerControlView *)controlView {
 //    if (!_controlView) {
@@ -113,9 +113,32 @@
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
     }];
 
         
+}
+
+- (void)bofangwithUrl:(NSArray *)urlArr{
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+
+    self.player.assetURLs = urlArr;
+    [self.player playTheIndex:0];
 }
 
 
@@ -139,13 +162,11 @@
     NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"滑板车识字" ofType:@"mp3"];
     NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
 
-    __block ZFPlayerController *player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
-    player.assetURLs = @[localVideoUrl];
-    [player playTheIndex:0];
+    [self bofangwithUrl:@[localVideoUrl]];
 
-    player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
-        [player stop];
-        player = nil;
+    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        [self.player stop];
+        self.player = nil;
         
         [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
     };

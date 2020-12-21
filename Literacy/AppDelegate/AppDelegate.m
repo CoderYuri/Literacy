@@ -10,6 +10,8 @@
 //#import "MainViewController.h"
 #import "WelcomeViewController.h"
 #import "FuxiViewController.h"
+#import <UMCommon/UMCommon.h>
+
 @interface AppDelegate ()
 @end
 
@@ -60,6 +62,13 @@
     keyboardManager.enable = YES; // 控制整个功能是否启用
     keyboardManager.shouldResignOnTouchOutside = YES; // 控制点击背景是否收起键盘
     
+    //友盟统计 iPad和iPhone版
+    if(isPad){
+        [UMConfigure initWithAppkey:@"5fe05fac345b8b53f5754613" channel:@"App Store"];
+    }
+    else{
+        [UMConfigure initWithAppkey:@"5fe05fec345b8b53f5754617" channel:@"App Store"];
+    }
     
     return YES;
 }

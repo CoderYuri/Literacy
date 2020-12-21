@@ -14,6 +14,8 @@
 #import <WebKit/WKNavigationDelegate.h>
 #import "YLwebViewController.h"
 
+#import <StoreKit/StoreKit.h>
+
 #define kbackColor [JKUtil getColor:@"F4FAFF"]
 #define klcolor [JKUtil getColor:@"E5EEFD"]
 #define kocolor [JKUtil getColor:@"FF6112"]
@@ -25,7 +27,7 @@
 #define yincexieyi  @"http://huabanche.club/shizi_privacy"
 #define kefuHaoma @"HBCshizi"
 
-@interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate,UITextFieldDelegate>{
+@interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate,UITextFieldDelegate,SKPaymentTransactionObserver,SKProductsRequestDelegate>{
     UIView *backV;
     
     UIImageView *vipImg;
@@ -62,6 +64,8 @@
     
     NoHighBtn *anothercloseBtn;
     CGFloat thisScale;
+    
+    BOOL iftogoumai;
 }
 
 @property (nonatomic,strong) NudeIn *monL;
@@ -69,13 +73,62 @@
 @property (nonatomic,strong) NudeIn *xieyiLabel;
 
 @property (nonatomic,strong)WKWebView *YLwkwebView;
+
+@property(nonatomic,copy) NSString *order_id;
+
+@property(nonatomic,copy) NSString *ios_purchase_id;
+
+@property (nonatomic, strong) ZFPlayerController *player;
+
 @end
 
 @implementation MeViewController
 
+- (void)bofangwithUrl:(NSArray *)urlArr{
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+
+    self.player.assetURLs = urlArr;
+    [self.player playTheIndex:0];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.player.viewControllerDisappear = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.player.viewControllerDisappear = YES;
+    
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    if(self.ifluyin){
+        //    播放录音
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"解锁更多汉字" ofType:@"mp3"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+        
+        [self bofangwithUrl:@[localVideoUrl]];
+        
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            [self.player stop];
+            self.player = nil;
+        };
+
+    }
     
     dataArr = [NSMutableArray array];
     NSArray *arr = [YUserDefaults objectForKey:kziKu];
@@ -253,6 +306,7 @@
     [leftV addSubview:userBtn];
     [userBtn addTarget:self action:@selector(touxiangClick) forControlEvents:UIControlEventTouchUpInside];
     userBtn.sd_layout.leftSpaceToView(leftV, 11 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight).widthIs(50 * YScaleWidth).heightEqualToWidth();
+    [userBtn setEnlargeEdgeWithTop:0 right:80 * YScaleWidth bottom:0 left:0];
     
     vipImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notvip"]];
     [leftV addSubview:vipImg];
@@ -287,31 +341,11 @@
     vipL.font = YSystemFont(11 * YScaleWidth);
     [leftV addSubview:vipL];
     vipL.sd_layout.leftEqualToView(nameTextF).topSpaceToView(nameTextF, 3 * YScaleHeight).heightIs(16 * YScaleWidth).widthIs(108 * YScaleWidth);
-    
+
+    //更新页面信息
     if([YUserDefaults objectForKey:kusername]){
-        nameTextF.text = [YUserDefaults objectForKey:kusername];
-        if([YUserDefaults boolForKey:kis_member]){
-            self->vipImg.image = [UIImage imageNamed:@"vip"];
-            self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
-            self->vipL.textColor = [JKUtil getColor:@"FF6112"];
-
-        }
-        else{
-            self->vipImg.image = [UIImage imageNamed:@"notvip"];
-            self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
-            
-            if([YUserDefaults boolForKey:khas_purchase]){
-                self->vipL.text = @"您的会员已到期";
-            }
-            else{
-                self->vipL.text = @"当前未开通会员";
-            }
-
-        }
+        [self gerenxinxiyemianxiugai];
     }
-
-    
-    
     
     NSArray *namearr = @[@"购买方案",@"识字情况",@"联系客服",@"关于我们"];
     ///操作按钮
@@ -418,7 +452,7 @@
     
     NSArray *nameArr = @[@"永久卡",@"年卡",@"月卡"];
     NSArray *monArr = @[@"68",@"45",@"8"];
-    NSArray *shixiaoArr = @[@"终身有效",@"自动订阅",@"自动订阅"];
+    NSArray *shixiaoArr = @[@"终身有效",@"低至0.1元/天",@""];
     
     CGFloat margin = (700 * YScaleWidth - 600 * thisScale)/2.0;
     for (int i = 0; i < nameArr.count; i++) {
@@ -536,8 +570,8 @@
         zhongjianV.sd_layout.topSpaceToView(topV, 50 * YScaleHeight);
     }
     else{
-        
-        if(Height_Bottom){
+        YLog(@"%f",[[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom)
+        if([[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom){
             lineV.hidden = YES;
             payBtn.sd_layout.bottomSpaceToView(goumaiV, 10 * YScaleHeight);
         }
@@ -942,9 +976,86 @@
 
         }
         
+        else if([dic[@"code"] integerValue] == 401){
+            
+            [SVProgressHUD showErrorWithStatus:@"您的账户已在第三台设备登录，请确认账户信息安全"];
+            [SVProgressHUD dismissWithDelay:3];
+            
+            //清空旧数据
+            NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
+            
+            [defs removeObjectForKey:khas_learn_num];
+            [defs removeObjectForKey:kusername];
+            [defs removeObjectForKey:ktoken];
+            [defs removeObjectForKey:kis_member];
+            [defs removeObjectForKey:kexpiretime];
+            [defs removeObjectForKey:khas_purchase];
+            [defs removeObjectForKey:kuserid];
+            
+            [defs synchronize];
+            
+            //修改字库数据
+            NSArray *arr = [YUserDefaults objectForKey:kziKu];
+            NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+            
+            for (AllModel *mod in array) {
+                mod.is_learn = NO;
+            }
+            NSArray *dictArr = [AllModel mj_keyValuesArrayWithObjectArray:array];
+            [YUserDefaults setObject:dictArr forKey:kziKu];
+            
+            nameTextF.text = @"未登录";
+            vipImg.image = [UIImage imageNamed:@"notvip"];
+            vipL.textColor = [JKUtil getColor:@"17449C"];
+            self->vipL.text = @"当前未开通会员";
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"refresh" object:self];
+
+            //获取新的userid
+            //网络请求数据
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            
+            YLog(@"%@",[NSString getBaseUrl:_URL_userID withparam:param])
+            
+        //    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            [YLHttpTool GET:_URL_userID parameters:param progress:^(NSProgress *progress) {
+                
+            } success:^(id dic) {
+
+                if([dic[@"code"] integerValue] == 200){
+                    
+                    NSDictionary *d = dic[@"data"];
+                    [YUserDefaults setObject:d[@"user_id"] forKey:kuserid];
+                    
+                    //跳转购买页
+                    [self setupDengluV];
+
+
+                }
+                
+                YLog(@"%@",dic);
+            } failure:^(NSError *error) {
+                
+                
+            }];
+            
+        }
+        
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
     }];
     
 }
@@ -1102,18 +1213,20 @@
     //已登录
     if([YUserDefaults objectForKey:kusername]){
         
-        //已会员
-        if([YUserDefaults boolForKey:kis_member]){
-            [SVProgressHUD showSuccessWithStatus:@"当前已是会员"];
-            [SVProgressHUD dismissWithDelay:1];
-        }
-        //不是会员  跳内购
-        else{
-            YLogFunc
-        }
+//        //已会员
+//        if([YUserDefaults boolForKey:kis_member]){
+//            [SVProgressHUD showSuccessWithStatus:@"当前已是会员"];
+//            [SVProgressHUD dismissWithDelay:1];
+//        }
+//        //不是会员  跳内购
+//        else{
+            [self applepay];
+//        }
     }
     
     else{
+        iftogoumai = YES;
+        
         [self setupDengluV];
     }
     
@@ -1171,6 +1284,17 @@
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
     }];
 
     
@@ -1250,29 +1374,19 @@
             
             [YUserDefaults setBool:[d[@"has_purchase"] boolValue] forKey:khas_purchase];
 
-            
-            nameTextF.text = [YUserDefaults objectForKey:kusername];
-            if([YUserDefaults boolForKey:kis_member]){
-                self->vipImg.image = [UIImage imageNamed:@"vip"];
-                self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
-                self->vipL.textColor = [JKUtil getColor:@"FF6112"];
-            }
-            else{
-                self->vipImg.image = [UIImage imageNamed:@"notvip"];
-                self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
+            //更新页面信息
+            [self gerenxinxiyemianxiugai];
 
-                if([YUserDefaults boolForKey:khas_purchase]){
-                    self->vipL.text = @"您的会员已到期";
-                }
-                else{
-                    self->vipL.text = @"当前未开通会员";
-                }
-            }
-            
             [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
 
             [SVProgressHUD showSuccessWithStatus:@"登录成功"];
             [SVProgressHUD dismissWithDelay:1];
+            
+            if(iftogoumai){
+                YLog(@"%ld",selectIndex)
+                
+                [self applepay];
+            }
             
             [self xiugaiziku];
             
@@ -1289,6 +1403,17 @@
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
     }];
 }
 
@@ -1503,12 +1628,416 @@
             YLog(@"%@",dic);
         } failure:^(NSError *error) {
             //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+            if(error.code == -1009){
+                NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+                NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+                [self bofangwithUrl:@[localVideoUrl]];
+                
+                self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                    [self.player stop];
+                    self.player = nil;
+                };
+            }
+
         }];
 
 
     }
 
 }
+
+- (void)applepay{
+    YLog(@"%ld",selectIndex)
+    
+    NSString *product_type;
+    if(selectIndex == 0){
+        product_type = @"permanent";
+    }
+    else if(selectIndex == 1){
+        product_type = @"year";
+    }
+    else{
+        product_type = @"month";
+    }
+    
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"product_type"] = product_type;
+    
+    YLog(@"%@",[NSString getBaseUrl:_URL_iOSorder withparam:param])
+    
+    
+    [YLHttpTool POST:_URL_iOSorder parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            
+            //调起内购
+            NSDictionary *d = dic[@"data"];
+            self.order_id = d[@"order_id"];
+            self.ios_purchase_id = d[@"product_id"];
+
+            [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+            [self gotopay];
+        }
+        
+        else{
+            [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
+            [SVProgressHUD dismissWithDelay:1.0];
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
+    }];
+
+    
+}
+
+- (void)gotopay{
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showWithStatus:@"正在处理中，请稍等~"];
+
+    //在每次购买之前检测是否有未完成的交易如果有就关闭。
+    NSArray* transactions = [SKPaymentQueue defaultQueue].transactions;
+    if (transactions.count > 0) {
+        //检测是否有未完成的交易
+        SKPaymentTransaction* transaction = [transactions firstObject];
+        if (transaction.transactionState == SKPaymentTransactionStatePurchased) {
+            [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+            return;
+        }
+    }
+    
+    // 5.点击按钮的时候判断app是否允许apple支付
+    
+    //如果app允许applepay
+    if ([SKPaymentQueue canMakePayments]) {
+        NSLog(@"yes");
+    
+        // 6.请求苹果后台商品
+        [self getRequestAppleProduct];
+    }
+    else
+    {
+        NSLog(@"not");
+    }
+}
+
+//请求苹果商品
+- (void)getRequestAppleProduct
+{
+    // 7.这里的com.czchat.CZChat01就对应着苹果后台的商品ID,他们是通过这个ID进行联系的。
+    NSArray *product = [[NSArray alloc] initWithObjects:self.ios_purchase_id,nil];
+    
+    NSSet *nsset = [NSSet setWithArray:product];
+    
+    // 8.初始化请求
+    SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:nsset];
+    request.delegate = self;
+    
+    // 9.开始请求
+    [request start];
+}
+
+
+// 10.接收到产品的返回信息,然后用返回的商品信息进行发起购买请求
+- (void) productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
+{
+    NSArray *product = response.products;
+    
+    //如果服务器没有产品
+    if([product count] == 0){
+        NSLog(@"nothing");
+        return;
+    }
+    
+    SKProduct *requestProduct = nil;
+    for (SKProduct *pro in product) {
+        
+        NSLog(@"%@", [pro description]);
+        NSLog(@"%@", [pro localizedTitle]);
+        NSLog(@"%@", [pro localizedDescription]);
+        NSLog(@"%@", [pro price]);
+        NSLog(@"%@", [pro productIdentifier]);
+        
+        // 11.如果后台消费条目的ID与我这里需要请求的一样（用于确保订单的正确性）
+        if([pro.productIdentifier isEqualToString:self.ios_purchase_id]){
+            requestProduct = pro;
+        }
+    }
+    
+    // 12.发送购买请求
+    SKPayment *payment = [SKPayment paymentWithProduct:requestProduct];
+    [[SKPaymentQueue defaultQueue] addPayment:payment];
+}
+
+//请求失败
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
+    NSLog(@"error:%@", error);
+    
+    [SVProgressHUD showErrorWithStatus:@"购买失败"];
+    [SVProgressHUD dismissWithDelay:1];
+}
+
+//反馈请求的产品信息结束后
+- (void)requestDidFinish:(SKRequest *)request{
+    NSLog(@"信息反馈结束");
+    
+}
+
+// 13.监听购买结果
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions//交易结果
+{
+    NSLog(@"-----paymentQueue--------");
+    for (SKPaymentTransaction *transaction in transactions)
+    {
+        switch (transaction.transactionState)
+        {
+            case SKPaymentTransactionStatePurchased:{//交易完成
+                NSLog(@"-----交易完成 --------");
+                
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];//记得关闭交易事件
+
+                NSLog(@"购买完成,向自己的服务器验证 ---- %@", transaction.payment.applicationUsername);
+                NSData *data = [NSData dataWithContentsOfFile:[[[NSBundle mainBundle] appStoreReceiptURL] path]];
+                NSString *receipt = [data base64EncodedStringWithOptions:0];
+                
+                [self completeTransaction:transaction];
+                
+                [SVProgressHUD dismiss];
+
+//                UIAlertView *alerView =  [[UIAlertView alloc] initWithTitle:@""
+//                                                                    message:@"购买成功"
+//                                                                   delegate:nil cancelButtonTitle:NSLocalizedString(@"关闭",nil) otherButtonTitles:nil];
+//
+//                [alerView show];
+                
+            } break;
+            case SKPaymentTransactionStateFailed://交易失败
+            {
+                [self failedTransaction:transaction];
+                NSLog(@"-----交易失败 --------");
+//                UIAlertView *alerView2 =  [[UIAlertView alloc] initWithTitle:@"提示"
+//                                                                     message:@"购买失败，请重新尝试购买"
+//                                                                    delegate:nil cancelButtonTitle:NSLocalizedString(@"关闭",nil) otherButtonTitles:nil];
+//
+//                [alerView2 show];
+                [SVProgressHUD showErrorWithStatus:@"购买失败"];
+                [SVProgressHUD dismissWithDelay:1];
+
+                ///[self gotoDetail];
+
+                
+            }break;
+            case SKPaymentTransactionStateRestored://已经购买过该商品
+                [self restoreTransaction:transaction];
+                NSLog(@"-----已经购买过该商品 --------");
+            case SKPaymentTransactionStatePurchasing:      //商品添加进列表
+                NSLog(@"-----商品添加进列表 --------");
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+- (void) restoreTransaction: (SKPaymentTransaction *)transaction
+{
+    NSLog(@" 交易恢复处理");
+}
+
+- (void) failedTransaction: (SKPaymentTransaction *)transaction{
+    NSLog(@"失败");
+    if (transaction.error.code != SKErrorPaymentCancelled)
+    {
+        
+    }
+    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+    
+}
+
+// 14.交易结束,当交易结束后还要去appstore上验证支付信息是否都正确,只有所有都正确后,我们就可以给用户方法我们的虚拟物品了。
+- (void)completeTransaction:(SKPaymentTransaction *)transaction
+{
+    NSString * str=[[NSString alloc]initWithData:transaction.transactionReceipt encoding:NSUTF8StringEncoding];
+    
+    NSString *environment=[self environmentForReceipt:str];
+    NSLog(@"----- 完成交易调用的方法completeTransaction 1--------%@",environment);
+    
+    
+    // 验证凭据，获取到苹果返回的交易凭据
+    // appStoreReceiptURL iOS7.0增加的，购买交易完成后，会将凭据存放在该地址
+    NSURL *receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
+    // 从沙盒中获取到购买凭据
+    NSData *receiptData = [NSData dataWithContentsOfURL:receiptURL];
+    /**
+     20      BASE64 常用的编码方案，通常用于数据传输，以及加密算法的基础算法，传输过程中能够保证数据传输的稳定性
+     21      BASE64是可以编码和解码的
+     22      */
+    NSString *encodeStr = [receiptData base64EncodedStringWithOptions:0];
+    
+    if (!encodeStr) {
+        return;
+    }
+    
+    [SVProgressHUD dismiss];
+    [SVProgressHUD showSuccessWithStatus:@"内购成功"];
+
+    
+    //生成流水号 接口
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"order_id"] = self.order_id;
+    param[@"receipt_data"] = encodeStr;
+
+    YLog(@"%@",[NSString getBaseUrl:_URL_iap_verify_receipt withparam:param])
+    
+    [YLHttpTool POST:_URL_iap_verify_receipt parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+        
+        [SVProgressHUD dismiss];
+        
+        if([dic[@"code"] integerValue] == 200){
+            YLog(@"%@",dic)
+            
+            [self refreshData];
+        }
+        else{
+
+            [SVProgressHUD showErrorWithStatus:dic[@"error"]];
+            [SVProgressHUD dismissWithDelay:1];
+        }
+        
+    } failure:^(NSError *error) {
+
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
+//        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+     
+}
+
+- (void)refreshData{
+    [SVProgressHUD showWithStatus:@"会员开通中..."];
+    
+    
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    
+    YLog(@"%@",[NSString getBaseUrl:_URL_userInfo withparam:param])
+    
+//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [YLHttpTool POST:_URL_userInfo parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            [SVProgressHUD dismissWithDelay:1];
+
+            NSDictionary *d = dic[@"data"];
+            [YUserDefaults setObject:d[@"name"] forKey:kusername];
+            [YUserDefaults setBool:[d[@"is_member"] boolValue] forKey:kis_member];
+            [YUserDefaults setObject:d[@"expire_time"] forKey:kexpiretime];
+            [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
+            [YUserDefaults setBool:[d[@"has_purchase"] boolValue] forKey:khas_purchase];
+
+            
+            [self gerenxinxiyemianxiugai];
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"refresh" object:self];
+
+            
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
+    }];
+}
+
+
+- (void)gerenxinxiyemianxiugai{
+    nameTextF.text = [YUserDefaults objectForKey:kusername];
+    if([YUserDefaults boolForKey:kis_member]){
+        self->vipImg.image = [UIImage imageNamed:@"vip"];
+        self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
+        self->vipL.textColor = [JKUtil getColor:@"FF6112"];
+
+    }
+    else{
+        self->vipImg.image = [UIImage imageNamed:@"notvip"];
+        self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
+        
+        if([YUserDefaults boolForKey:khas_purchase]){
+            self->vipL.text = @"您的会员已到期";
+        }
+        else{
+            self->vipL.text = @"当前未开通会员";
+        }
+    }
+}
+
+//结束后一定要销毁
+- (void)dealloc
+{
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+}
+
+-(NSString * )environmentForReceipt:(NSString * )str
+{
+    str= [str stringByReplacingOccurrencesOfString:@"\r\n" withString:@""];
+    
+    str = [str stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    
+    str = [str stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+    
+    str=[str stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    str=[str stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+    
+    NSArray * arr=[str componentsSeparatedByString:@";"];
+    
+    //存储收据环境的变量
+    NSString * environment=arr[2];
+    return environment;
+}
+
+
 /*
 #pragma mark - Navigation
 

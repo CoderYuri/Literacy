@@ -48,8 +48,8 @@ ul, ol {
 	text-align:center
 }
 #logo a {
-	background-image: url(/static/logo.jpg);
-	background-image: none, url(/static/logo.jpg);
+	background-image: url(logo.jpg);
+	background-image: none, url(logo.jpg);
 	-webkit-background-size: 84px;
 	background-size: 84px;
 	background-position: center top;
