@@ -486,20 +486,20 @@
 		DA4274ED256277E900610D12 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				DA9132CA25835A7400D1E8F9 /* WelcomeViewController.h */,
+				DA9132CB25835A7400D1E8F9 /* WelcomeViewController.m */,
 				DA4274EE2562781200610D12 /* MainViewController.h */,
 				DA4274EF2562781200610D12 /* MainViewController.m */,
+				DAF31F6E256E2B2B0056435B /* FunViewController.h */,
+				DAF31F6F256E2B2B0056435B /* FunViewController.m */,
 				DA9FD8412567A7BE0048D870 /* WordsViewController.h */,
 				DA9FD8422567A7BE0048D870 /* WordsViewController.m */,
 				DA9FD8492567C0F30048D870 /* MeViewController.h */,
 				DA9FD84A2567C0F30048D870 /* MeViewController.m */,
-				DAF31F6E256E2B2B0056435B /* FunViewController.h */,
-				DAF31F6F256E2B2B0056435B /* FunViewController.m */,
 				DA8184332574837500190F38 /* FuxiViewController.h */,
 				DA8184342574837500190F38 /* FuxiViewController.m */,
 				DA1A75F72575D7AF00B047FC /* FuxiPlayViewController.h */,
 				DA1A75F82575D7B000B047FC /* FuxiPlayViewController.m */,
-				DA9132CA25835A7400D1E8F9 /* WelcomeViewController.h */,
-				DA9132CB25835A7400D1E8F9 /* WelcomeViewController.m */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1232,7 +1232,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Literacy/Literacy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8R3385G3CM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1273,7 +1273,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Literacy/Literacy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8R3385G3CM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

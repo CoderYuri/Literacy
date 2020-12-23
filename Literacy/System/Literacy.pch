@@ -48,7 +48,6 @@
 
 //网络请求头
 #import "YLHttpTool.h"
-#import "ASIHTTPRequest.h"
 #import "NSString+urlParam.h"
 
 //#import "WXApi.h"

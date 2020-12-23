@@ -51,6 +51,7 @@
 
 @implementation MainViewController
 
+//播放音频
 - (void)bofangwithUrl:(NSArray *)urlArr{
     if(self.player){
         [self.player stop];
@@ -63,7 +64,7 @@
     [self.player playTheIndex:0];
 }
 
-
+//获取字库
 - (void)fetch{
     
     NSArray *arr = [YUserDefaults objectForKey:kziKu];
@@ -187,7 +188,6 @@
 
 }
 
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.player.viewControllerDisappear = YES;
@@ -200,7 +200,6 @@
     }
 }
 
-
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
@@ -210,6 +209,7 @@
 //    [self shouyeyemianrefresh];
 }
 
+//首页数据刷新
 - (void)shouyeyemianrefresh{
     if([YUserDefaults objectForKey:kusername]){
         
@@ -251,9 +251,7 @@
 
 }
 
-
-- (void)dealloc
-{
+- (void)dealloc{
     // 移除监听器
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -371,7 +369,6 @@
     
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -387,7 +384,6 @@
 
     [self fetch];
 }
-
 
 - (void)setupView{
     backV = self.view;
@@ -616,7 +612,7 @@
         
 }
 
-
+//上面两个view
 - (void)setshangV{
     UIView *headV = [UIView new];
     [backV addSubview:headV];
@@ -695,6 +691,7 @@
 }
 
 #pragma mark - click
+//选中某个路灯进行学习操作
 - (void)caozuoClick:(UIButton *)b{
     NSInteger ziIndex = b.superview.tag - 10000;
     YLog(@"%ld",ziIndex)
@@ -930,7 +927,7 @@
  
 }
 
-
+//清空旧数据
 - (void)weidengluCaozuo{
     //清空旧数据
     NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
@@ -994,6 +991,7 @@
 
 }
 
+//401之后修改信息
 - (void)xiugaixinxi{
     
     [YUserDefaults setBool:NO forKey:kis_member];
@@ -1010,6 +1008,7 @@
 
 }
 
+//进入个人中心页面 有录音
 - (void)gotomewithLuyin{
     MeViewController *meVc = [[MeViewController alloc] init];
 //    [self.navigationController pushViewController:meVc animated:YES];
@@ -1019,6 +1018,7 @@
     [self presentViewController:meVc animated:YES completion:nil];
 }
 
+//不是会员的时候  对后面的路灯进行封锁
 - (void)lockHoumian{
     NSArray *arr = [YUserDefaults objectForKey:kziKu];
 
@@ -1069,7 +1069,7 @@
     }
 }
 
-
+//学习完成之后  点亮路灯
 - (void)ludengdianliang:(NSInteger)index{
     
     
@@ -1088,6 +1088,7 @@
     
 }
 
+//进入学习记录页面
 - (void)ziClick{
     WordsViewController *vc = [[WordsViewController alloc] init];
 //    [self.navigationController pushViewController:vc animated:YES];
@@ -1097,6 +1098,7 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
+//进入个人中心
 - (void)tapAction{
     MeViewController *meVc = [[MeViewController alloc] init];
 //    [self.navigationController pushViewController:meVc animated:YES];
@@ -1106,6 +1108,7 @@
 }
 
 #pragma mark ————— scrollView代理方法 —————
+//页面滑动时候的代理方法
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
 
     gifView.centerX = gifCenterX - scrollView.contentOffset.x;
@@ -1160,6 +1163,7 @@
 }
 
 #pragma mark - 协议页面
+//首次进入app 协议页面
 - (void)xieyiyemian{
     CGFloat thisScale;
     thisScale = YScaleWidth;
@@ -1251,30 +1255,43 @@
     btn2.layer.cornerRadius = 30 * thisScale;
 }
 
+//用户协议
 - (void)yonghuclick{
     SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_user_agreement"]];
 //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
 //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:safariVc animated:YES completion:nil];
+    [self presentViewController:safariVc animated:YES completion:^{
+        //播放首次视频
+        iftuichu = NO;
+    }];
 
 }
 
+//隐私协议
 - (void)yinsiclick{
     SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_privacy"]];
 //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
 //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:safariVc animated:YES completion:nil];
+    [self presentViewController:safariVc animated:YES completion:^{
+        //播放首次视频
+        iftuichu = NO;
+    }];
 
 }
 
+//儿童隐私协议
 - (void)ertongclick{
     SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/children_privacy/"]];
 //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
 //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:safariVc animated:YES completion:nil];
+    [self presentViewController:safariVc animated:YES completion:^{
+        //播放首次视频
+        iftuichu = NO;
+    }];
 
 }
 
+//同意并进入
 - (void)tongyi{
     [xieyiCoverView removeFromSuperview];
     xieyiCoverView = nil;
@@ -1284,6 +1301,7 @@
     [self setupView];
 }
 
+//不同意操作
 - (void)butongyi{
     [SVProgressHUD showErrorWithStatus:@"请同意后使用App"];
     [SVProgressHUD dismissWithDelay:1];

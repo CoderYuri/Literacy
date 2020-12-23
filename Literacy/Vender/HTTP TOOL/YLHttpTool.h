@@ -37,12 +37,6 @@
     success:(void (^)(id responseObject))success
     failure:(void (^)(NSError *error))failure;
 
-//+ (void)GET:(NSString *)URLString
-// parameters:(id)parameters
-//setRequestSerializer:(AFHTTPResponseSerializer *)responseSerializer
-//    success:(void (^)(id responseObject))success
-//    failure:(void (^)(NSError *error))failure;
-
 + (void)ConnectionGET:(NSString *)URLString
            parameters:(id)parameters
               success:(void (^)(id responseObject))success
@@ -52,6 +46,4 @@
             parameters:(id)parameters
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure;
-
-
 @end

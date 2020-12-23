@@ -9,11 +9,13 @@
 #import "WordCollectionViewCell.h"
 #import "NSString+correctPhone.h"
 
+//app在当前页面 进入网页
 #import <WebKit/WKWebView.h>
 #import <WebKit/WKUIDelegate.h>
 #import <WebKit/WKNavigationDelegate.h>
 #import "YLwebViewController.h"
 
+//进入内购环节
 #import <StoreKit/StoreKit.h>
 
 #define kbackColor [JKUtil getColor:@"F4FAFF"]
@@ -84,6 +86,7 @@
 
 @implementation MeViewController
 
+//播放视频
 - (void)bofangwithUrl:(NSArray *)urlArr{
     if(self.player){
         [self.player stop];
@@ -111,11 +114,11 @@
     }
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    //特殊界面进入的时候 播放录音
     if(self.ifluyin){
         //    播放录音
         NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"解锁更多汉字" ofType:@"mp3"];
@@ -149,6 +152,7 @@
     [self setupView];
 }
 
+//登录页面的  绘制
 - (void)setupDengluV{
     blackV = [UIView new];
     blackV.backgroundColor = kblackColor;
@@ -273,7 +277,7 @@
     return textF;
 }
 
-
+//页面绘制
 - (void)setupView{
     backV = self.view;
     backV.backgroundColor = [JKUtil getColor:@"1665FF"];
@@ -950,6 +954,7 @@
     return strlength;
 }
 
+//名字修改完成  进行接口调用  后台修改
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     if (textField == nameTextF) {
         nameTextF.enabled = NO;
@@ -1062,6 +1067,7 @@
 
 
 #pragma mark - click
+//关于我们  app跳转到 滑板车背诵下载
 - (void)xiazaiClick{
     //滑板车背诵  id  1528921153
     
@@ -1069,6 +1075,7 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
+//关于我们 协议点击
 - (void)aboutClick:(UIButton *)btn{
     NSInteger aboutIndex = btn.tag;
     
@@ -1111,6 +1118,7 @@
 
 }
 
+
 - (void)anothercloseClick{
     [_YLwkwebView removeFromSuperview];
     [anothercloseBtn removeFromSuperview];
@@ -1124,6 +1132,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+//个人中心  四个栏目切换
 - (void)caozuoClick:(UIButton *)Btn{
     NSInteger btnIndex = Btn.tag - 1000;
     
@@ -1185,6 +1194,7 @@
     
 }
 
+//头像点击 进入登录
 - (void)touxiangClick{
     //已登录
     if(![YUserDefaults objectForKey:kusername]){
@@ -1232,6 +1242,7 @@
     
 }
 
+//登录页面  消失
 - (void)closeClick{
 //    blackV.hidden = YES;
 //    closeBtn.hidden = YES;
@@ -1302,6 +1313,7 @@
 
 }
 
+//获取倒计时
 - (void)setRestTime{
     //修改时间效果
     __block int timeout = 59;
@@ -1417,8 +1429,8 @@
     }];
 }
 
+//修改字库数据
 - (void)xiugaiziku{
-    //修改字库数据
     NSArray *arr = [YUserDefaults objectForKey:kziKu];
     NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
     

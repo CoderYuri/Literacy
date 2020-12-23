@@ -41,6 +41,8 @@
     CGFloat ludengY;
     
     BOOL iftuichu;
+    
+    BOOL ifhoutai;
     //播放器
     AVPlayer *avPlayer;
     AVPlayerItem * songItem;
@@ -52,8 +54,6 @@
 @property (nonatomic, strong) UIImageView *containerView;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 
-
-
 @end
 
 @implementation FunViewController
@@ -64,6 +64,7 @@
     iftuichu = NO;
 }
 
+//播放音频
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.player.viewControllerDisappear = YES;
@@ -81,15 +82,55 @@
     iftuichu = YES;
 }
 
+//app进入前台
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+//    NSLog(@"Application did become active.");
+    ifhoutai = NO;
+    
+    if(avPlayer){
+        [avPlayer play];
+    }
+    
+    if(self.player){
+//        [self.player resumePlayRecord];
+        [self.player.currentPlayerManager play];
+    }
+
+}
+
+
+//app进入后台
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    ifhoutai = YES;
+    
+    if(avPlayer){
+        [avPlayer pause];
+    }
+    
+    if(self.player){
+        [self.player.currentPlayerManager pause];
+    }
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+               selector:@selector(applicationDidBecomeActive:)
+                   name:UIApplicationDidBecomeActiveNotification
+                 object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+               selector:@selector(applicationDidEnterBackground:)
+                   name:UIApplicationDidEnterBackgroundNotification
+                 object:nil];
+
     
     [self setupView];
 }
 
-
+//基础页面绘制
 - (void)setupView{
     backV = self.view;
 
@@ -217,7 +258,6 @@
     
 }
 
-
 - (ZFPlayerControlView *)controlView {
     if (!_controlView) {
         _controlView = [ZFPlayerControlView new];
@@ -234,9 +274,8 @@
     return _controlView;
 }
 
-
 #pragma mark -- 认  页面操作
-
+//认  页面操作
 - (void)dianshiVjiazai{
     /*
     //步骤1：获取视频路径
@@ -296,16 +335,6 @@
 
         [avPlayer play];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(28 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-            if(iftuichu){
-                return;
-            }
-            
-            [self jinruduyemian];
-
-        });
-        
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:songItem];
 
         timeObserve = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
@@ -336,6 +365,17 @@
                     
                     
                         });
+                        
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            
+                            if(iftuichu){
+                                return;
+                            }
+                            
+                            [self jinruduyemian];
+
+                        });
+
 
                         
                         
@@ -419,12 +459,12 @@
     
 }
 
-
 //视频播放完成
 - (void)playbackFinished:(NSNotification *)notice {
 
 }
 
+//进入读页面
 - (void)jinruduyemian{
     if (timeObserve) {
         [avPlayer removeTimeObserver:timeObserve];
@@ -451,8 +491,6 @@
     }];
 
 }
-
-
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -495,6 +533,7 @@
 
 }
 
+//读 页面加载出来
 - (void)duVjiazai{
         
     CATransition *anim = [CATransition animation];
@@ -532,10 +571,11 @@
             
             //播放完成
             if(self.player.currentPlayIndex == 1){
-                [self huatongcaozuo];
-                
                 [self.player stop];
                 self.player = nil;
+                
+                [self huatongcaozuo];
+
             }
 
             [self.player playTheNext];
@@ -548,20 +588,20 @@
     
 }
 
+//播放音频
 - (void)bofangwithUrl:(NSArray *)urlArr{
     if(self.player){
         [self.player stop];
         self.player  = nil;
     }
 
-    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
-
+    self.player = [ZFPlayerController playerWithPlayerManager:[[ZFAVPlayerManager alloc] init]  containerView:[UIView new]];
+    self.player.pauseWhenAppResignActive = YES;
     self.player.assetURLs = urlArr;
     [self.player playTheIndex:0];
 }
 
-
-
+//话筒上升 跟进操作
 - (void)huatongcaozuo{
     [UIView animateWithDuration:0.7 animations:^{
         self->huatongImg.mj_y = 415 * YScaleHeight;
@@ -586,18 +626,20 @@
             
             [self bofangwithUrl:@[localVideoUrl , webVideoUrl]];
             
+            if(ifhoutai){
+                [self.player.currentPlayerManager pause];
+            }
+            
             self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
                 
                 YLog(@"%ld",self.player.currentPlayIndex)
                 
                 //播放完成
                 if(self.player.currentPlayIndex == 1){
-                    [self quwan];
-                    
-                    
                     [self.player stop];
                     self.player = nil;
 
+                    [self quwan];
                 }
 
                 [self.player playTheNext];
@@ -613,6 +655,7 @@
 
 }
 
+//进入  玩 页面
 - (void)quwan{
     [huatongImg startAnimating];
     
@@ -641,7 +684,6 @@
     
 }
 
-
 - (NSUInteger)durationWithVideo:(NSURL *)videoUrl{
     
     NSDictionary *opts = [NSDictionary dictionaryWithObject:@(NO) forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
@@ -653,7 +695,7 @@
 }
 
 #pragma mark -- 玩 页面操作
-
+//玩 页面操作
 - (void)wancaozuo{
     
         
@@ -677,6 +719,11 @@
             
             [self bofangwithUrl:@[localVideoUrl]];
             
+            if(ifhoutai){
+                [self.player.currentPlayerManager pause];
+            }
+
+            
             self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
                 [self.player stop];
                 self.player = nil;
@@ -687,6 +734,7 @@
 
 }
 
+//滑动至半屏位置
 - (void)banpingcaozuo{
     [UIView animateWithDuration:1.7 animations:^{
         
@@ -699,7 +747,7 @@
 
 }
 
-
+//玩 成功之后的操作
 - (void)successCaozuo{
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -754,6 +802,7 @@
 
 }
 
+//成功之后 通过的接口调用
 - (void)successFetch{
     
     if(self.xuanzhongIndex < [YUserDefaults integerForKey:khas_learn_num]){
@@ -817,9 +866,8 @@
 }
 
 
-
-
 #pragma mark -- View init
+//绘制认页面
 - (void)setRenV{
     renV = [UIView new];
     [scrollV addSubview:renV];
@@ -858,6 +906,7 @@
 //    [dianshiV addSubview:_containerView];
 //    _containerView.frame = CGRectMake(0 * YScaleHeight, 127 * YScaleHeight, 656 * YScaleHeight, 492 * YScaleHeight);
 
+    /*
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
 //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
 
@@ -872,11 +921,13 @@
     self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
     self.player.controlView = self.controlView;
     /// 设置退到后台继续播放
-    self.player.pauseWhenAppResignActive = NO;
+//    self.player.pauseWhenAppResignActive = NO;
     [self.controlView showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModeAutomatic];
-
+     */
+    
 }
 
+//绘制读页面
 - (void)setduV{
     duV = [UIView new];
     [scrollV addSubview:duV];
@@ -947,6 +998,7 @@
     
 }
 
+//绘制玩页面
 - (void)setwanV{
     wanV = [UIView new];
     [scrollV addSubview:wanV];
@@ -1101,7 +1153,38 @@
     
 }
 
-///动画轨迹  选择某个字
+//绘制 成功页面
+- (void)setsuccessV{
+    successV = [UIView new];
+    [scrollV addSubview:successV];
+    successV.frame = CGRectMake(YScreenW * 3, 0, YScreenW, YScreenH);
+    
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg2"]];
+    [successV addSubview:img];
+    
+
+    //添加下面的路
+    UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad2"]];
+    [successV addSubview:roadImg];
+    roadImg.frame = CGRectMake(0, roadH, YScreenW, 237 * YScaleWidth);
+    
+    UIImageView *imgg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementflag"]];
+    [successV addSubview:imgg];
+    imgg.frame = CGRectMake(764 * YScaleWidth, 0, 180 * YScaleHeight, 328 * YScaleHeight);
+    
+    if(isPad){
+        img.frame = CGRectMake(0, 0, YScreenW, YScreenH);
+        imgg.mj_y = 293 * YScaleHeight;
+
+    }
+    else{
+        img.frame = CGRectMake(0,  -50 * YScaleHeight, YScreenW, YScreenW * 0.75);
+        imgg.mj_y = 263 * YScaleHeight;
+    }
+
+}
+
+///动画轨迹  选择某个字完成
 - (void)caozuoClick:(UITapGestureRecognizer *)tap{
 
     NSInteger ziIndex = tap.view.tag;
@@ -1200,7 +1283,7 @@
 
 }
     
-    
+//设置一个可移动的view
 - (UIView *)fangkuiVwithName:(NSString *)name andifnormal:(BOOL)ifnormal{
     UIView *zhanweiV = [UIView new];
     zhanweiV.backgroundColor = ClearColor;
@@ -1227,36 +1310,6 @@
     
     }
     return zhanweiV;;
-}
-
-- (void)setsuccessV{
-    successV = [UIView new];
-    [scrollV addSubview:successV];
-    successV.frame = CGRectMake(YScreenW * 3, 0, YScreenW, YScreenH);
-    
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg2"]];
-    [successV addSubview:img];
-    
-
-    //添加下面的路
-    UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad2"]];
-    [successV addSubview:roadImg];
-    roadImg.frame = CGRectMake(0, roadH, YScreenW, 237 * YScaleWidth);
-    
-    UIImageView *imgg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementflag"]];
-    [successV addSubview:imgg];
-    imgg.frame = CGRectMake(764 * YScaleWidth, 0, 180 * YScaleHeight, 328 * YScaleHeight);
-    
-    if(isPad){
-        img.frame = CGRectMake(0, 0, YScreenW, YScreenH);
-        imgg.mj_y = 293 * YScaleHeight;
-
-    }
-    else{
-        img.frame = CGRectMake(0,  -50 * YScaleHeight, YScreenW, YScreenW * 0.75);
-        imgg.mj_y = 263 * YScaleHeight;
-    }
-
 }
 
 

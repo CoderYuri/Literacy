@@ -22,7 +22,6 @@ platform :ios, '9.0'
   pod 'MBProgressHUD'
   pod 'IQKeyboardManager'
   pod 'NudeIn'
-  pod 'ASIHTTPRequest'
 
   # 支付SDK
   #pod 'AlipaySDK-iOS'

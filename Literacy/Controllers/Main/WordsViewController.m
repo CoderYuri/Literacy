@@ -51,6 +51,7 @@
     }
 }
 
+//页面加载
 - (void)setupView{
     backV = self.view;
     
@@ -236,6 +237,7 @@
 
 }
 
+//播放录音
 - (void)bofangwithUrl:(NSArray *)urlArr{
     if(self.player){
         [self.player stop];

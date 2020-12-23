@@ -122,7 +122,7 @@
         UILabel *ziL = [UILabel new];
         ziL.text = @"人";
         ziL.font = [UIFont fontWithName:@"kaiti" size:72 * YScaleHeight];
-        ziL.textColor = BlackColor;
+        ziL.textColor = [JKUtil getColor:@"191949"];
         ziL.textAlignment = NSTextAlignmentCenter;
         [v addSubview:ziL];
         ziL.sd_layout.leftSpaceToView(v, 48 * YScaleHeight).topSpaceToView(v, 63 * YScaleHeight).widthIs(76 * YScaleHeight).heightIs(72 * YScaleHeight);
