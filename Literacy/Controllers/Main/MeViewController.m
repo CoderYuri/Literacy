@@ -27,7 +27,7 @@
 
 #define yonghuxieyi @"http://huabanche.club/shizi_user_agreement"
 #define yincexieyi  @"http://huabanche.club/shizi_privacy"
-#define kefuHaoma @"HBCshizi"
+#define kefuHaoma @"18014201009"
 
 @interface MeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,WKUIDelegate,WKNavigationDelegate,UITextFieldDelegate,SKPaymentTransactionObserver,SKProductsRequestDelegate>{
     UIView *backV;
@@ -119,19 +119,19 @@
     // Do any additional setup after loading the view.
     
     //特殊界面进入的时候 播放录音
-    if(self.ifluyin){
-        //    播放录音
-        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"解锁更多汉字" ofType:@"mp3"];
-        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
-        
-        [self bofangwithUrl:@[localVideoUrl]];
-        
-        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
-            [self.player stop];
-            self.player = nil;
-        };
-
-    }
+//    if(self.ifluyin){
+//        //    播放录音
+//        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"解锁更多汉字" ofType:@"mp3"];
+//        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+//        
+//        [self bofangwithUrl:@[localVideoUrl]];
+//        
+//        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+//            [self.player stop];
+//            self.player = nil;
+//        };
+//
+//    }
     
     dataArr = [NSMutableArray array];
     NSArray *arr = [YUserDefaults objectForKey:kziKu];
@@ -150,10 +150,15 @@
 
     
     [self setupView];
+
 }
 
 //登录页面的  绘制
 - (void)setupDengluV{
+    if(blackV){
+        return;
+    }
+    
     blackV = [UIView new];
     blackV.backgroundColor = kblackColor;
     blackV.alpha = 0.55;
@@ -780,7 +785,7 @@
     kefuV.sd_layout.centerXEqualToView(rightV).centerYEqualToView(rightV).widthIs(806 * YScaleWidth).heightIs(600 * YScaleHeight);
     
     UILabel *dixiaL = [UILabel new];
-    dixiaL.text = @"联系方式：点击复制公众号， 打开微信关注公众号留言";
+    dixiaL.text = @"联系方式：点击复制微信号， 打开微信添加客服为好友";
     dixiaL.font = YSystemFont(16 * YScaleWidth);
     dixiaL.textColor = [JKUtil getColor:@"B0BBD4"];
     dixiaL.textAlignment = NSTextAlignmentCenter;
@@ -810,7 +815,7 @@
     img.sd_layout.leftSpaceToView(midV, 33 * YScaleWidth).centerYEqualToView(midV).widthIs(40 * YScaleWidth).heightIs(32 * YScaleWidth);
     
     UILabel *detailL = [UILabel new];
-    detailL.text = [NSString stringWithFormat:@"公众号：%@",kefuHaoma];
+    detailL.text = [NSString stringWithFormat:@"客服：%@",kefuHaoma];
     detailL.textAlignment = NSTextAlignmentCenter;
     detailL.textColor = [JKUtil getColor:@"616E8D"];
     detailL.font = YSystemFont(20 * YScaleWidth);
@@ -2048,6 +2053,7 @@
     NSString * environment=arr[2];
     return environment;
 }
+
 
 
 /*

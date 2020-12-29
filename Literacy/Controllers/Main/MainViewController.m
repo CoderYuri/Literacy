@@ -42,6 +42,15 @@
     BOOL ifcanYidong;
     
     BOOL iftuichu;
+    
+    CGFloat thisScale;
+    UIView *jiazhangV;
+    UIView *BlackJZV;
+    UIView *zhongwenV;
+    UIView *shuziV;
+    NSMutableArray *rightArr;
+    NSInteger successCounts;
+
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
@@ -372,8 +381,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
-    [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
 
     dataArr = [NSMutableArray array];
     ifcanYidong = YES;
@@ -383,6 +390,9 @@
 
 
     [self fetch];
+    
+    rightArr = [NSMutableArray array];
+    successCounts = 0;
 }
 
 - (void)setupView{
@@ -1010,12 +1020,18 @@
 
 //进入个人中心页面 有录音
 - (void)gotomewithLuyin{
+    //设置家长view
+    [self setJiaZhangView];
+
+    
+    /*
     MeViewController *meVc = [[MeViewController alloc] init];
 //    [self.navigationController pushViewController:meVc animated:YES];
-    meVc.ifluyin = YES;
+//    meVc.ifluyin = YES;
     meVc.modalPresentationStyle = UIModalPresentationFullScreen;
     meVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:meVc animated:YES completion:nil];
+     */
 }
 
 //不是会员的时候  对后面的路灯进行封锁
@@ -1074,6 +1090,7 @@
     
     
     //点亮路灯
+    /*
     for (UIView *v in scrollV.subviews) {
         if (v.tag == index)
         {
@@ -1085,7 +1102,9 @@
 
         }
     }
+     */
     
+    [self gengxingdeng];
 }
 
 //进入学习记录页面
@@ -1100,8 +1119,19 @@
 
 //进入个人中心
 - (void)tapAction{
+    [self setJiaZhangView];
+
+    /*
     MeViewController *meVc = [[MeViewController alloc] init];
 //    [self.navigationController pushViewController:meVc animated:YES];
+    meVc.modalPresentationStyle = UIModalPresentationFullScreen;
+    meVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:meVc animated:YES completion:nil];
+     */
+}
+
+- (void)gotoMeVC{
+    MeViewController *meVc = [[MeViewController alloc] init];
     meVc.modalPresentationStyle = UIModalPresentationFullScreen;
     meVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:meVc animated:YES completion:nil];
@@ -1257,39 +1287,90 @@
 
 //用户协议
 - (void)yonghuclick{
-    SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_user_agreement"]];
-//    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
-//    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:safariVc animated:YES completion:^{
-        //播放首次视频
-        iftuichu = NO;
+    [self shuxueti:^{
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_user_agreement"]];
+    //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
+    //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:safariVc animated:YES completion:^{
+            //播放首次视频
+            iftuichu = NO;
+        }];
     }];
-
 }
 
 //隐私协议
 - (void)yinsiclick{
-    SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_privacy"]];
-//    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
-//    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:safariVc animated:YES completion:^{
-        //播放首次视频
-        iftuichu = NO;
-    }];
+    [self shuxueti:^{
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_privacy"]];
+    //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
+    //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:safariVc animated:YES completion:^{
+            //播放首次视频
+            iftuichu = NO;
+        }];
 
+    }];
 }
 
 //儿童隐私协议
 - (void)ertongclick{
-    SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/children_privacy/"]];
-//    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
-//    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:safariVc animated:YES completion:^{
-        //播放首次视频
-        iftuichu = NO;
-    }];
 
+    [self shuxueti:^{
+        
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/children_privacy/"]];
+    //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
+    //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:safariVc animated:YES completion:^{
+            //播放首次视频
+            iftuichu = NO;
+        }];
+
+    }];
 }
+
+- (void)shuxueti:(void (^)(void))completionBlock{
+    __block UITextField *textF = [[UITextField alloc] init];
+    
+    NSInteger a = arc4random_uniform(20)+1;
+    NSInteger b = arc4random_uniform(20)+1;
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"为确保您是家长\n请回答以下问题" message:[NSString stringWithFormat:@"%ld + %ld = ?",a,b] preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"提交" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        if([textF.text integerValue] == (a + b)){
+            if(completionBlock){
+                completionBlock();
+            }
+        }
+        else{
+            [SVProgressHUD showErrorWithStatus:@"回答错误，请重试"];
+            [SVProgressHUD dismissWithDelay:1];
+            
+        }
+
+    }];
+    
+    [cancel setValue:kblackColor forKey:@"titleTextColor"];
+    [confirm setValue:kblackColor forKey:@"titleTextColor"];
+    
+    [alert addAction:cancel];
+    [alert addAction:confirm];
+    
+
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textF = textField;
+        textF.backgroundColor = ClearColor;
+        textF.keyboardType = UIKeyboardTypeNumberPad;
+    }];
+    
+
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
 
 //同意并进入
 - (void)tongyi{
@@ -1305,6 +1386,258 @@
 - (void)butongyi{
     [SVProgressHUD showErrorWithStatus:@"请同意后使用App"];
     [SVProgressHUD dismissWithDelay:1];
+}
+
+
+//家长控制页面
+- (void)setJiaZhangView{
+    if(BlackJZV){
+        return;
+    }
+    
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"家长" ofType:@"mp3"];
+    NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+    [self bofangwithUrl:@[localVideoUrl]];
+    
+    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        [self.player stop];
+        self.player = nil;
+    };
+    
+    if(isPad){
+        thisScale = YScaleWidth;
+    }
+    else{
+        if([[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom){
+            thisScale = YScaleWidth * 0.7;
+        }
+        else{
+            thisScale = YScaleWidth * 0.8;
+        }
+    }
+    
+    BlackJZV = [UIView new];
+    BlackJZV.backgroundColor = kblackColor;
+    BlackJZV.alpha = 0.6;
+    [backV addSubview:BlackJZV];
+    BlackJZV.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
+        
+    jiazhangV = [UIView new];
+    jiazhangV.backgroundColor = ClearColor;
+    [backV addSubview:jiazhangV];
+//    jiazhangV.sd_layout.centerXEqualToView(backV).widthIs(729 * thisScale).heightIs(539 * thisScale).topSpaceToView(backV, 128 * YScaleHeight);
+    
+    jiazhangV.frame = CGRectMake((YScreenW - 729 * thisScale)/2, 128 * YScaleHeight, 729 * thisScale, 539 * thisScale);
+
+
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"verificationbox"]];
+    [jiazhangV addSubview:img];
+    img.sd_layout.leftEqualToView(jiazhangV).rightEqualToView(jiazhangV).topEqualToView(jiazhangV).bottomEqualToView(jiazhangV);
+    
+    UIButton *closeB = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [closeB setBackgroundImage:[UIImage imageNamed:@"elementclose"] forState:UIControlStateNormal];
+    [jiazhangV addSubview:closeB];
+    closeB.frame = CGRectMake(620 * thisScale, -29 * thisScale, 94 * thisScale, 94 * thisScale);
+    [closeB addTarget:self action:@selector(closeJiazhang) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    UILabel *Label = [UILabel new];
+    Label.text = @"家长验证，请依次点击";
+    Label.textColor = [JKUtil getColor:@"344366"];
+    Label.font = YSystemFont(24 * thisScale);
+    [jiazhangV addSubview:Label];
+    Label.sd_layout.leftSpaceToView(jiazhangV, 120 * thisScale).topSpaceToView(jiazhangV, 64 * thisScale).widthIs(248 * thisScale).heightIs(34 * thisScale);
+    
+    [self setzhongwen];
+    
+    shuziV = [UIView new];
+    shuziV.backgroundColor = ClearColor;
+    [jiazhangV addSubview:shuziV];
+    shuziV.sd_layout.leftSpaceToView(jiazhangV, 194 * thisScale).topSpaceToView(jiazhangV, 138 * thisScale).widthIs(340 * thisScale).heightIs(300 * thisScale);
+    
+    
+    for (int i = 0; i < 9; i++) {
+        UIButton *btn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+        [btn setTitleColor:WhiteColor forState:UIControlStateNormal];
+        [btn setTitleColor:[JKUtil getColor:@"0A45BA"] forState:UIControlStateSelected];
+        
+        [btn setBackgroundImage:[UIImage imageWithColor:[JKUtil getColor:@"1665FF"]] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageWithColor:[JKUtil getColor:@"4B80E8"]] forState:UIControlStateSelected];
+        btn.tag = i;
+        [btn setTitle:[NSString stringWithFormat:@"%d",i + 1] forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:50 * thisScale];
+
+        
+        
+        [shuziV addSubview:btn];
+        btn.frame = CGRectMake(130 * thisScale * (i % 3), 110 * thisScale * (i / 3), 80 * thisScale, 80 * thisScale);
+        btn.layer.cornerRadius = 6;
+        btn.layer.masksToBounds = YES;
+        [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];    }
+    
+    
+}
+
+- (void)btnClick:(UIButton *)b{
+    NSNumber *seleIndex = [NSNumber numberWithInteger:b.tag];
+    
+    if(successCounts > 2){
+        return;
+    }
+
+    if([seleIndex isEqualToNumber:rightArr[successCounts]]){
+        b.selected = YES;
+        successCounts ++;
+    }
+    else{
+        
+        UIView *v = jiazhangV;
+        
+        srand([[NSDate date] timeIntervalSince1970]);
+        float rand=(float)random();
+        CFTimeInterval t=rand*0.0000000001;
+        
+        [UIView animateWithDuration:0.1 delay:t options:0  animations:^
+         {
+            v.transform=CGAffineTransformMakeRotation(-0.03);
+         } completion:^(BOOL finished)
+         {
+             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+              {
+                 v.transform=CGAffineTransformMakeRotation(0.03);
+              } completion:^(BOOL finished) {}];
+         }];
+        
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
+             {
+                 v.transform=CGAffineTransformIdentity;
+             } completion:^(BOOL finished) {
+                 
+                 
+                 successCounts = 0;
+                 [self setzhongwen];
+                 for (UIButton *b in shuziV.subviews) {
+                     b.selected = NO;
+                 }
+
+                 
+             }];
+            
+        });
+
+        
+    }
+
+    YLog(@"%ld",successCounts)
+    
+    if(successCounts == 3){
+        //成功之后的操作
+
+        successCounts = 0;
+        [rightArr removeAllObjects];
+
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            //家长页面消失
+            [self closeJiazhang];
+
+            //进入个人中心
+            [self gotoMeVC];
+
+        });
+    }
+    
+    
+}
+
+
+- (void)setzhongwen{
+    if(zhongwenV){
+        [zhongwenV removeFromSuperview];
+        zhongwenV = nil;
+    }
+    
+    if(rightArr.count){
+        [rightArr removeAllObjects];
+    }
+    
+    zhongwenV = [UIView new];
+    [jiazhangV addSubview:zhongwenV];
+    zhongwenV.backgroundColor = WhiteColor;
+    zhongwenV.sd_layout.rightSpaceToView(jiazhangV, 115 * thisScale).topSpaceToView(jiazhangV, 46 * thisScale).widthIs(230 * thisScale).heightIs(70 * thisScale);
+    
+    NSMutableArray *zhongArr = [NSMutableArray arrayWithArray:@[@"壹",@"贰",@"叁",@"肆",@"伍",@"陆",@"柒",@"捌",@"玖"]];
+    NSMutableArray *tagsArr = [NSMutableArray array];
+    
+    for (int i = 0; i < 3; i++) {
+        UILabel *L = [UILabel new];
+        NSInteger num = arc4random_uniform(9 - i);
+        L.text = zhongArr[num];
+        [zhongArr removeObjectAtIndex:num];
+        
+        L.textAlignment = NSTextAlignmentCenter;
+        L.font = [UIFont fontWithName:@"Helvetica-Bold" size:50 * thisScale];
+        L.textColor = [JKUtil getColor:@"FF5E18"];
+        [zhongwenV addSubview:L];
+        L.frame = CGRectMake(80 * thisScale * i, 0, 70 * thisScale, 70 * thisScale);
+        
+        YLog(@"------%ld",num)
+        
+        [tagsArr addObject:[NSNumber numberWithInteger:num]];
+        
+//        if(i > 0){
+//            NSNumber *thisNum = rightArr[i - 1];
+//            YLog(@"%ld",[thisNum integerValue])
+//            if(num >= [thisNum integerValue]){
+//                [rightArr addObject:[NSNumber numberWithInteger:(num + i)]];
+//                YLog(@"%ld",num)
+//            }
+//            else{
+//                [rightArr addObject:[NSNumber numberWithInteger:num]];
+//
+//                YLog(@"%ld",num)
+//            }
+//        }
+//        else{
+//            [rightArr addObject:];
+//            YLog(@"%ld",num)
+//        }
+        
+    }
+    
+    NSMutableArray *arr = [NSMutableArray array];
+    for (int i = 0; i < 9; i++) {
+        [arr addObject:[NSNumber numberWithInt:i]];
+    }
+    
+    for (int i = 0; i < 3; i++) {
+        NSNumber *thisNum = tagsArr[i];
+        NSInteger thisInt = [thisNum integerValue];
+                
+        if(i > 0){
+            NSNumber *rightNum = arr[thisInt];
+            [rightArr addObject:rightNum];
+        }
+        else{
+            [rightArr addObject:tagsArr[0]];
+        }
+        
+        [arr removeObjectAtIndex:thisInt];
+        
+    }
+    
+}
+
+- (void)closeJiazhang{
+    [BlackJZV removeFromSuperview];
+    BlackJZV = nil;
+    
+    [jiazhangV removeFromSuperview];
+    jiazhangV = nil;
 }
 
 

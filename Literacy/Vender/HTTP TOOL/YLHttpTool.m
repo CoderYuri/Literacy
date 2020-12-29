@@ -59,13 +59,10 @@
                 
                 [SVProgressHUD showErrorWithStatus:@"当前无网络，建议检查设备网络状态"];
                 [SVProgressHUD dismissWithDelay:1];
-                
-
             }
             else{
                 [SVProgressHUD showErrorWithStatus:@"服务器请求失败,请稍候再试"];
                 [SVProgressHUD dismissWithDelay:1];
-
             }
             
 

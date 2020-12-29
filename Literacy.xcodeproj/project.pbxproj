@@ -15,7 +15,6 @@
 		DA1C63AD2566690D00E23AE8 /* YLNavgationController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1C63AA2566690D00E23AE8 /* YLNavgationController.m */; };
 		DA2316A12589E3E300B444D1 /* children_privacy in Resources */ = {isa = PBXBuildFile; fileRef = DA2316A02589E3E300B444D1 /* children_privacy */; };
 		DA2D6783258B49CD008F2143 /* success.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA2D6782258B49CD008F2143 /* success.gif */; };
-		DA2D6786258B54DF008F2143 /* 滑板车识字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA2D6785258B54DF008F2143 /* 滑板车识字.mp3 */; };
 		DA2D67AC258B93CB008F2143 /* 跟我读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */; };
 		DA41A3D825876812001C2C51 /* 组成词语.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */; };
 		DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */; };
@@ -28,6 +27,7 @@
 		DA4274D6255E7B9400610D12 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4274CF255E7B9300610D12 /* AppDelegate.m */; };
 		DA4274F02562781200610D12 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4274EF2562781200610D12 /* MainViewController.m */; };
 		DA45773C257917110086392D /* YLwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA45773B257917110086392D /* YLwebViewController.m */; };
+		DA4BBF88259AF7D300C2AC4C /* UMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA4BBF87259AF7D300C2AC4C /* UMCommon.framework */; };
 		DA712C0E25709FB5000DB9BD /* huatong.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C0D25709FB4000DB9BD /* huatong.gif */; };
 		DA712C1125709FBC000DB9BD /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C1025709FBC000DB9BD /* loading.gif */; };
 		DA8184352574837500190F38 /* FuxiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8184342574837500190F38 /* FuxiViewController.m */; };
@@ -44,6 +44,8 @@
 		DABF02AF258F79E200D24839 /* 玩.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DABF02AC258F79E200D24839 /* 玩.mp3 */; };
 		DABF02B0258F79E200D24839 /* 读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DABF02AD258F79E200D24839 /* 读.mp3 */; };
 		DABF02B1258F79E200D24839 /* 认.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DABF02AE258F79E200D24839 /* 认.mp3 */; };
+		DAC0DE19259588CA007F8881 /* 滑板车识字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAC0DE18259588CA007F8881 /* 滑板车识字.mp3 */; };
+		DAC0DE1C259588DD007F8881 /* 家长.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAC0DE1B259588DD007F8881 /* 家长.mp3 */; };
 		DAEA2F0E256CFD3B00F8081F /* AllModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DAEA2F0D256CFD3A00F8081F /* AllModel.m */; };
 		DAF31F70256E2B2B0056435B /* FunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF31F6F256E2B2B0056435B /* FunViewController.m */; };
 		DAF3630E2581FF5500BD8C16 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF3630D2581FF5400BD8C16 /* StoreKit.framework */; };
@@ -82,7 +84,6 @@
 		DAF3BA16258DE417001C8734 /* 网络.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF3BA15258DE417001C8734 /* 网络.mp3 */; };
 		DAF3BA1A258DF458001C8734 /* 按顺序学习.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF3BA19258DF458001C8734 /* 按顺序学习.mp3 */; };
 		DAF3BA1F258E1D62001C8734 /* BTNoneProgressPlayerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BA1E258E1D62001C8734 /* BTNoneProgressPlayerControlView.m */; };
-		DAF5E4E2256366D700003A85 /* NJCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E460256366D600003A85 /* NJCamera.m */; };
 		DAF5E4E7256366D700003A85 /* NSString+HEX.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E488256366D600003A85 /* NSString+HEX.m */; };
 		DAF5E4E8256366D700003A85 /* UIButton+CenterImageAndTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E48A256366D600003A85 /* UIButton+CenterImageAndTitle.m */; };
 		DAF5E4E9256366D700003A85 /* NSString+urlParam.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E48B256366D600003A85 /* NSString+urlParam.m */; };
@@ -108,9 +109,6 @@
 		DAF5E4FD256366D700003A85 /* UIImage+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4B3256366D600003A85 /* UIImage+Common.m */; };
 		DAF5E4FE256366D700003A85 /* UIResponder+Router.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4B5256366D600003A85 /* UIResponder+Router.m */; };
 		DAF5E4FF256366D700003A85 /* UINavigationBar+Awesome.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4B6256366D600003A85 /* UINavigationBar+Awesome.m */; };
-		DAF5E500256366D700003A85 /* UMCommonLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4BB256366D600003A85 /* UMCommonLog.framework */; };
-		DAF5E501256366D700003A85 /* UMCommonLog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DAF5E4BC256366D600003A85 /* UMCommonLog.bundle */; };
-		DAF5E502256366D700003A85 /* UMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4C0256366D600003A85 /* UMCommon.framework */; };
 		DAF5E503256366D700003A85 /* NullSafe.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4C1256366D600003A85 /* NullSafe.m */; };
 		DAF5E504256366D700003A85 /* MSSAutoresizeLabelFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4C3256366D600003A85 /* MSSAutoresizeLabelFlow.m */; };
 		DAF5E505256366D700003A85 /* MSSAutoresizeLabelFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4C4256366D600003A85 /* MSSAutoresizeLabelFlowLayout.m */; };
@@ -118,14 +116,6 @@
 		DAF5E507256366D700003A85 /* MSSAutoresizeLabelFlowConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4CA256366D600003A85 /* MSSAutoresizeLabelFlowConfig.m */; };
 		DAF5E508256366D700003A85 /* JKUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4CD256366D600003A85 /* JKUtil.m */; };
 		DAF5E509256366D700003A85 /* YLHttpTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4CE256366D600003A85 /* YLHttpTool.m */; };
-		DAF5E50A256366D700003A85 /* leqidata_black_list.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAF5E4D1256366D600003A85 /* leqidata_black_list.plist */; };
-		DAF5E50B256366D700003A85 /* LeqiAnalyticsSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4D2256366D600003A85 /* LeqiAnalyticsSDK.framework */; };
-		DAF5E50C256366D700003A85 /* UMSocialSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DAF5E4D5256366D600003A85 /* UMSocialSDKResources.bundle */; };
-		DAF5E50D256366D700003A85 /* UShareUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4D6256366D600003A85 /* UShareUI.framework */; };
-		DAF5E50E256366D700003A85 /* UMShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4D7256366D600003A85 /* UMShare.framework */; };
-		DAF5E50F256366D700003A85 /* libSocialWeChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4DA256366D600003A85 /* libSocialWeChat.a */; };
-		DAF5E510256366D700003A85 /* libSocialSina.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4DD256366D600003A85 /* libSocialSina.a */; };
-		DAF5E511256366D700003A85 /* libSocialQQ.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF5E4E1256366D600003A85 /* libSocialQQ.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -144,7 +134,6 @@
 		DA1C63AB2566690D00E23AE8 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		DA2316A02589E3E300B444D1 /* children_privacy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = children_privacy; sourceTree = "<group>"; };
 		DA2D6782258B49CD008F2143 /* success.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = success.gif; sourceTree = "<group>"; };
-		DA2D6785258B54DF008F2143 /* 滑板车识字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "滑板车识字.mp3"; sourceTree = "<group>"; };
 		DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "跟我读.mp3"; sourceTree = "<group>"; };
 		DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "组成词语.mp3"; sourceTree = "<group>"; };
 		DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "你太棒了.mp3"; sourceTree = "<group>"; };
@@ -162,6 +151,7 @@
 		DA4274EF2562781200610D12 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		DA45773A257917110086392D /* YLwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YLwebViewController.h; sourceTree = "<group>"; };
 		DA45773B257917110086392D /* YLwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLwebViewController.m; sourceTree = "<group>"; };
+		DA4BBF87259AF7D300C2AC4C /* UMCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMCommon.framework; sourceTree = "<group>"; };
 		DA712C0D25709FB4000DB9BD /* huatong.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = huatong.gif; sourceTree = "<group>"; };
 		DA712C1025709FBC000DB9BD /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
 		DA8184332574837500190F38 /* FuxiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FuxiViewController.h; sourceTree = "<group>"; };
@@ -185,6 +175,8 @@
 		DABF02AC258F79E200D24839 /* 玩.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "玩.mp3"; sourceTree = "<group>"; };
 		DABF02AD258F79E200D24839 /* 读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "读.mp3"; sourceTree = "<group>"; };
 		DABF02AE258F79E200D24839 /* 认.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "认.mp3"; sourceTree = "<group>"; };
+		DAC0DE18259588CA007F8881 /* 滑板车识字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "滑板车识字.mp3"; sourceTree = "<group>"; };
+		DAC0DE1B259588DD007F8881 /* 家长.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "家长.mp3"; sourceTree = "<group>"; };
 		DAEA2F0C256CFD3A00F8081F /* AllModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllModel.h; sourceTree = "<group>"; };
 		DAEA2F0D256CFD3A00F8081F /* AllModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllModel.m; sourceTree = "<group>"; };
 		DAF31F6E256E2B2B0056435B /* FunViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunViewController.h; sourceTree = "<group>"; };
@@ -261,8 +253,6 @@
 		DAF3BA1D258E1D62001C8734 /* BTNoneProgressPlayerControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTNoneProgressPlayerControlView.h; sourceTree = "<group>"; };
 		DAF3BA1E258E1D62001C8734 /* BTNoneProgressPlayerControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTNoneProgressPlayerControlView.m; sourceTree = "<group>"; };
 		DAF5E45C2563655E00003A85 /* Literacy.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Literacy.pch; sourceTree = "<group>"; };
-		DAF5E460256366D600003A85 /* NJCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NJCamera.m; sourceTree = "<group>"; };
-		DAF5E461256366D600003A85 /* NJCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJCamera.h; sourceTree = "<group>"; };
 		DAF5E487256366D600003A85 /* UIBarButtonItem+XMGExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+XMGExtension.h"; sourceTree = "<group>"; };
 		DAF5E488256366D600003A85 /* NSString+HEX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HEX.m"; sourceTree = "<group>"; };
 		DAF5E489256366D600003A85 /* NSString+cancelH5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+cancelH5.h"; sourceTree = "<group>"; };
@@ -312,9 +302,6 @@
 		DAF5E4B5256366D600003A85 /* UIResponder+Router.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+Router.m"; sourceTree = "<group>"; };
 		DAF5E4B6256366D600003A85 /* UINavigationBar+Awesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+Awesome.m"; sourceTree = "<group>"; };
 		DAF5E4B7256366D600003A85 /* Toast+UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Toast+UIView.h"; sourceTree = "<group>"; };
-		DAF5E4BB256366D600003A85 /* UMCommonLog.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMCommonLog.framework; sourceTree = "<group>"; };
-		DAF5E4BC256366D600003A85 /* UMCommonLog.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UMCommonLog.bundle; sourceTree = "<group>"; };
-		DAF5E4C0256366D600003A85 /* UMCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMCommon.framework; sourceTree = "<group>"; };
 		DAF5E4C1256366D600003A85 /* NullSafe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NullSafe.m; sourceTree = "<group>"; };
 		DAF5E4C3256366D600003A85 /* MSSAutoresizeLabelFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSAutoresizeLabelFlow.m; sourceTree = "<group>"; };
 		DAF5E4C4256366D600003A85 /* MSSAutoresizeLabelFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSAutoresizeLabelFlowLayout.m; sourceTree = "<group>"; };
@@ -328,17 +315,6 @@
 		DAF5E4CD256366D600003A85 /* JKUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKUtil.m; sourceTree = "<group>"; };
 		DAF5E4CE256366D600003A85 /* YLHttpTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLHttpTool.m; sourceTree = "<group>"; };
 		DAF5E4CF256366D600003A85 /* JKUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKUtil.h; sourceTree = "<group>"; };
-		DAF5E4D1256366D600003A85 /* leqidata_black_list.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = leqidata_black_list.plist; sourceTree = "<group>"; };
-		DAF5E4D2256366D600003A85 /* LeqiAnalyticsSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LeqiAnalyticsSDK.framework; sourceTree = "<group>"; };
-		DAF5E4D5256366D600003A85 /* UMSocialSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UMSocialSDKResources.bundle; sourceTree = "<group>"; };
-		DAF5E4D6256366D600003A85 /* UShareUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UShareUI.framework; sourceTree = "<group>"; };
-		DAF5E4D7256366D600003A85 /* UMShare.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMShare.framework; sourceTree = "<group>"; };
-		DAF5E4DA256366D600003A85 /* libSocialWeChat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSocialWeChat.a; sourceTree = "<group>"; };
-		DAF5E4DB256366D600003A85 /* UMSocialWechatHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSocialWechatHandler.h; sourceTree = "<group>"; };
-		DAF5E4DD256366D600003A85 /* libSocialSina.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSocialSina.a; sourceTree = "<group>"; };
-		DAF5E4DE256366D600003A85 /* UMSocialSinaHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSocialSinaHandler.h; sourceTree = "<group>"; };
-		DAF5E4E0256366D600003A85 /* UMSocialQQHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMSocialQQHandler.h; sourceTree = "<group>"; };
-		DAF5E4E1256366D600003A85 /* libSocialQQ.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSocialQQ.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -346,17 +322,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAF5E511256366D700003A85 /* libSocialQQ.a in Frameworks */,
-				DAF5E50E256366D700003A85 /* UMShare.framework in Frameworks */,
 				49CC1D5EA3E5946D55492AA5 /* Pods_Literacy.framework in Frameworks */,
+				DA4BBF88259AF7D300C2AC4C /* UMCommon.framework in Frameworks */,
 				DAF363112581FF6F00BD8C16 /* AudioToolbox.framework in Frameworks */,
-				DAF5E502256366D700003A85 /* UMCommon.framework in Frameworks */,
-				DAF5E50D256366D700003A85 /* UShareUI.framework in Frameworks */,
-				DAF5E50F256366D700003A85 /* libSocialWeChat.a in Frameworks */,
-				DAF5E510256366D700003A85 /* libSocialSina.a in Frameworks */,
 				DAF3630E2581FF5500BD8C16 /* StoreKit.framework in Frameworks */,
-				DAF5E50B256366D700003A85 /* LeqiAnalyticsSDK.framework in Frameworks */,
-				DAF5E500256366D700003A85 /* UMCommonLog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,6 +473,22 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		DA4BBF85259AF7D300C2AC4C /* common */ = {
+			isa = PBXGroup;
+			children = (
+				DA4BBF86259AF7D300C2AC4C /* common_ios_7.1.0.1+K */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		DA4BBF86259AF7D300C2AC4C /* common_ios_7.1.0.1+K */ = {
+			isa = PBXGroup;
+			children = (
+				DA4BBF87259AF7D300C2AC4C /* UMCommon.framework */,
+			);
+			path = "common_ios_7.1.0.1+K";
+			sourceTree = "<group>";
+		};
 		DAF3636E2582399C00BD8C16 /* ZFPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -618,35 +603,15 @@
 		DAF5E45D256366D600003A85 /* Vender */ = {
 			isa = PBXGroup;
 			children = (
+				DA4BBF85259AF7D300C2AC4C /* common */,
 				DAF3636E2582399C00BD8C16 /* ZFPlayer */,
 				DAF5E5122563B41400003A85 /* Sources */,
-				DAF5E45E256366D600003A85 /* NJCamera */,
 				DAF5E486256366D600003A85 /* Category */,
-				DAF5E4B8256366D600003A85 /* iOS */,
 				DAF5E4C1256366D600003A85 /* NullSafe.m */,
 				DAF5E4C2256366D600003A85 /* Class */,
 				DAF5E4CB256366D600003A85 /* HTTP TOOL */,
-				DAF5E4D0256366D600003A85 /* LeqiAnalyticsSDK */,
-				DAF5E4D3256366D600003A85 /* share_ios_6.9.8 */,
 			);
 			path = Vender;
-			sourceTree = "<group>";
-		};
-		DAF5E45E256366D600003A85 /* NJCamera */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E45F256366D600003A85 /* lib */,
-			);
-			path = NJCamera;
-			sourceTree = "<group>";
-		};
-		DAF5E45F256366D600003A85 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E460256366D600003A85 /* NJCamera.m */,
-				DAF5E461256366D600003A85 /* NJCamera.h */,
-			);
-			path = lib;
 			sourceTree = "<group>";
 		};
 		DAF5E486256366D600003A85 /* Category */ = {
@@ -709,56 +674,6 @@
 			path = Category;
 			sourceTree = "<group>";
 		};
-		DAF5E4B8256366D600003A85 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4B9256366D600003A85 /* umcommonlog */,
-				DAF5E4BD256366D600003A85 /* common */,
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
-		DAF5E4B9256366D600003A85 /* umcommonlog */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4BA256366D600003A85 /* umcommonlog_ios_2.0.0 */,
-			);
-			path = umcommonlog;
-			sourceTree = "<group>";
-		};
-		DAF5E4BA256366D600003A85 /* umcommonlog_ios_2.0.0 */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4BB256366D600003A85 /* UMCommonLog.framework */,
-				DAF5E4BC256366D600003A85 /* UMCommonLog.bundle */,
-			);
-			path = umcommonlog_ios_2.0.0;
-			sourceTree = "<group>";
-		};
-		DAF5E4BD256366D600003A85 /* common */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4BE256366D600003A85 /* common_ios_7.1.0 */,
-			);
-			path = common;
-			sourceTree = "<group>";
-		};
-		DAF5E4BE256366D600003A85 /* common_ios_7.1.0 */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4BF256366D600003A85 /* normal */,
-			);
-			path = common_ios_7.1.0;
-			sourceTree = "<group>";
-		};
-		DAF5E4BF256366D600003A85 /* normal */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4C0256366D600003A85 /* UMCommon.framework */,
-			);
-			path = normal;
-			sourceTree = "<group>";
-		};
 		DAF5E4C2256366D600003A85 /* Class */ = {
 			isa = PBXGroup;
 			children = (
@@ -785,71 +700,6 @@
 			path = "HTTP TOOL";
 			sourceTree = "<group>";
 		};
-		DAF5E4D0256366D600003A85 /* LeqiAnalyticsSDK */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4D1256366D600003A85 /* leqidata_black_list.plist */,
-				DAF5E4D2256366D600003A85 /* LeqiAnalyticsSDK.framework */,
-			);
-			path = LeqiAnalyticsSDK;
-			sourceTree = "<group>";
-		};
-		DAF5E4D3256366D600003A85 /* share_ios_6.9.8 */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4D4256366D600003A85 /* UMSocialUI */,
-				DAF5E4D7256366D600003A85 /* UMShare.framework */,
-				DAF5E4D8256366D600003A85 /* SocialLibraries */,
-			);
-			path = share_ios_6.9.8;
-			sourceTree = "<group>";
-		};
-		DAF5E4D4256366D600003A85 /* UMSocialUI */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4D5256366D600003A85 /* UMSocialSDKResources.bundle */,
-				DAF5E4D6256366D600003A85 /* UShareUI.framework */,
-			);
-			path = UMSocialUI;
-			sourceTree = "<group>";
-		};
-		DAF5E4D8256366D600003A85 /* SocialLibraries */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4D9256366D600003A85 /* WeChat */,
-				DAF5E4DC256366D600003A85 /* Sina */,
-				DAF5E4DF256366D600003A85 /* QQ */,
-			);
-			path = SocialLibraries;
-			sourceTree = "<group>";
-		};
-		DAF5E4D9256366D600003A85 /* WeChat */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4DA256366D600003A85 /* libSocialWeChat.a */,
-				DAF5E4DB256366D600003A85 /* UMSocialWechatHandler.h */,
-			);
-			path = WeChat;
-			sourceTree = "<group>";
-		};
-		DAF5E4DC256366D600003A85 /* Sina */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4DD256366D600003A85 /* libSocialSina.a */,
-				DAF5E4DE256366D600003A85 /* UMSocialSinaHandler.h */,
-			);
-			path = Sina;
-			sourceTree = "<group>";
-		};
-		DAF5E4DF256366D600003A85 /* QQ */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4E0256366D600003A85 /* UMSocialQQHandler.h */,
-				DAF5E4E1256366D600003A85 /* libSocialQQ.a */,
-			);
-			path = QQ;
-			sourceTree = "<group>";
-		};
 		DAF5E5122563B41400003A85 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -858,9 +708,10 @@
 				DABF02AC258F79E200D24839 /* 玩.mp3 */,
 				DAF3BA19258DF458001C8734 /* 按顺序学习.mp3 */,
 				DAF3BA15258DE417001C8734 /* 网络.mp3 */,
-				DA2D6785258B54DF008F2143 /* 滑板车识字.mp3 */,
 				DA41A3D725876812001C2C51 /* 解锁更多汉字.mp3 */,
+				DAC0DE18259588CA007F8881 /* 滑板车识字.mp3 */,
 				DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */,
+				DAC0DE1B259588DD007F8881 /* 家长.mp3 */,
 				DA41A3D325876811001C2C51 /* 开始今天的学习吧.mp3 */,
 				DA41A3CF25876810001C2C51 /* 你太棒了.mp3 */,
 				DA41A3D625876812001C2C51 /* 再读一遍.mp3 */,
@@ -933,6 +784,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAC0DE19259588CA007F8881 /* 滑板车识字.mp3 in Resources */,
 				DA4274D2255E7B9400610D12 /* Assets.xcassets in Resources */,
 				DA41A3E025876812001C2C51 /* 再读一遍.mp3 in Resources */,
 				DA712C0E25709FB5000DB9BD /* huatong.gif in Resources */,
@@ -940,14 +792,11 @@
 				DA9FD80625676BD40048D870 /* kaiti.ttf in Resources */,
 				DA41A3E125876812001C2C51 /* 解锁更多汉字.mp3 in Resources */,
 				DA2316A12589E3E300B444D1 /* children_privacy in Resources */,
-				DAF5E501256366D700003A85 /* UMCommonLog.bundle in Resources */,
 				DA9132C82583593700D1E8F9 /* welcome.mp4 in Resources */,
 				DA9FD819256790C60048D870 /* shaonv.gif in Resources */,
-				DA2D6786258B54DF008F2143 /* 滑板车识字.mp3 in Resources */,
-				DAF5E50C256366D700003A85 /* UMSocialSDKResources.bundle in Resources */,
 				DABF02B1258F79E200D24839 /* 认.mp3 in Resources */,
 				DABF02AF258F79E200D24839 /* 玩.mp3 in Resources */,
-				DAF5E50A256366D700003A85 /* leqidata_black_list.plist in Resources */,
+				DAC0DE1C259588DD007F8881 /* 家长.mp3 in Resources */,
 				DA9E2B6F257F4AB900CE95FA /* yonghuxieyi in Resources */,
 				DAF3BA16258DE417001C8734 /* 网络.mp3 in Resources */,
 				DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */,
@@ -1063,7 +912,6 @@
 				DAF5E503256366D700003A85 /* NullSafe.m in Sources */,
 				DAF5E4EF256366D700003A85 /* UITapImageView.m in Sources */,
 				DAF363B72582399C00BD8C16 /* ZFOrientationObserver.m in Sources */,
-				DAF5E4E2256366D700003A85 /* NJCamera.m in Sources */,
 				DAF363C52582399C00BD8C16 /* ZFAVPlayerManager.m in Sources */,
 				DAF5E507256366D700003A85 /* MSSAutoresizeLabelFlowConfig.m in Sources */,
 				DAF3BA1F258E1D62001C8734 /* BTNoneProgressPlayerControlView.m in Sources */,
@@ -1232,7 +1080,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Literacy/Literacy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 8R3385G3CM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1242,6 +1090,7 @@
 					"$(PROJECT_DIR)/Literacy/Vender/LeqiAnalyticsSDK",
 					"$(PROJECT_DIR)/Literacy/Vender/share_ios_6.9.8/UMSocialUI",
 					"$(PROJECT_DIR)/Literacy/Vender/share_ios_6.9.8",
+					"$(PROJECT_DIR)/Literacy/Vender/common/common_ios_7.1.0.1+K",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Literacy/System/Literacy.pch;
@@ -1273,7 +1122,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Literacy/Literacy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 8R3385G3CM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1283,6 +1132,7 @@
 					"$(PROJECT_DIR)/Literacy/Vender/LeqiAnalyticsSDK",
 					"$(PROJECT_DIR)/Literacy/Vender/share_ios_6.9.8/UMSocialUI",
 					"$(PROJECT_DIR)/Literacy/Vender/share_ios_6.9.8",
+					"$(PROJECT_DIR)/Literacy/Vender/common/common_ios_7.1.0.1+K",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Literacy/System/Literacy.pch;

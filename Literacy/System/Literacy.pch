@@ -51,9 +51,7 @@
 #import "NSString+urlParam.h"
 
 //#import "WXApi.h"
-#import <UMShare/UMShare.h>
 #import "NudeIn.h"
-#import <UMCommon/MobClick.h>
 #import <YYImage/YYImage.h>
 #import "HeaderUrl.h"
 

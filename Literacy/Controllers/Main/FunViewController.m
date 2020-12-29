@@ -329,9 +329,13 @@
         [self addChildViewController:avPlayerVC];
         [dianshiV addSubview:avPlayerVC.view];
         //步骤4：设置播放器视图大小
-        avPlayerVC.view.backgroundColor = WhiteColor;
+        avPlayerVC.view.backgroundColor = ClearColor;
+        
+//        avPlayerVC.view.frame = CGRectMake(98 * YScaleHeight, 128 * YScaleHeight, 656 * YScaleHeight, 492 * YScaleHeight);
         avPlayerVC.view.frame = CGRectMake(99 * YScaleHeight, 128 * YScaleHeight, 656 * YScaleHeight, 492 * YScaleHeight);
-//        avPlayerVC.view.sd_layout.centerXEqualToView(dianshiV).topSpaceToView(dianshiV, 128 * YScaleHeight).widthIs(656 * YScaleHeight).heightIs(492 * YScaleHeight);
+
+//        avPlayerVC.view.frame = CGRectMake(0 * YScaleHeight, 85 * YScaleHeight, 852 * YScaleHeight, 578 * YScaleHeight);
+//        avPlayerVC.view.sd_layout.centerXEqualToView(dianshiV).bottomSpaceToView(dianshiV, 111 * YScaleHeight).widthIs(656 * YScaleHeight).heightIs(492 * YScaleHeight);
 
         [avPlayer play];
         
@@ -473,11 +477,14 @@
     
     [avPlayer pause];
     avPlayer = nil;
+
+    [self->dianshiV removeFromSuperview];
+    dianshiV = nil;
     
+    [avPlayerVC removeFromParentViewController];
+    avPlayerVC = nil;
     
     [UIView animateWithDuration:1 animations:^{
-        [self->dianshiV removeFromSuperview];
-        dianshiV = nil;
 
         self->renCoverImg.hidden = YES;
         

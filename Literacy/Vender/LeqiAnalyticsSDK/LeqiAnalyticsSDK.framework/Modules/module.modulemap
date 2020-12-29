@@ -1,6 +1,0 @@
-framework module LeqiAnalyticsSDK {
-  umbrella header "LeqiAnalyticsSDK.h"
-
-  export *
-  module * { export * }
-}

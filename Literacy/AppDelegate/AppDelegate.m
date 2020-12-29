@@ -21,11 +21,9 @@
     // Override point for customization after application launch.
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
+    
     //进入欢迎页
     [self gotoWelcome];
-    
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
     //iOS 11 适配
     if (@available(iOS 11.0,*)) {

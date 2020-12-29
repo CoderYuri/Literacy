@@ -6,10 +6,8 @@
 //
 
 #import "WelcomeViewController.h"
-
 #import "ZFAVPlayerManager.h"
 #import "ZFPlayerControlView.h"
-
 #import "MainViewController.h"
 
 @interface WelcomeViewController (){
@@ -142,7 +140,6 @@
 }
 
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -152,6 +149,8 @@
     else{
         [self netWorkChangeEvent];
     }
+    
+    self.view.backgroundColor = [JKUtil getColor:@"0061E8"];
     
     UIImageView *img = [[UIImageView alloc] init];
     img.image = [UIImage imageNamed:@"launchimage"];
