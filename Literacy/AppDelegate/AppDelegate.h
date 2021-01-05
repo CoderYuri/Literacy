@@ -13,10 +13,7 @@
 
 - (void)gotoMainVC;
 
-/*
- 当前的网络状态
- */
-@property(nonatomic,assign)int netWorkStatesCode;
+- (void)gotoFuxi;
 
 @end
 

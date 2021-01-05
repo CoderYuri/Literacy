@@ -73,10 +73,12 @@
     WelcomeViewController *welcomeVc = [[WelcomeViewController alloc] init];
     [self.window setRootViewController:welcomeVc];
     [self.window makeKeyAndVisible];
-    
-//    FuxiViewController *welcomeVc = [[FuxiViewController alloc] init];
-//    [self.window setRootViewController:welcomeVc];
-//    [self.window makeKeyAndVisible];
+}
+
+- (void)gotoFuxi{
+    FuxiViewController *welcomeVc = [[FuxiViewController alloc] init];
+    [self.window setRootViewController:welcomeVc];
+    [self.window makeKeyAndVisible];
 }
 
 

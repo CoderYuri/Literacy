@@ -23,7 +23,6 @@
  */
 @property(nonatomic,assign)int netWorkStatesCode;
 
-
 @end
 
 @implementation WelcomeViewController
@@ -167,7 +166,8 @@
         [self.player stop];
         self.player = nil;
         
-        [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
+//        [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
+        [(AppDelegate*)[UIApplication sharedApplication].delegate gotoFuxi];
     };
 
 

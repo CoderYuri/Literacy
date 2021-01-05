@@ -13,6 +13,7 @@
 		DA1A75F92575D7B000B047FC /* FuxiPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A75F82575D7B000B047FC /* FuxiPlayViewController.m */; };
 		DA1C63AC2566690D00E23AE8 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1C63A92566690D00E23AE8 /* BaseViewController.m */; };
 		DA1C63AD2566690D00E23AE8 /* YLNavgationController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1C63AA2566690D00E23AE8 /* YLNavgationController.m */; };
+		DA1EAF5825A461900048F7FD /* shaonv.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA1EAF5725A4618F0048F7FD /* shaonv.gif */; };
 		DA2316A12589E3E300B444D1 /* children_privacy in Resources */ = {isa = PBXBuildFile; fileRef = DA2316A02589E3E300B444D1 /* children_privacy */; };
 		DA2D6783258B49CD008F2143 /* success.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA2D6782258B49CD008F2143 /* success.gif */; };
 		DA2D67AC258B93CB008F2143 /* 跟我读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */; };
@@ -36,7 +37,6 @@
 		DA9E2B6C257F496300CE95FA /* yinsixieyi in Resources */ = {isa = PBXBuildFile; fileRef = DA9E2B6B257F496300CE95FA /* yinsixieyi */; };
 		DA9E2B6F257F4AB900CE95FA /* yonghuxieyi in Resources */ = {isa = PBXBuildFile; fileRef = DA9E2B6E257F4AB900CE95FA /* yonghuxieyi */; };
 		DA9FD80625676BD40048D870 /* kaiti.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA9FD80525676BD40048D870 /* kaiti.ttf */; };
-		DA9FD819256790C60048D870 /* shaonv.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA9FD818256790C50048D870 /* shaonv.gif */; };
 		DA9FD83F25679E190048D870 /* MainCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9FD83E25679E190048D870 /* MainCollectionViewCell.m */; };
 		DA9FD8432567A7BE0048D870 /* WordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9FD8422567A7BE0048D870 /* WordsViewController.m */; };
 		DA9FD8472567B3940048D870 /* WordCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9FD8462567B3940048D870 /* WordCollectionViewCell.m */; };
@@ -132,6 +132,7 @@
 		DA1C63A92566690D00E23AE8 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		DA1C63AA2566690D00E23AE8 /* YLNavgationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLNavgationController.m; sourceTree = "<group>"; };
 		DA1C63AB2566690D00E23AE8 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		DA1EAF5725A4618F0048F7FD /* shaonv.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = shaonv.gif; sourceTree = "<group>"; };
 		DA2316A02589E3E300B444D1 /* children_privacy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = children_privacy; sourceTree = "<group>"; };
 		DA2D6782258B49CD008F2143 /* success.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = success.gif; sourceTree = "<group>"; };
 		DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "跟我读.mp3"; sourceTree = "<group>"; };
@@ -162,7 +163,6 @@
 		DA9E2B6B257F496300CE95FA /* yinsixieyi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = yinsixieyi; sourceTree = "<group>"; };
 		DA9E2B6E257F4AB900CE95FA /* yonghuxieyi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = yonghuxieyi; sourceTree = "<group>"; };
 		DA9FD80525676BD40048D870 /* kaiti.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = kaiti.ttf; sourceTree = "<group>"; };
-		DA9FD818256790C50048D870 /* shaonv.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = shaonv.gif; sourceTree = "<group>"; };
 		DA9FD83D25679E190048D870 /* MainCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainCollectionViewCell.h; sourceTree = "<group>"; };
 		DA9FD83E25679E190048D870 /* MainCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainCollectionViewCell.m; sourceTree = "<group>"; };
 		DA9FD8412567A7BE0048D870 /* WordsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WordsViewController.h; sourceTree = "<group>"; };
@@ -718,9 +718,9 @@
 				DA41A3CE2587680F001C2C51 /* 组成词语.mp3 */,
 				DA9132C72583593700D1E8F9 /* welcome.mp4 */,
 				DA712C1025709FBC000DB9BD /* loading.gif */,
+				DA1EAF5725A4618F0048F7FD /* shaonv.gif */,
 				DA2D6782258B49CD008F2143 /* success.gif */,
 				DA712C0D25709FB4000DB9BD /* huatong.gif */,
-				DA9FD818256790C50048D870 /* shaonv.gif */,
 				DA9FD80525676BD40048D870 /* kaiti.ttf */,
 			);
 			path = Sources;
@@ -793,7 +793,6 @@
 				DA41A3E125876812001C2C51 /* 解锁更多汉字.mp3 in Resources */,
 				DA2316A12589E3E300B444D1 /* children_privacy in Resources */,
 				DA9132C82583593700D1E8F9 /* welcome.mp4 in Resources */,
-				DA9FD819256790C60048D870 /* shaonv.gif in Resources */,
 				DABF02B1258F79E200D24839 /* 认.mp3 in Resources */,
 				DABF02AF258F79E200D24839 /* 玩.mp3 in Resources */,
 				DAC0DE1C259588DD007F8881 /* 家长.mp3 in Resources */,
@@ -801,6 +800,7 @@
 				DAF3BA16258DE417001C8734 /* 网络.mp3 in Resources */,
 				DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */,
 				DA2D67AC258B93CB008F2143 /* 跟我读.mp3 in Resources */,
+				DA1EAF5825A461900048F7FD /* shaonv.gif in Resources */,
 				DA41A3D825876812001C2C51 /* 组成词语.mp3 in Resources */,
 				DAF363CB2582399D00BD8C16 /* ZFPlayer.bundle in Resources */,
 				DAF3BA1A258DF458001C8734 /* 按顺序学习.mp3 in Resources */,
