@@ -13,7 +13,7 @@
 
 - (void)gotoMainVC;
 
-- (void)gotoFuxi;
+//- (void)gotoFuxi;
 
 @end
 

@@ -29,6 +29,7 @@ platform :ios, '9.0'
 #  pod 'ZFPlayer', '~> 4.0'
 #  pod 'UMCommon'
 
+  pod 'lottie-ios','2.5.3'
 
   #相册
   pod 'TZImagePickerController'

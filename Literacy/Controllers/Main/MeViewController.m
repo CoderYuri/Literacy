@@ -1268,17 +1268,13 @@
 
 //获取验证码
 - (void)huoquclick{
-    NSString *warnS = [NSString valiMobile:mobileTextF.text];
-    if(warnS.length){
+//    NSString *warnS = [NSString valiMobile:mobileTextF.text];
+//    if(warnS.length){
 //        [self.view makeToast:warnS duration:2 position:@"center"];
-        [SVProgressHUD showErrorWithStatus:warnS];
-        [SVProgressHUD dismissWithDelay:1];
-        return;
-    }
-    
-    [codeTextF becomeFirstResponder];
-    huoquBtn.enabled = NO;
-    [self setRestTime];
+//        [SVProgressHUD showErrorWithStatus:warnS];
+//        [SVProgressHUD dismissWithDelay:1];
+//        return;
+//    }
 
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -1293,8 +1289,13 @@
     } success:^(id dic) {
 
         if([dic[@"code"] integerValue] == 200){
-
-
+            [codeTextF becomeFirstResponder];
+            huoquBtn.enabled = NO;
+            [self setRestTime];
+        }
+        else{
+            [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
+            [SVProgressHUD dismissWithDelay:1.0];
         }
         
         YLog(@"%@",dic);
@@ -1353,13 +1354,13 @@
 
 //登录
 - (void)dengluClick{
-    NSString *warnS = [NSString valiMobile:mobileTextF.text];
-    if(warnS.length){
-//        [self.view makeToast:warnS duration:2 position:@"center"];
-        [SVProgressHUD showErrorWithStatus:warnS];
-        [SVProgressHUD dismissWithDelay:1];
-        return;
-    }
+//    NSString *warnS = [NSString valiMobile:mobileTextF.text];
+//    if(warnS.length){
+////        [self.view makeToast:warnS duration:2 position:@"center"];
+//        [SVProgressHUD showErrorWithStatus:warnS];
+//        [SVProgressHUD dismissWithDelay:1];
+//        return;
+//    }
     
     
     if(!codeTextF.text.length){
@@ -1681,8 +1682,12 @@
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"product_type"] = product_type;
     
-    YLog(@"%@",[NSString getBaseUrl:_URL_iOSorder withparam:param])
+    if(isPad)
+        param[@"device"] = @"iPad";
+    else
+        param[@"device"] = @"iPhone";
     
+    YLog(@"%@",[NSString getBaseUrl:_URL_iOSorder withparam:param])
     
     [YLHttpTool POST:_URL_iOSorder parameters:param progress:^(NSProgress *progress) {
         

@@ -24,7 +24,7 @@
     AFHTTPSessionManager *mgr = [AFHTTPSessionManager manager];
     mgr.requestSerializer = [AFJSONRequestSerializer serializer];
     [mgr.requestSerializer willChangeValueForKey:@"timeoutInterval"];
-    mgr.requestSerializer.timeoutInterval = 15.f;
+    mgr.requestSerializer.timeoutInterval = 60.f;
     [mgr.requestSerializer didChangeValueForKey:@"timeoutInterval"];
     //设置请求头
     [mgr.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -60,11 +60,17 @@
                 [SVProgressHUD showErrorWithStatus:@"当前无网络，建议检查设备网络状态"];
                 [SVProgressHUD dismissWithDelay:1];
             }
-            else{
-                [SVProgressHUD showErrorWithStatus:@"服务器请求失败,请稍候再试"];
+            
+            if(error.code == -1001){
+                [SVProgressHUD showErrorWithStatus:@"网络请求超时，请稍候再试"];
                 [SVProgressHUD dismissWithDelay:1];
             }
-            
+
+            else{
+                [SVProgressHUD showErrorWithStatus:@"请稍候再试"];
+                [SVProgressHUD dismissWithDelay:1];
+            }
+
 
             failure(error);
         }
@@ -93,7 +99,7 @@
 
     
     [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
-    manager.requestSerializer.timeoutInterval = 15.f;
+    manager.requestSerializer.timeoutInterval = 60.f;
     [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
 
     //设置接受方式
@@ -123,8 +129,13 @@
                 [SVProgressHUD dismissWithDelay:1];
                                 
             }
+            if(error.code == -1001){
+                [SVProgressHUD showErrorWithStatus:@"网络请求超时，请稍候再试"];
+                [SVProgressHUD dismissWithDelay:1];
+            }
+
             else{
-                [SVProgressHUD showErrorWithStatus:@"服务器请求失败,请稍候再试"];
+                [SVProgressHUD showErrorWithStatus:@"请稍候再试"];
                 [SVProgressHUD dismissWithDelay:1];
             }
 

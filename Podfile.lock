@@ -7,6 +7,7 @@ PODS:
   - AFNetworking/Security (3.2.1)
   - AFNetworking/Serialization (3.2.1)
   - IQKeyboardManager (6.5.5)
+  - lottie-ios (2.5.3)
   - MBProgressHUD (1.2.0)
   - MJExtension (3.2.2)
   - MJRefresh (3.4.3)
@@ -30,6 +31,7 @@ DEPENDENCIES:
   - AFNetworking/Security (~> 3.0)
   - AFNetworking/Serialization (~> 3.0)
   - IQKeyboardManager
+  - lottie-ios (= 2.5.3)
   - MBProgressHUD
   - MJExtension
   - MJRefresh
@@ -46,6 +48,7 @@ SPEC REPOS:
   trunk:
     - AFNetworking
     - IQKeyboardManager
+    - lottie-ios
     - MBProgressHUD
     - MJExtension
     - MJRefresh
@@ -61,6 +64,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   IQKeyboardManager: 3a8b9e603f8b0eeaf5f096a1f2b2cfcf121992ef
+  lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MJExtension: d9b9c74cbdeb724c1e9ecbb157b318276e62e876
   MJRefresh: 53e3e3219f204425ee6d3e62e8733d3295944cd6
@@ -73,6 +77,6 @@ SPEC CHECKSUMS:
   TZImagePickerController: 4e7a7b3d314f8a75f11042931dfd9d34c270c7db
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
 
-PODFILE CHECKSUM: 2286345ecbf088cb9191af69ca6ccb8e2e683023
+PODFILE CHECKSUM: ccf04d041be168d1e4c691ffdd9a0d73e91e0581
 
 COCOAPODS: 1.10.0

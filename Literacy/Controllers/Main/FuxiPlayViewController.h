@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,assign) NSInteger successCounts;
 
+@property(nonatomic,strong) NSArray *fuxiArr;
+
 @end
 
 NS_ASSUME_NONNULL_END

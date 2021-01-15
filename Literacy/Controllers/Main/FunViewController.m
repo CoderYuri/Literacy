@@ -36,6 +36,16 @@
     NSInteger successIndex;  //成功个数
     NSInteger rightIndex;    //正确字的位置
     
+    //下面四个 方块
+    UIView *fankunV;
+    UIView *fankunV1;
+    UIView *fankunV2;
+    UIView *fankunV3;
+
+    //组合2个方块
+    YYAnimatedImageView *leftFangkuaiV;
+    YYAnimatedImageView *rightFangkuaiV;
+    
     UIView *successV;
     CGFloat roadH;
     CGFloat ludengY;
@@ -48,6 +58,12 @@
     AVPlayerItem * songItem;
     AVPlayerViewController *avPlayerVC;
     id timeObserve;
+    
+    LOTAnimationView *huatongAnimation;
+    LOTAnimationView *tishiAnimation;
+    
+    BOOL firstCheck;
+
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
@@ -244,14 +260,14 @@
     [super viewDidAppear:animated];
     
     [UIView animateWithDuration:2 animations:^{
-        self->gifView.centerX = 250 * YScaleWidth;
+        self->gifView.centerX = 330 * YScaleWidth;
 
     } completion:^(BOOL finished) {
         [self->gifView stopAnimating];
         //加载电视机 放动画  完成之后进入下个页面
         
-        [self dianshiVjiazai];
-
+//        [self dianshiVjiazai];
+        [self quwan];
 //        [self successCaozuo];
     }];
 
@@ -457,10 +473,6 @@
     [dianshiV.layer addAnimation:group forKey:nil];
 
     self->renCoverImg.hidden = NO;
-
-    
-
-    
 }
 
 //视频播放完成
@@ -520,21 +532,21 @@
 //        self->gifView.centerX =  - 134 * YScaleWidth + YScreenW;
 //    } completion:^(BOOL finished) {
         
-        [UIView animateWithDuration:Transformtimeinterval animations:^{
-            
-            [self->scrollV setContentOffset:CGPointMake(YScreenW, 0)];
-            self->yidongV.mj_x = 55 * YScaleWidth;
-            self->gifView.centerX =  250 * YScaleWidth + YScreenW;
+    [UIView animateWithDuration:Transformtimeinterval animations:^{
+        
+        [self->scrollV setContentOffset:CGPointMake(YScreenW, 0)];
+        self->yidongV.mj_x = 55 * YScaleWidth;
+        self->gifView.centerX =  330 * YScaleWidth + YScreenW;
 
-        } completion:^(BOOL finished) {
-            
+    } completion:^(BOOL finished) {
+        
 
-            [gifView stopAnimating];
-            //读的画面操作
-            [self duVjiazai];
+        [gifView stopAnimating];
+        //读的画面操作
+        [self duVjiazai];
 
-            
-        }];
+        
+    }];
 //    }];
 
 
@@ -542,16 +554,17 @@
 
 //读 页面加载出来
 - (void)duVjiazai{
-        
+
     CATransition *anim = [CATransition animation];
-    anim.type = @"cube";
+    anim.type = kCATransitionReveal;
 //        anim.type = kCATransitionFade;
     anim.duration = 1;
     [self->cikaV.layer addAnimation:anim forKey:nil];
     self->renCoverImg.hidden = NO;
 
     [UIView animateWithDuration:1 animations:^{
-        cikaV.alpha = 1;
+        cikaV.hidden = NO;
+
     } completion:^(BOOL finished) {
         
         if(iftuichu){
@@ -565,11 +578,8 @@
         NSString *webVideoPath = self.word_audio;
         NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
         
-//        NSURL *localVideoUrl1 = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"玩" ofType:@"mp3"]];
-
         
         [self bofangwithUrl:@[localVideoUrl , webVideoUrl]];
-        
         
         
         self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
@@ -611,19 +621,22 @@
 //话筒上升 跟进操作
 - (void)huatongcaozuo{
     [UIView animateWithDuration:0.7 animations:^{
-        self->huatongImg.mj_y = 415 * YScaleHeight;
+        self->huatongAnimation.mj_y = 415 * YScaleHeight;
 
     } completion:^(BOOL finished) {
-        [huatongImg startAnimating];
+        [huatongAnimation play];
         
         
         [UIView animateWithDuration:3 animations:^{
-            self->huatongImg.mj_y = 416 * YScaleHeight;
+            self->huatongAnimation.mj_y = 416 * YScaleHeight;
         } completion:^(BOOL finished) {
             
-            [huatongImg stopAnimating];
-         
+            if(iftuichu){
+                return;
+            }
 
+            [huatongAnimation stop];
+        
             //    播放录音
             NSString* localFilePath = [[NSBundle mainBundle]pathForResource:@"再读一遍" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -664,16 +677,16 @@
 
 //进入  玩 页面
 - (void)quwan{
-    [huatongImg startAnimating];
+    [huatongAnimation play];
     
     [UIView animateWithDuration:3 animations:^{
-        self->huatongImg.mj_y = 415 * YScaleHeight;
+        self->huatongAnimation.mj_y = 415 * YScaleHeight;
     } completion:^(BOOL finished) {
         
-        [huatongImg stopAnimating];
+        [huatongAnimation stop];
         
         [UIView animateWithDuration:0.7 animations:^{
-            self->huatongImg.mj_y = YScreenH;
+            self->huatongAnimation.mj_y = YScreenH;
 
         } completion:^(BOOL finished) {
             
@@ -745,10 +758,11 @@
 - (void)banpingcaozuo{
     [UIView animateWithDuration:1.7 animations:^{
         
-        self->gifView.centerX = 582 * YScaleWidth + YScreenW * 2;
+        self->gifView.centerX = 590 * YScaleWidth + YScreenW * 2;
 
     } completion:^(BOOL finished) {
         
+        firstCheck = YES;
 //        [self->gifView stopAnimating];
     }];
 
@@ -757,18 +771,21 @@
 //玩 成功之后的操作
 - (void)successCaozuo{
     
+    CGFloat gifwidth = 600 * YScaleWidth;
+    CGFloat gifheight = 450 * YScaleWidth;
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         UIImage *image = [YYImage imageNamed:@"success.gif"];
         
         YYAnimatedImageView *successImg = [[YYAnimatedImageView alloc] initWithImage:image];
         [backV addSubview:successImg];
-        successImg.frame = CGRectMake(0, YScreenH - 237 * YScaleHeight - 405 * YScaleWidth,540 * YScaleWidth, 405 * YScaleWidth);
-        [successImg startAnimating];
+        successImg.frame = CGRectMake(0, YScreenH - 237 * YScaleHeight - gifheight,gifwidth, gifheight);
+//        [successImg startAnimating];
         
         YYAnimatedImageView *successImg1 = [[YYAnimatedImageView alloc] initWithImage:image];
         [backV addSubview:successImg1];
-        successImg1.frame = CGRectMake(YScreenW - 540 * YScaleWidth, YScreenH - 237 * YScaleHeight - 405 * YScaleWidth,540 * YScaleWidth, 405 * YScaleWidth);
+        successImg1.frame = CGRectMake(YScreenW - gifwidth, YScreenH - 237 * YScaleHeight - gifheight,gifwidth, gifheight);
         successImg1.transform = CGAffineTransformMakeScale(-1.0, 1.0);//水平翻转
         
     });
@@ -798,10 +815,8 @@
         self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 3;
 
     } completion:^(BOOL finished) {
-        
+         
         [gifView stopAnimating];
-        
-
         //成功接口
         [self successFetch];
         
@@ -898,7 +913,7 @@
     
     UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad"]];
     [renV addSubview:roadImg];
-    roadImg.frame = CGRectMake(0, roadH, YScreenW, 237 * YScaleWidth);
+    roadImg.frame = CGRectMake(0, roadH, YScreenW, 236 * YScaleWidth);
     
     dianshiV = [UIView new];
     [backV addSubview:dianshiV];
@@ -958,12 +973,12 @@
     
     UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad1"]];
     [duV addSubview:roadImg];
-    roadImg.frame = CGRectMake(0, roadH, YScreenW, 237 * YScaleWidth);
+    roadImg.frame = CGRectMake(0, roadH, YScreenW, 236 * YScaleWidth);
     
     cikaV = [UIView new];
     [backV addSubview:cikaV];
     cikaV.sd_layout.centerXEqualToView(backV).bottomSpaceToView(backV, 120 * YScaleHeight).widthIs(922 * YScaleHeight).heightIs(550 * YScaleHeight);
-    cikaV.alpha = 0;
+    cikaV.hidden = YES;
     
     UIImageView *ciImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementbook"]];
     [cikaV addSubview:ciImg];
@@ -976,7 +991,7 @@
     UIImageView *leftimg = [[UIImageView alloc] init];
     [leftimg sd_setImageWithURL:[NSURL URLWithString:self.word_image]];
     [imgV addSubview:leftimg];
-    leftimg.sd_layout.centerXEqualToView(imgV).centerYEqualToView(imgV).widthIs(340 * YScaleHeight * 1.5).heightIs(289 * YScaleHeight * 1.5);
+    leftimg.sd_layout.centerXEqualToView(imgV).centerYEqualToView(imgV).widthIs(385.333 * YScaleHeight).heightIs(289 * YScaleHeight);
     
 //    leftimg.center = imgV.center;
 //    leftimg.size = CGSizeMake(408 * YScaleHeight, 346.8 * YScaleHeight);
@@ -997,10 +1012,18 @@
     [cikaV addSubview:rightL];
     rightL.sd_layout.rightSpaceToView(cikaV, 59 * YScaleHeight).bottomSpaceToView(cikaV, 75 * YScaleHeight).widthIs(340 * YScaleHeight).heightIs(90 * YScaleHeight);
     
-    UIImage *image = [YYImage imageNamed:@"huatong.gif"];
-    huatongImg = [[YYAnimatedImageView alloc] initWithImage:image];
-    [cikaV addSubview:huatongImg];
-    huatongImg.frame = CGRectMake(360 * YScaleHeight, 670 * YScaleHeight, 201 * YScaleHeight, 255 * YScaleHeight);
+    LOTAnimationView *animation = [LOTAnimationView animationNamed:@"mic_animation"];
+    huatongAnimation = animation;
+    
+    [cikaV addSubview:animation];
+    animation.frame = CGRectMake(360 * YScaleHeight, 670 * YScaleHeight, 201 * YScaleHeight, 255 * YScaleHeight);
+    
+    huatongAnimation.loopAnimation = NO;
+    
+//    UIImage *image = [YYImage imageNamed:@"huatong.gif"];
+//    huatongImg = [[YYAnimatedImageView alloc] initWithImage:image];
+//    [cikaV addSubview:huatongImg];
+//    huatongImg.frame = CGRectMake(360 * YScaleHeight, 670 * YScaleHeight, 201 * YScaleHeight, 255 * YScaleHeight);
 
     
 }
@@ -1026,13 +1049,13 @@
     
     UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementroad1"]];
     [wanV addSubview:roadImg];
-    roadImg.frame = CGRectMake(0, roadH, 529 * YScaleWidth, 237 * YScaleWidth);
+    roadImg.frame = CGRectMake(0, roadH, 522 * YScaleWidth, 236 * YScaleWidth);
+    
     
     NSString *qianS = self.combine_words.firstObject;
     
     NSString *s1 = [qianS substringWithRange:NSMakeRange(0, 1)];
     
-    UIView *fankunV;
     if([s1 isEqualToString:self.selectedMod.word]){
         fankunV = [self fangkuiVwithName:s1 andifnormal:NO];
         
@@ -1045,12 +1068,10 @@
     
     //217  377  676 836
     [wanV addSubview:fankunV];
-    fankunV.sd_layout.leftSpaceToView(wanV, 217 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
+    fankunV.sd_layout.leftSpaceToView(wanV, 200 * YScaleWidth).topSpaceToView(wanV, roadH + 12 * YScaleWidth).widthIs(200 * YScaleWidth).heightEqualToWidth();
 
-//    UIView *fankunV1 = [self fangkuiVwithName:@"们" andifnormal:YES];
     NSString *s2 = [qianS substringWithRange:NSMakeRange(1, 1)];
     
-    UIView *fankunV1;
     if([s2 isEqualToString:self.selectedMod.word]){
         fankunV1 = [self fangkuiVwithName:s2 andifnormal:NO];
         
@@ -1061,23 +1082,41 @@
         fankunV1 = [self fangkuiVwithName:s2 andifnormal:YES];
     }
     [wanV addSubview:fankunV1];
-    fankunV1.sd_layout.leftSpaceToView(wanV, 377 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
-
+    fankunV1.sd_layout.leftSpaceToView(wanV, 356 * YScaleWidth).topSpaceToView(wanV, roadH + 12 * YScaleWidth).widthIs(200 * YScaleWidth).heightEqualToWidth();
+     
     
+    UIImage *image = [YYImage imageNamed:@"roadstar.gif"];
+    leftFangkuaiV = [[YYAnimatedImageView alloc] initWithImage:image];
+    [wanV addSubview:leftFangkuaiV];
+    leftFangkuaiV.sd_layout.leftSpaceToView(wanV, 118 * YScaleWidth).topSpaceToView(wanV, roadH - 34 * YScaleWidth).widthIs(520 * YScaleWidth).heightIs(268 * YScaleWidth);
+         
+    UILabel *label = [UILabel new];
+//    label.text = self.combine_words.firstObject;
+    label.textColor = [JKUtil getColor:@"492B19"];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = [UIFont fontWithName:@"kaiti" size:80 * YScaleWidth];
+    //富文本属性  设置字间距
+    NSMutableDictionary *textDict = [NSMutableDictionary dictionary];
+    textDict[NSKernAttributeName] = @(20 * YScaleWidth);
+    label.attributedText = [[NSAttributedString alloc] initWithString:self.combine_words.firstObject attributes:textDict];
+
+    [leftFangkuaiV addSubview:label];
+    label.sd_layout.leftSpaceToView(leftFangkuaiV, 112 * YScaleWidth).bottomSpaceToView(leftFangkuaiV, 68 * YScaleWidth).widthIs(266 * YScaleWidth).heightIs(80 * YScaleWidth);
+    [leftFangkuaiV stopAnimating];
+    leftFangkuaiV.hidden = YES;
     
     UIImageView *roadImg2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementroad2"]];
     [wanV addSubview:roadImg2];
-    roadImg2.frame = CGRectMake(529 * YScaleWidth, roadH, 189 * YScaleWidth, 237 * YScaleWidth);
+    roadImg2.frame = CGRectMake(522 * YScaleWidth, roadH, 188 * YScaleWidth, 236 * YScaleWidth);
     
     UIImageView *roadImg3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementroad3"]];
     [wanV addSubview:roadImg3];
-    roadImg3.frame = CGRectMake(718 * YScaleWidth, roadH, 270 * YScaleWidth, 237 * YScaleWidth);
+    roadImg3.frame = CGRectMake(710 * YScaleWidth, roadH, 262 * YScaleWidth, 236 * YScaleWidth);
     
     NSString *houS = self.combine_words.lastObject;
 
     NSString *s3 = [houS substringWithRange:NSMakeRange(0, 1)];
     
-    UIView *fankunV2;
     if([s3 isEqualToString:self.selectedMod.word]){
         fankunV2 = [self fangkuiVwithName:s3 andifnormal:NO];
         
@@ -1091,12 +1130,10 @@
     
     //133  237 415 501
     [wanV addSubview:fankunV2];
-    fankunV2.sd_layout.leftSpaceToView(wanV, 676 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
+    fankunV2.sd_layout.leftSpaceToView(wanV, 650 * YScaleWidth).topSpaceToView(wanV, roadH + 12 * YScaleWidth).widthIs(200 * YScaleWidth).heightEqualToWidth();
 
-//    UIView *fankunV3 = [self fangkuiVwithName:@"民" andifnormal:YES];
     NSString *s4 = [houS substringWithRange:NSMakeRange(1, 1)];
     
-    UIView *fankunV3;
     if([s4 isEqualToString:self.selectedMod.word]){
         fankunV3 = [self fangkuiVwithName:s4 andifnormal:NO];
         
@@ -1110,13 +1147,12 @@
 
     
     [wanV addSubview:fankunV3];
-    fankunV3.sd_layout.leftSpaceToView(wanV, 836 * YScaleWidth).topSpaceToView(wanV, roadH + 16 * YScaleWidth).widthIs(190 * YScaleWidth).heightEqualToWidth();
+    fankunV3.sd_layout.leftSpaceToView(wanV, 806 * YScaleWidth).topSpaceToView(wanV, roadH + 12 * YScaleWidth).widthIs(200 * YScaleWidth).heightEqualToWidth();
 
-    
 
     UIImageView *roadImg4 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementroad4"]];
     [wanV addSubview:roadImg4];
-    roadImg4.frame = CGRectMake(988 * YScaleWidth, roadH, 92 * YScaleWidth, 237 * YScaleWidth);
+    roadImg4.frame = CGRectMake(972 * YScaleWidth, roadH, 108 * YScaleWidth, 236 * YScaleWidth);
     
     
     
@@ -1154,6 +1190,44 @@
         [v addSubview:label];
         label.sd_layout.centerXEqualToView(v).topSpaceToView(v, 38 * YScaleWidth).widthIs(84 * YScaleWidth).heightIs(80 * YScaleWidth);
 
+        if(i == rightIndex){
+            tishiAnimation = [LOTAnimationView animationNamed:@"hint_animation"];
+            [v addSubview:tishiAnimation];
+            tishiAnimation.frame = CGRectMake(66 * YScaleWidth, 80 * YScaleWidth, 120 * YScaleWidth, 130 * YScaleWidth);
+            
+            tishiAnimation.loopAnimation = YES;
+            [tishiAnimation play];
+            
+            /*
+            srand([[NSDate date] timeIntervalSince1970]);
+            float rand=(float)random();
+            CFTimeInterval t=rand*0.0000000001;
+            
+            [UIView animateWithDuration:0.1 delay:t options:0  animations:^
+             {
+                v.transform = CGAffineTransformMakeTranslation(0, -20);
+             } completion:^(BOOL finished)
+             {
+                 [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+                  {
+                     v.transform = CGAffineTransformMakeTranslation(0, 20);
+                  } completion:^(BOOL finished) {}];
+             }];
+            
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
+                 {
+                     v.transform = CGAffineTransformIdentity;
+                 } completion:^(BOOL finished) {}];
+                
+            });
+             */
+            
+            
+        }
+        
     }
     
 
@@ -1173,7 +1247,7 @@
     //添加下面的路
     UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad2"]];
     [successV addSubview:roadImg];
-    roadImg.frame = CGRectMake(0, roadH, YScreenW, 237 * YScaleWidth);
+    roadImg.frame = CGRectMake(0, roadH, YScreenW, 236 * YScaleWidth);
     
     UIImageView *imgg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementflag"]];
     [successV addSubview:imgg];
@@ -1205,12 +1279,12 @@
         
         [UIView animateWithDuration:0.1 delay:t options:0  animations:^
          {
-            v.transform=CGAffineTransformMakeRotation(-0.05);
+            v.transform = CGAffineTransformMakeRotation(-0.05);
          } completion:^(BOOL finished)
          {
              [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
               {
-                 v.transform=CGAffineTransformMakeRotation(0.05);
+                 v.transform = CGAffineTransformMakeRotation(0.05);
               } completion:^(BOOL finished) {}];
          }];
         
@@ -1219,7 +1293,7 @@
             
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
              {
-                 v.transform=CGAffineTransformIdentity;
+                 v.transform = CGAffineTransformIdentity;
              } completion:^(BOOL finished) {}];
             
         });
@@ -1235,6 +1309,10 @@
         return;
     }
     
+    //第一步没走完 第二步刚开始 不会有响应
+    if((successIndex == 1) && (!firstCheck)){
+        return;
+    }
     
     NSInteger counts = 4;
     CGFloat leftMargin = (YScreenW -  (counts * 158 * YScaleWidth + (counts - 1) * 48 * YScaleWidth))/2;
@@ -1262,26 +1340,48 @@
             [v removeFromSuperview];
             self->okV1.hidden = NO;
             
-            [gifView startAnimating];
-            [self banpingcaozuo];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                [leftFangkuaiV startAnimating];
+                leftFangkuaiV.hidden = NO;
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    [gifView startAnimating];
+                    [self banpingcaozuo];
 
+                });
+            });
+
+            
         }];
+        
+        
+        
     }
     
     else if (successIndex == 1){
-        [UIView animateWithDuration:0.5 animations:^{
-            v.center = okV2.center;
+        
+        //第一关完成
+        if(firstCheck){
             
-        } completion:^(BOOL finished) {
-            [v removeFromSuperview];
-            self->okV2.hidden = NO;
-            
-            //一段成功的音乐
-            
-            [gifView startAnimating];
-            [self successCaozuo];
+            [UIView animateWithDuration:0.5 animations:^{
+                v.center = okV2.center;
+                
+            } completion:^(BOOL finished) {
+                [v removeFromSuperview];
+                self->okV2.hidden = NO;
+                
+                //一段成功的音乐
+                [gifView startAnimating];
+                [self successCaozuo];
 
-        }];
+            }];
+
+        }
+        
+        
+    
     }
     
     
@@ -1304,7 +1404,7 @@
     label.text = name;
     label.font = [UIFont fontWithName:@"kaiti" size:80 * YScaleWidth];
     [zhanweiV addSubview:label];
-    label.sd_layout.leftSpaceToView(zhanweiV, 36 * YScaleWidth).bottomSpaceToView(zhanweiV, 38 * YScaleWidth).widthIs(84 * YScaleWidth).heightIs(80 * YScaleWidth);
+    label.sd_layout.leftSpaceToView(zhanweiV, 43 * YScaleWidth).bottomSpaceToView(zhanweiV, 38 * YScaleWidth).widthIs(84 * YScaleWidth).heightIs(80 * YScaleWidth);
     
     
     if(ifnormal){

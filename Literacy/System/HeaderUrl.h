@@ -40,6 +40,12 @@
 //支付验证
 #define _URL_iap_verify_receipt [NSString stringWithFormat:@"%@%@",BaseUrl,@"payment/iap_verify_receipt"]
 
+//是否需要学习
+#define _URL_ifFuxi [NSString stringWithFormat:@"%@%@",BaseUrl,@"main/review"]
+
+//复习完成
+#define _URL_FuxiCheck [NSString stringWithFormat:@"%@%@",BaseUrl,@"main/review/done"]
+
 
 
 #endif /* HeaderUrl_h */

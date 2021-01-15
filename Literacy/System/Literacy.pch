@@ -50,6 +50,9 @@
 #import "YLHttpTool.h"
 #import "NSString+urlParam.h"
 
+//动画gif
+#import <Lottie/Lottie.h>
+
 //#import "WXApi.h"
 #import "NudeIn.h"
 #import <YYImage/YYImage.h>

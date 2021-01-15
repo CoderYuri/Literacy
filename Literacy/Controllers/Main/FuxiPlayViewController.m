@@ -13,21 +13,51 @@
     
     NoHighBtn *labaBtn;
     NoHighBtn *nextBtn;
+    NoHighBtn *backBtn;
     
     UIView *lightV;
     UIView *ziV;
     
     NSInteger rightIndex;
+    
+    NSDictionary *thisDict;
+    BOOL ifback;
 }
 
+@property (nonatomic, strong) ZFPlayerController *player;
+@property (nonatomic, strong) UIImageView *containerView;
+@property (nonatomic, strong) ZFPlayerControlView *controlView;
 @end
 
 @implementation FuxiPlayViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.player.viewControllerDisappear = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.player.viewControllerDisappear = YES;
+}
+
+- (void)bofangwithUrl:(NSArray *)urlArr{
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+
+    self.player.assetURLs = urlArr;
+    [self.player playTheIndex:0];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    thisDict = self.fuxiArr[self.successCounts];
     [self setupView];
 }
 
@@ -86,21 +116,26 @@
     [backV addSubview:nextBtn];
     nextBtn.sd_layout.rightSpaceToView(backV, 30 * YScaleWidth + 27 * YScaleHeight).bottomSpaceToView(backV,57 * YScaleHeight).widthIs(66 * YScaleHeight).heightEqualToWidth();
     [nextBtn addTarget:self action:@selector(nextClick) forControlEvents:UIControlEventTouchUpInside];
-   
+    
+    backBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [backBtn setBackgroundImage:[UIImage imageNamed:@"iconback"] forState:UIControlStateNormal];
+    [backV addSubview:backBtn];
+    backBtn.sd_layout.leftSpaceToView(backV, 27 * YScaleWidth).topSpaceToView(backV, 27 * YScaleWidth).widthIs(66 * YScaleHeight).heightEqualToWidth();
+    [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     
     labaBtn.hidden = YES;
     nextBtn.hidden = YES;
-    
+    backBtn.hidden = YES;
     
     ziV = [UIView new];
     [backV addSubview:ziV];
     ziV.backgroundColor = ClearColor;
     ziV.sd_layout.rightSpaceToView(backV, 96 * YScaleWidth).topSpaceToView(backV, 293 * YScaleHeight).widthIs(422 * YScaleHeight).heightIs(418 * YScaleHeight);
     
-    NSMutableArray *ziArr = [NSMutableArray arrayWithArray:@[@"八",@"大",@"入"]];
+    NSMutableArray *ziArr = [NSMutableArray arrayWithArray:thisDict[@"similar_words"]];
     rightIndex = arc4random_uniform(4);
 //    NSMutableArray *arr = [NSMutableArray arrayWithArray:self.similar_words];
-    [ziArr insertObject:@"人" atIndex:rightIndex];
+    [ziArr insertObject:thisDict[@"word"] atIndex:rightIndex];
     
     for (int i = 0; i < ziArr.count; i++) {
         UIView *v = [UIView new];
@@ -139,34 +174,51 @@
     [lightV addSubview:lightoffImg];
     lightoffImg.sd_layout.leftEqualToView(lightV).rightEqualToView(lightV).topEqualToView(lightV).bottomEqualToView(lightV);
     
-    UIImageView *ziImg = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:YRandomColor]];
-    [lightV addSubview:ziImg];
-    ziImg.sd_layout.leftSpaceToView(lightV, 105 * YScaleHeight).topSpaceToView(lightV, 371 * YScaleHeight).widthIs(234 * YScaleHeight).heightIs(262 * YScaleHeight);
+    
+    UIView *ziV = [[UIImageView alloc] init];
+    [lightV addSubview:ziV];
+    ziV.sd_layout.leftSpaceToView(lightV, 105 * YScaleHeight).topSpaceToView(lightV, 371 * YScaleHeight).widthIs(234 * YScaleHeight).heightIs(262 * YScaleHeight);
+    
+    UIImageView *leftimg = [[UIImageView alloc] init];
+    [leftimg sd_setImageWithURL:[NSURL URLWithString:thisDict[@"word_image"]]];
+    [ziV addSubview:leftimg];
+    leftimg.sd_layout.centerXEqualToView(ziV).centerYEqualToView(ziV).widthIs(349.333 * YScaleHeight).heightIs(262 * YScaleHeight);
+
+
     
 }
 
 
 #pragma mark - click
 - (void)labaClick{
-    YLogFunc
+    
+    NSString *webVideoPath = thisDict[@"word_audio"];
+    NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+
+    [self bofangwithUrl:@[webVideoUrl]];
+    
+    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        [self.player stop];
+        self.player = nil;
+    };
 }
 
 - (void)nextClick{
     
     //复习完成 进入首页
-    if(self.successCounts == 5){
-        [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
-    }
-    else{
-        //进入下一个学习页面
-        FuxiPlayViewController *vc = [[FuxiPlayViewController alloc] init];
-        vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        vc.modalPresentationStyle = UIModalPresentationFullScreen;
-        vc.successCounts = self.successCounts;
-        [self presentViewController:vc animated:YES completion:^{
-        }];
+//    if(self.successCounts == 5){
+//    }
+//    else{
+//    }
 
-    }
+    //进入下一个学习页面
+    FuxiPlayViewController *vc = [[FuxiPlayViewController alloc] init];
+    vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
+    vc.successCounts = self.successCounts;
+    vc.fuxiArr = self.fuxiArr;
+    [self presentViewController:vc animated:YES completion:^{
+    }];
     
 }
 
@@ -228,7 +280,11 @@
         
         v.mj_x = 55 * YScaleWidth - 628 * (YScaleWidth - YScaleHeight);
         self->lightV.mj_x = 212 * YScaleWidth + 200 * (YScaleWidth - YScaleHeight);
+
     } completion:^(BOOL finished) {
+        //选词正确 放一遍语音
+        [self labaClick];
+        
         //修改灯的颜色
         UIImageView *lightImg = lightV.subviews.firstObject;
         lightImg.image = [UIImage imageNamed:@"fuxilighton"];
@@ -240,11 +296,62 @@
         self.successCounts ++;
         [self setschedule];
         
+        if(self.successCounts == 5){
+            nextBtn.hidden = YES;
+            backBtn.hidden = NO;
+            
+            //学习完成接口
+//            [self fuxiOk];
+        }
+                
     }];
     
 }
 
+- (void)fuxiOk{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+    YLog(@"%@",[NSString getBaseUrl:_URL_FuxiCheck withparam:param])
+    
+    [YLHttpTool POST:_URL_FuxiCheck parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+        
+        if([dic[@"code"] integerValue] == 200){
 
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self back];
+            });
+            
+        }
+        
+        YLog(@"%@",dic)
+        
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        if(error.code == -1009){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
+        
+    }];
+
+}
+
+- (void)back{
+    if(!ifback){
+        [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
+        ifback = YES;
+
+    }
+}
 
 /*
 #pragma mark - Navigation

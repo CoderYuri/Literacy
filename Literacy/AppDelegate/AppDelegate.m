@@ -9,7 +9,7 @@
 #import <IQKeyboardManager/IQKeyboardManager.h>
 //#import "MainViewController.h"
 #import "WelcomeViewController.h"
-#import "FuxiViewController.h"
+//#import "FuxiViewController.h"
 #import <UMCommon/UMCommon.h>
 
 @interface AppDelegate ()
@@ -75,11 +75,11 @@
     [self.window makeKeyAndVisible];
 }
 
-- (void)gotoFuxi{
-    FuxiViewController *welcomeVc = [[FuxiViewController alloc] init];
-    [self.window setRootViewController:welcomeVc];
-    [self.window makeKeyAndVisible];
-}
+//- (void)gotoFuxi{
+//    FuxiViewController *welcomeVc = [[FuxiViewController alloc] init];
+//    [self.window setRootViewController:welcomeVc];
+//    [self.window makeKeyAndVisible];
+//}
 
 
 @end

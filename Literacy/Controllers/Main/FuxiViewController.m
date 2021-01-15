@@ -76,6 +76,7 @@
     vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     vc.successCounts = 0;
+    vc.fuxiArr = self.fuxiArr;
     [self presentViewController:vc animated:YES completion:^{
     }];
 }

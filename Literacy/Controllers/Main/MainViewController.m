@@ -12,7 +12,6 @@
 
 #import "UIImage+GIF.h"
 #import "YFGIFImageView.h"
-#import <SafariServices/SafariServices.h>
 
 @interface MainViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>{
     UIView *backV;
@@ -37,12 +36,10 @@
     
     //gif加载
     UIView *LoadingBackV;
-    UIView *xieyiCoverView;
     
+    //是否能移动
     BOOL ifcanYidong;
-    
-    BOOL iftuichu;
-    
+        
     CGFloat thisScale;
     UIView *jiazhangV;
     UIView *BlackJZV;
@@ -51,10 +48,12 @@
     NSMutableArray *rightArr;
     NSInteger successCounts;
 
+    //是否移动中
+    BOOL ifyidong;
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
-@property (nonatomic,strong) NudeIn *xieyiLabel;
+@property (nonatomic, strong) ZFPlayerController *backgroundplayer;
 
 @end
 
@@ -73,6 +72,24 @@
     [self.player playTheIndex:0];
 }
 
+
+
+- (void)beijingyinyue{
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"" ofType:@"mp3"];
+    NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+    
+
+    self.backgroundplayer = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    self.backgroundplayer.assetURLs = @[localVideoUrl];
+    [self.backgroundplayer playTheIndex:0];
+
+    self.backgroundplayer.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        [self.backgroundplayer playTheIndex:0];
+    };
+
+}
+
 //获取字库
 - (void)fetch{
     
@@ -80,7 +97,6 @@
     if(arr.count){
         dataArr = [AllModel mj_objectArrayWithKeyValuesArray:arr];
         [self setupView];
-
     }
     else{
         
@@ -200,13 +216,13 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.player.viewControllerDisappear = YES;
-    
-    iftuichu = YES;
-     
+         
     if(self.player){
         [self.player stop];
         self.player = nil;
     }
+    
+    [self.backgroundplayer.currentPlayerManager pause];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -216,6 +232,7 @@
     
     [self fetchuserInfo];
 //    [self shouyeyemianrefresh];
+    [self.backgroundplayer.currentPlayerManager play];
 }
 
 //首页数据刷新
@@ -346,8 +363,10 @@
     gifView.transform = CGAffineTransformMakeScale(1.0, 1.0);//水平翻转
 
     [UIView animateWithDuration:Transformtimeinterval animations:^{
+        ifyidong = YES;
         self->gifView.centerX = 363 * YScaleHeight;
     } completion:^(BOOL finished) {
+        ifyidong = NO;
         scrollV.scrollEnabled = YES;
     }];
 }
@@ -371,8 +390,10 @@
     gifView.mj_y = YScreenH - 282 * YScaleHeight - 88 * YScaleHeight;
     
     [UIView animateWithDuration:Transformtimeinterval animations:^{
+        ifyidong = YES;
         self->gifView.centerX = 363 * YScaleHeight;
     } completion:^(BOOL finished) {
+        ifyidong = NO;
         scrollV.scrollEnabled = YES;
     }];
     
@@ -384,11 +405,12 @@
 
     dataArr = [NSMutableArray array];
     ifcanYidong = YES;
+    ifyidong = YES;
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
    [center addObserver:self selector:@selector(plusClick:) name:@"refresh" object:nil];
 
-
+//    [self beijingyinyue];
     [self fetch];
     
     rightArr = [NSMutableArray array];
@@ -397,15 +419,7 @@
 
 - (void)setupView{
     backV = self.view;
-    
-    //新增温馨提示页面
-    //第一次打开
-    if(![YUserDefaults objectForKey:kxieyi]){
-        [self xieyiyemian];
-        return;
-    }
-
-    
+        
     scrollV = [[UIScrollView alloc] init];
     scrollV.showsVerticalScrollIndicator = NO;
     scrollV.showsHorizontalScrollIndicator = NO;
@@ -594,13 +608,10 @@
 
     
     [UIView animateWithDuration:Transformtimeinterval animations:^{
+        ifyidong = YES;
         self->gifView.centerX = 363 * YScaleHeight;
     } completion:^(BOOL finished) {
         scrollV.scrollEnabled = YES;
-        
-        if(iftuichu){
-            return;
-        }
         
         //app下载之后只播放一次
         if([YUserDefaults integerForKey:khas_learn_num] < 1){
@@ -610,11 +621,15 @@
             [self bofangwithUrl:@[localVideoUrl]];
             
             self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                ifyidong = NO;
+
                 [self.player stop];
                 self.player = nil;
             };
 
-//            [YUserDefaults setObject:@"you" forKey:koneVoice];
+        }
+        else{
+            ifyidong = NO;
         }
 
         
@@ -800,10 +815,13 @@
         //            * fabs(huadongjuli - gifView.centerX )/ 1080
                     [UIView animateWithDuration:timeterval animations:^{
                         
+                        ifyidong = YES;
                         self->gifView.centerX = huadongjuli;
+                        
                         
                     } completion:^(BOOL finished) {
                         
+                        ifyidong = NO;
                         ifcanYidong = YES;
                         
                         scrollV.scrollEnabled = YES;
@@ -1109,6 +1127,10 @@
 
 //进入学习记录页面
 - (void)ziClick{
+    if(ifyidong){
+        return;
+    }
+    
     WordsViewController *vc = [[WordsViewController alloc] init];
 //    [self.navigationController pushViewController:vc animated:YES];
 //    vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -1192,205 +1214,12 @@
         
 }
 
-#pragma mark - 协议页面
-//首次进入app 协议页面
-- (void)xieyiyemian{
-    CGFloat thisScale;
-    thisScale = YScaleWidth;
-
-//    if(isPad){
-//        thisScale = YScaleWidth;
-//    }
-//    else{
-//        thisScale = YScaleWidth * 0.8;
-//    }
-    
-    xieyiCoverView = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    xieyiCoverView.backgroundColor =  [[UIColor blackColor] colorWithAlphaComponent:0.55];
-
-    [self.view addSubview:xieyiCoverView];
-    
-    
-    UIView *xieyiMidV = [UIView new];
-    xieyiMidV.backgroundColor = WhiteColor;
-    xieyiMidV.layer.cornerRadius = 4;
-    xieyiMidV.layer.masksToBounds = YES;
-    [xieyiCoverView addSubview:xieyiMidV];
-    xieyiMidV.sd_layout.centerXEqualToView(xieyiCoverView).centerYEqualToView(xieyiCoverView).widthIs(560 * thisScale).heightIs(394 * thisScale);
-    
-    UILabel *namexieyiL  = [UILabel new];
-    namexieyiL.text = @"温馨提示";
-//        namexieyiL.font = YSystemFont(17);
-    namexieyiL.font = [UIFont fontWithName:@"Helvetica-Bold" size:26 * thisScale];
-    namexieyiL.textColor = kblackColor;
-    namexieyiL.textAlignment = NSTextAlignmentCenter;
-    [xieyiMidV addSubview:namexieyiL];
-    namexieyiL.sd_layout.topSpaceToView(xieyiMidV, 30 * thisScale).centerXEqualToView(xieyiMidV).widthIs(300).heightIs(38 * thisScale);
-    
-    UILabel *huanyingL  = [UILabel new];
-    huanyingL.text = @"欢迎来到滑板车识字App。";
-    huanyingL.font = YSystemFont(18 * thisScale);
-    huanyingL.textColor = kblackColor;
-    [xieyiMidV addSubview:huanyingL];
-    huanyingL.sd_layout.topSpaceToView(namexieyiL, 24 * thisScale).leftSpaceToView(xieyiMidV, 40 * thisScale).widthIs(300).heightIs(27 * thisScale);
-
-    
-    //反馈label
-    _xieyiLabel = [NudeIn make:^(NUDTextMaker *make) {
-    make.allText().font(18* thisScale).attach();
-
-    make.text(@"感谢您的下载和使用，我们非常重视您的个人信息和隐私保护，为了更好的保障您的权益，在使用本产品前，请认真阅读《").color(kblackColor).attach();
-        make.text(@"用户协议").color([JKUtil getColor:@"1D69FF"]).link(self , @selector(yonghuclick)).attach();
-        make.text(@"》、《").color(kblackColor).attach();
-        make.text(@"用户隐私政策").color([JKUtil getColor:@"1D69FF"]).link(self , @selector(yinsiclick)).attach();
-        make.text(@"》、《").color(kblackColor).attach();
-        make.text(@"儿童用户隐私政策").color([JKUtil getColor:@"1D69FF"]).link(self , @selector(ertongclick)).attach();
-        make.text(@"》的全部内容，同意并接受全部条款后即可开始使用我们的产品和服务。").color(kblackColor).attach();
-        
-    }];
-    
-//    NSMutableAttributedString * attributedString1 = [[NSMutableAttributedString alloc] initWithString:_xieyiLabel.text];
-//    NSMutableParagraphStyle * paragraphStyle1 = [[NSMutableParagraphStyle alloc] init];
-//    [paragraphStyle1 setLineSpacing:5];
-//    [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [_xieyiLabel.text length])];
-//    [_xieyiLabel setAttributedText:attributedString1];
-    
-//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-//    paragraphStyle.lineSpacing = 5;     //行间距
-//    NSDictionary *attributes = @{ NSFontAttributeName:[UIFont systemFontOfSize:18* thisScale], NSParagraphStyleAttributeName:paragraphStyle};
-//    _xieyiLabel.attributedText = [[NSAttributedString alloc] initWithString:_xieyiLabel.text attributes:attributes];
-    
-    [xieyiMidV addSubview:_xieyiLabel];
-    _xieyiLabel.sd_layout.topSpaceToView(huanyingL, 20 * thisScale).widthIs(480 * thisScale).heightIs(135 * thisScale).centerXEqualToView(xieyiMidV);
-        
-    UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn1 setTitle:@"取消" forState:UIControlStateNormal];
-    [btn1 setTitleColor:[JKUtil getColor:@"8295A9"] forState:UIControlStateNormal];
-    [btn1 setBackgroundColor:[JKUtil getColor:@"EEF2F8"]];
-    btn1.titleLabel.font = YSystemFont(26 * thisScale);
-    [btn1 addTarget:self action:@selector(butongyi) forControlEvents:UIControlEventTouchUpInside];
-    [xieyiMidV addSubview:btn1];
-    btn1.sd_layout.leftSpaceToView(xieyiMidV, 40 * thisScale).bottomSpaceToView(xieyiMidV, 30 * thisScale).widthIs(230 * thisScale).heightIs(60 * thisScale);
-    btn1.layer.cornerRadius = 30 * thisScale;
-    
-    
-    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn2 setTitle:@"同意" forState:UIControlStateNormal];
-    [btn2 setTitleColor:WhiteColor forState:UIControlStateNormal];
-    [btn2 setBackgroundColor:[JKUtil getColor:@"1D69FF"]];
-    btn2.titleLabel.font = YSystemFont(26 * thisScale);
-    [btn2 addTarget:self action:@selector(tongyi) forControlEvents:UIControlEventTouchUpInside];
-    [xieyiMidV addSubview:btn2];
-    btn2.sd_layout.rightSpaceToView(xieyiMidV, 40 * thisScale).bottomSpaceToView(xieyiMidV, 30 * thisScale).widthIs(230 * thisScale).heightIs(60 * thisScale);
-    btn2.layer.cornerRadius = 30 * thisScale;
-}
-
-//用户协议
-- (void)yonghuclick{
-    [self shuxueti:^{
-        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_user_agreement"]];
-    //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
-    //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentViewController:safariVc animated:YES completion:^{
-            //播放首次视频
-            iftuichu = NO;
-        }];
-    }];
-}
-
-//隐私协议
-- (void)yinsiclick{
-    [self shuxueti:^{
-        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/literacy_privacy"]];
-    //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
-    //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentViewController:safariVc animated:YES completion:^{
-            //播放首次视频
-            iftuichu = NO;
-        }];
-
-    }];
-}
-
-//儿童隐私协议
-- (void)ertongclick{
-
-    [self shuxueti:^{
-        
-        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"http://literacy.huabanche.club/children_privacy/"]];
-    //    safariVc.modalPresentationStyle = UIModalPresentationFullScreen;
-    //    safariVc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentViewController:safariVc animated:YES completion:^{
-            //播放首次视频
-            iftuichu = NO;
-        }];
-
-    }];
-}
-
-- (void)shuxueti:(void (^)(void))completionBlock{
-    __block UITextField *textF = [[UITextField alloc] init];
-    
-    NSInteger a = arc4random_uniform(20)+1;
-    NSInteger b = arc4random_uniform(20)+1;
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"为确保您是家长\n请回答以下问题" message:[NSString stringWithFormat:@"%ld + %ld = ?",a,b] preferredStyle:UIAlertControllerStyleAlert];
-
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"提交" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        
-        if([textF.text integerValue] == (a + b)){
-            if(completionBlock){
-                completionBlock();
-            }
-        }
-        else{
-            [SVProgressHUD showErrorWithStatus:@"回答错误，请重试"];
-            [SVProgressHUD dismissWithDelay:1];
-            
-        }
-
-    }];
-    
-    [cancel setValue:kblackColor forKey:@"titleTextColor"];
-    [confirm setValue:kblackColor forKey:@"titleTextColor"];
-    
-    [alert addAction:cancel];
-    [alert addAction:confirm];
-    
-
-    
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textF = textField;
-        textF.backgroundColor = ClearColor;
-        textF.keyboardType = UIKeyboardTypeNumberPad;
-    }];
-    
-
-    [self presentViewController:alert animated:YES completion:nil];
-    
-}
-
-
-//同意并进入
-- (void)tongyi{
-    [xieyiCoverView removeFromSuperview];
-    xieyiCoverView = nil;
-    
-    [YUserDefaults setObject:@"keyi" forKey:kxieyi];
-    
-    [self setupView];
-}
-
-//不同意操作
-- (void)butongyi{
-    [SVProgressHUD showErrorWithStatus:@"请同意后使用App"];
-    [SVProgressHUD dismissWithDelay:1];
-}
-
-
 //家长控制页面
 - (void)setJiaZhangView{
+    if(ifyidong){
+        return;
+    }
+    
     if(BlackJZV){
         return;
     }

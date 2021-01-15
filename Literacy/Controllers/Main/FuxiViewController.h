@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FuxiViewController : BaseViewController
 
+@property(nonatomic,strong) NSArray *fuxiArr;
+
 @end
 
 NS_ASSUME_NONNULL_END
