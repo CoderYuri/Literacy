@@ -37,9 +37,6 @@
     //gif加载
     UIView *LoadingBackV;
     
-    //是否能移动
-    BOOL ifcanYidong;
-        
     CGFloat thisScale;
     UIView *jiazhangV;
     UIView *BlackJZV;
@@ -50,6 +47,11 @@
 
     //是否移动中
     BOOL ifyidong;
+    //是否能移动
+    BOOL ifcanYidong;
+
+    //家长页 抖动
+    BOOL ifjiazhangdoudong;
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
@@ -65,8 +67,13 @@
         [self.player stop];
         self.player = nil;
     }
-
+    
     self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
+
 
     self.player.assetURLs = urlArr;
     [self.player playTheIndex:0];
@@ -75,11 +82,14 @@
 
 
 - (void)beijingyinyue{
-    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"" ofType:@"mp3"];
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"一起旅行" ofType:@"mp3"];
     NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
     
-
     self.backgroundplayer = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.backgroundplayer.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
     
     self.backgroundplayer.assetURLs = @[localVideoUrl];
     [self.backgroundplayer playTheIndex:0];
@@ -87,6 +97,8 @@
     self.backgroundplayer.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
         [self.backgroundplayer playTheIndex:0];
     };
+    
+
 
 }
 
@@ -173,7 +185,6 @@
                 
                 //重新赋值  已学习个数
                 [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
-
                 
                 [self gengxingdeng];
             }
@@ -216,7 +227,8 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.player.viewControllerDisappear = YES;
-         
+    self.backgroundplayer.viewControllerDisappear = YES;
+
     if(self.player){
         [self.player stop];
         self.player = nil;
@@ -229,9 +241,10 @@
     [super viewWillAppear:animated];
     
     self.player.viewControllerDisappear = NO;
+    self.backgroundplayer.viewControllerDisappear = NO;
+
     
     [self fetchuserInfo];
-//    [self shouyeyemianrefresh];
     [self.backgroundplayer.currentPlayerManager play];
 }
 
@@ -242,7 +255,17 @@
         self->nameL.text = [YUserDefaults objectForKey:kusername];
         if([YUserDefaults boolForKey:kis_member]){
             self->vipImg.image = [UIImage imageNamed:@"vip"];
-            self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
+            
+            YLog(@"---%ld---",[self expiretimeYear])
+            
+//            if([self expiretimeYear] > 80){
+//                self->vipL.text = @"永久会员";
+//
+//            }
+//            else{
+                self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
+//            }
+            
             vipL.alpha = 1;
             self->vipL.textColor = [JKUtil getColor:@"FF6112"];
             
@@ -275,6 +298,30 @@
 //    [YUserDefaults setObject:dictArr forKey:kziKu];
 
 
+}
+
+- (NSInteger)expiretimeYear{
+    NSDate *nowDate = [NSDate date];
+    
+    NSDateFormatter *dateFomatter = [[NSDateFormatter alloc] init];
+    dateFomatter.dateFormat = @"yyyy.MM.dd";
+
+    // 截止时间字符串格式
+    NSString *expireDateStr = [YUserDefaults objectForKey:kexpiretime];
+    // 当前时间字符串格式
+    NSString *nowDateStr = [dateFomatter stringFromDate:nowDate];
+    // 截止时间data格式
+    NSDate *expireDate = [dateFomatter dateFromString:expireDateStr];
+    // 当前时间data格式
+    nowDate = [dateFomatter dateFromString:nowDateStr];
+    // 当前日历
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    // 需要对比的时间数据
+    NSCalendarUnit unit = NSCalendarUnitYear;
+    // 对比时间差
+    NSDateComponents *dateCom = [calendar components:unit fromDate:nowDate toDate:expireDate options:0];
+
+    return dateCom.year;
 }
 
 - (void)dealloc{
@@ -356,7 +403,7 @@
     }
     
     selectIndex = hasLearnCount;
-    scrollV.scrollEnabled = YES;
+    scrollV.scrollEnabled = NO;
 
     gifCenterX = 363 * YScaleHeight + 256 * YScaleHeight * hasLearnCount;
     scrollV.contentOffset = CGPointMake(256 * YScaleHeight * hasLearnCount, 0);
@@ -402,15 +449,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    backV = self.view;
 
     dataArr = [NSMutableArray array];
     ifcanYidong = YES;
     ifyidong = YES;
+    ifjiazhangdoudong = YES;
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
    [center addObserver:self selector:@selector(plusClick:) name:@"refresh" object:nil];
 
-//    [self beijingyinyue];
+    //背景音乐
+    [self beijingyinyue];
+    
     [self fetch];
     
     rightArr = [NSMutableArray array];
@@ -418,8 +469,6 @@
 }
 
 - (void)setupView{
-    backV = self.view;
-        
     scrollV = [[UIScrollView alloc] init];
     scrollV.showsVerticalScrollIndicator = NO;
     scrollV.showsHorizontalScrollIndicator = NO;
@@ -447,7 +496,6 @@
         else{
 //            img.frame = CGRectMake(YScreenW * i, YScreenH - YScreenW * 0.75, YScreenW, YScreenW * 0.75);
             img.frame = CGRectMake(YScreenW * i, -50 * YScaleHeight, YScreenW, YScreenW * 0.75);
-
         }
         
         
@@ -696,18 +744,17 @@
 }
 
 - (void)loading{
-    LoadingBackV = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    LoadingBackV.backgroundColor =  [[UIColor blackColor] colorWithAlphaComponent:0.3];
-    UIWindow *keywindow = [[UIApplication sharedApplication] keyWindow];
-    [keywindow addSubview:LoadingBackV];
+//    LoadingBackV = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+//    LoadingBackV.backgroundColor =  [[UIColor blackColor] colorWithAlphaComponent:0.3];
+//    UIWindow *keywindow = [[UIApplication sharedApplication] keyWindow];
+//    [keywindow addSubview:LoadingBackV];
 
     NSString *filepath = [[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"loading"ofType:@"gif"];
     NSData *imagedata = [NSData dataWithContentsOfFile:filepath];
     UIImageView *loadImg = [[UIImageView alloc] init];
     loadImg.image= [UIImage sd_imageWithGIFData:imagedata];
-    [LoadingBackV addSubview:loadImg];
-    loadImg.sd_layout.centerYEqualToView(LoadingBackV).centerXEqualToView(LoadingBackV).widthIs(330 * YScaleHeight).heightIs(140 * YScaleHeight);
-
+    [backV addSubview:loadImg];
+    loadImg.sd_layout.centerYEqualToView(backV).centerXEqualToView(backV).widthIs(495 * YScaleHeight).heightIs(210 * YScaleHeight);
 }
 
 - (void)removeLoading{
@@ -839,7 +886,8 @@
                         vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
                         vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
                         vc.word_audio = [NSString stringWithFormat:@"%@",dict[@"word_audio"]];
-
+                        vc.words_audios = dict[@"words_audios"];
+                        vc.ifFuxi = NO;
                         
                         vc.callBack = ^(NSInteger xuanzhongIndex) {
                     //                    self->ifNoanimation = YES;
@@ -991,7 +1039,14 @@
     //获取新的userid
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    
+    if(isPad){
+        param[@"device"] = @"iPad";
+    }
+    else{
+        param[@"device"] = @"iPhone";
+    }
+    param[@"origin"] = @"app store";
+
     YLog(@"%@",[NSString getBaseUrl:_URL_userID withparam:param])
     
 //    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -1131,12 +1186,26 @@
         return;
     }
     
-    WordsViewController *vc = [[WordsViewController alloc] init];
-//    [self.navigationController pushViewController:vc animated:YES];
-//    vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    vc.modalPresentationStyle = UIModalPresentationFullScreen;
-    vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:vc animated:YES completion:nil];
+    NSLog(@"---%@",BaseUrl);
+
+//    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"光标" ofType:@"wav"];
+//    NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+//
+//    [self bofangwithUrl:@[localVideoUrl]];
+//
+//    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+//        [self.player stop];
+//        self.player = nil;
+        
+        WordsViewController *vc = [[WordsViewController alloc] init];
+    //    [self.navigationController pushViewController:vc animated:YES];
+    //    vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        vc.modalPresentationStyle = UIModalPresentationFullScreen;
+        vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:vc animated:YES completion:nil];
+
+//    };
+    
 }
 
 //进入个人中心
@@ -1181,10 +1250,10 @@
         if(gifCenterX > 448 * YScaleHeight){
             //调整人物方向
             if((scrollView.contentOffset.x - lastOffSetX) > 0) {
-                NSLog(@"正在向左滑动");
+//                NSLog(@"正在向左滑动");
                 gifView.transform = CGAffineTransformMakeScale( 1.0, 1.0);//水平翻转
              }else{
-                NSLog(@"正在向右滑动");
+//                NSLog(@"正在向右滑动");
                  gifView.transform = CGAffineTransformMakeScale(-1.0, 1.0);//水平翻转
             }
            lastOffSetX = scrollView.contentOffset.x;
@@ -1258,6 +1327,8 @@
     
     jiazhangV.frame = CGRectMake((YScreenW - 729 * thisScale)/2, 128 * YScaleHeight, 729 * thisScale, 539 * thisScale);
 
+    YLog(@"%@",jiazhangV)
+
 
     UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"verificationbox"]];
     [jiazhangV addSubview:img];
@@ -1282,7 +1353,8 @@
     shuziV = [UIView new];
     shuziV.backgroundColor = ClearColor;
     [jiazhangV addSubview:shuziV];
-    shuziV.sd_layout.leftSpaceToView(jiazhangV, 194 * thisScale).topSpaceToView(jiazhangV, 138 * thisScale).widthIs(340 * thisScale).heightIs(300 * thisScale);
+//    shuziV.sd_layout.leftSpaceToView(jiazhangV, 194 * thisScale).topSpaceToView(jiazhangV, 138 * thisScale).widthIs(340 * thisScale).heightIs(300 * thisScale);
+    shuziV.frame = CGRectMake(194 * thisScale, 138 * thisScale, 340 * thisScale, 300 * thisScale);
     
     
     for (int i = 0; i < 9; i++) {
@@ -1297,12 +1369,13 @@
         btn.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:50 * thisScale];
 
         
-        
         [shuziV addSubview:btn];
         btn.frame = CGRectMake(130 * thisScale * (i % 3), 110 * thisScale * (i / 3), 80 * thisScale, 80 * thisScale);
         btn.layer.cornerRadius = 6;
         btn.layer.masksToBounds = YES;
-        [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];    }
+        [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
     
     
 }
@@ -1320,7 +1393,17 @@
     }
     else{
         
-        UIView *v = jiazhangV;
+//        UIView *v = jiazhangV;
+        
+        if(!ifjiazhangdoudong){
+            return;
+        }
+        
+        ifjiazhangdoudong = NO;
+        
+        YLog(@"%@",jiazhangV)
+        jiazhangV.transform=CGAffineTransformIdentity;
+
         
         srand([[NSDate date] timeIntervalSince1970]);
         float rand=(float)random();
@@ -1328,23 +1411,24 @@
         
         [UIView animateWithDuration:0.1 delay:t options:0  animations:^
          {
-            v.transform=CGAffineTransformMakeRotation(-0.03);
+            jiazhangV.transform = CGAffineTransformMakeRotation(-0.05);
          } completion:^(BOOL finished)
          {
              [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
               {
-                 v.transform=CGAffineTransformMakeRotation(0.03);
+                 jiazhangV.transform = CGAffineTransformMakeRotation(0.05);
               } completion:^(BOOL finished) {}];
          }];
         
+
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
+
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
              {
-                 v.transform=CGAffineTransformIdentity;
+                jiazhangV.transform = CGAffineTransformIdentity;
              } completion:^(BOOL finished) {
-                 
+                 ifjiazhangdoudong = YES;
                  
                  successCounts = 0;
                  [self setzhongwen];
@@ -1352,10 +1436,16 @@
                      b.selected = NO;
                  }
 
-                 
              }];
-            
+
         });
+         
+        
+//        successCounts = 0;
+//        [self setzhongwen];
+//        for (UIButton *b in shuziV.subviews) {
+//            b.selected = NO;
+//        }
 
         
     }
@@ -1397,7 +1487,8 @@
     zhongwenV = [UIView new];
     [jiazhangV addSubview:zhongwenV];
     zhongwenV.backgroundColor = WhiteColor;
-    zhongwenV.sd_layout.rightSpaceToView(jiazhangV, 115 * thisScale).topSpaceToView(jiazhangV, 46 * thisScale).widthIs(230 * thisScale).heightIs(70 * thisScale);
+//    zhongwenV.sd_layout.rightSpaceToView(jiazhangV, 115 * thisScale).topSpaceToView(jiazhangV, 46 * thisScale).widthIs(230 * thisScale).heightIs(70 * thisScale);
+    zhongwenV.frame = CGRectMake(384 * thisScale, 46 * thisScale, 230 * thisScale, 70 * thisScale);
     
     NSMutableArray *zhongArr = [NSMutableArray arrayWithArray:@[@"壹",@"贰",@"叁",@"肆",@"伍",@"陆",@"柒",@"捌",@"玖"]];
     NSMutableArray *tagsArr = [NSMutableArray array];

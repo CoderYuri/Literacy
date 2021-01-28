@@ -25,6 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,copy) NSString *word_audio;
 
+@property(nonatomic,strong) NSArray *words_audios;
+
+@property(nonatomic,assign)BOOL ifFuxi;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -8,6 +8,11 @@
 #ifndef HeaderUrl_h
 #define HeaderUrl_h
 
+//#define BaseUrl @"https://literacy.huabanche.club/"
+
+//处于开发阶段
+//#define BaseUrl @"http://123.56.231.29:8899/"
+//处于发布阶段
 #define BaseUrl @"https://literacy.huabanche.club/"
 
 //getuserID
@@ -45,6 +50,9 @@
 
 //复习完成
 #define _URL_FuxiCheck [NSString stringWithFormat:@"%@%@",BaseUrl,@"main/review/done"]
+
+//使用时长
+#define _URL_UsingLong [NSString stringWithFormat:@"%@%@",BaseUrl,@"data/learning/duration"]
 
 
 

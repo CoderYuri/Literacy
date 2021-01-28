@@ -9,7 +9,6 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
-#import "BTNoneProgressPlayerControlView.h"
 
 @interface FunViewController ()<UIScrollViewDelegate>{
     UIView *backV;
@@ -63,7 +62,12 @@
     LOTAnimationView *tishiAnimation;
     
     BOOL firstCheck;
-
+    UIView *rightV;
+    
+    NSInteger bofangCounts;
+    
+    BOOL selectFirst;
+    BOOL selectSecond;
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
@@ -155,7 +159,7 @@
     scrollV.showsHorizontalScrollIndicator = NO;
     scrollV.delegate = self;
     scrollV.scrollEnabled = NO;
-    scrollV.contentSize = CGSizeMake(4 * YScreenW , YScreenH);
+    scrollV.contentSize = CGSizeMake(5 * YScreenW , YScreenH);
     [backV addSubview: scrollV];
     scrollV.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
     
@@ -266,8 +270,8 @@
         [self->gifView stopAnimating];
         //加载电视机 放动画  完成之后进入下个页面
         
-//        [self dianshiVjiazai];
-        [self quwan];
+        [self dianshiVjiazai];
+//        [self quwan];
 //        [self successCaozuo];
     }];
 
@@ -556,7 +560,7 @@
 - (void)duVjiazai{
 
     CATransition *anim = [CATransition animation];
-    anim.type = kCATransitionReveal;
+    anim.type = @"cube";
 //        anim.type = kCATransitionFade;
     anim.duration = 1;
     [self->cikaV.layer addAnimation:anim forKey:nil];
@@ -572,7 +576,7 @@
         }
         
         //    播放录音
-        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"跟我读" ofType:@"mp3"];
+        NSString* localFilePath = [[NSBundle mainBundle]pathForResource:@"跟我读" ofType:@"mp3"];
         NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
         
         NSString *webVideoPath = self.word_audio;
@@ -583,6 +587,10 @@
         
         
         self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            if(ifhoutai){
+                [self.player.currentPlayerManager pause];
+            }
+
             
             YLog(@"%ld",self.player.currentPlayIndex)
             
@@ -612,7 +620,12 @@
         self.player  = nil;
     }
 
-    self.player = [ZFPlayerController playerWithPlayerManager:[[ZFAVPlayerManager alloc] init]  containerView:[UIView new]];
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
+
     self.player.pauseWhenAppResignActive = YES;
     self.player.assetURLs = urlArr;
     [self.player playTheIndex:0];
@@ -726,7 +739,7 @@
             self->yidongV.mj_x = 105 * YScaleWidth;
 
         } completion:^(BOOL finished) {
-            [gifView stopAnimating];
+//            [gifView stopAnimating];
             
             if(iftuichu){
                 return;
@@ -747,10 +760,153 @@
             self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
                 [self.player stop];
                 self.player = nil;
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    bofangCounts = 0;
+                    [self newPlaywithUrl:self.words_audios.firstObject :^{
+                        [self doudongwithV];
+                    }];
+                    
+                });
+
+                
             };
 
             
         }];
+
+}
+
+- (void)newPlaywithUrl:(NSString *)urlString :(void (^)(void))completionBlock{
+    
+    if(iftuichu){
+        return;
+    }
+    
+    NSString *webVideoPath = urlString;
+    NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+    
+    if(self.player){
+        [self.player stop];
+        self.player  = nil;
+    }
+
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
+
+    self.player.pauseWhenAppResignActive = YES;
+    self.player.assetURLs = @[webVideoUrl];
+    [self.player playTheIndex:0];
+
+    
+    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        if(ifhoutai){
+            [self.player.currentPlayerManager pause];
+        }
+        
+        //播放完成
+        if(bofangCounts == 2){
+            [self.player stop];
+            self.player = nil;
+            
+            if(completionBlock){
+                bofangCounts = 0;
+                completionBlock();
+            }
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if(iftuichu){
+                return;
+            }
+            
+            [self.player playTheIndex:0];
+            bofangCounts ++;
+        });
+        
+
+        
+    };
+}
+
+//提示开始
+- (void)doudongwithV{
+    tishiAnimation.hidden = NO;
+
+    srand([[NSDate date] timeIntervalSince1970]);
+    float rand=(float)random();
+    CFTimeInterval t=rand*0.0000000001;
+    
+    [UIView animateWithDuration:0.5 delay:t options:0  animations:^
+     {
+        rightV.transform = CGAffineTransformMakeTranslation(0, -10);
+     } completion:^(BOOL finished)
+     {
+         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+          {
+             rightV.transform = CGAffineTransformMakeTranslation(0, 0);
+          } completion:^(BOOL finished) {}];
+     }];
+
+}
+
+
+//提示结束
+- (void)xuanzhongRight{
+    
+    //音频结束
+    //再放一遍词语音频
+    NSString *webVideoPath;
+    if(successIndex == 0){
+        webVideoPath = self.words_audios.firstObject;
+    }
+    else{
+        webVideoPath = self.words_audios.lastObject;
+    }
+    
+    NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+
+    [self bofangwithUrl:@[webVideoUrl]];
+        
+    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        
+        [self.player stop];
+        self.player = nil;
+    };
+
+
+    
+    tishiAnimation.hidden = YES;
+//    rightV.transform = CGAffineTransformIdentity;
+    
+    srand([[NSDate date] timeIntervalSince1970]);
+    float rand=(float)random();
+    CFTimeInterval t=rand*0.0000000001;
+    
+    [UIView animateWithDuration:0.5 delay:t options:0  animations:^
+     {
+        rightV.transform = CGAffineTransformMakeTranslation(0, -10);
+     } completion:^(BOOL finished)
+     {
+         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+          {
+             rightV.transform = CGAffineTransformMakeTranslation(0, 0);
+          } completion:^(BOOL finished) {}];
+     }];
+
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+        [UIView animateWithDuration:0.01 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
+         {
+            self->rightV.transform = CGAffineTransformIdentity;
+         } completion:^(BOOL finished) {}];
+
+    });
 
 }
 
@@ -764,6 +920,17 @@
         
         firstCheck = YES;
 //        [self->gifView stopAnimating];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            bofangCounts = 0;
+            [self newPlaywithUrl:self.words_audios.lastObject :^{
+                [self doudongwithV];
+            }];
+            
+        });
+
+        
     }];
 
 }
@@ -783,17 +950,18 @@
         successImg.frame = CGRectMake(0, YScreenH - 237 * YScaleHeight - gifheight,gifwidth, gifheight);
 //        [successImg startAnimating];
         
-        YYAnimatedImageView *successImg1 = [[YYAnimatedImageView alloc] initWithImage:image];
-        [backV addSubview:successImg1];
-        successImg1.frame = CGRectMake(YScreenW - gifwidth, YScreenH - 237 * YScaleHeight - gifheight,gifwidth, gifheight);
-        successImg1.transform = CGAffineTransformMakeScale(-1.0, 1.0);//水平翻转
+        //间隔0.5s  有点交错的感觉
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            YYAnimatedImageView *successImg1 = [[YYAnimatedImageView alloc] initWithImage:image];
+            [backV addSubview:successImg1];
+            successImg1.frame = CGRectMake(YScreenW - gifwidth, YScreenH - 237 * YScaleHeight - gifheight,gifwidth, gifheight);
+            successImg1.transform = CGAffineTransformMakeScale(-1.0, 1.0);//水平翻转
+            
+        });
+
         
     });
-
-    if(iftuichu){
-        return;
-    }
-
     
     //    播放录音
     NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"你太棒了" ofType:@"mp3"];
@@ -809,16 +977,21 @@
     };
     
     
-    [UIView animateWithDuration:3 animations:^{
+    [UIView animateWithDuration:6 animations:^{
         
-        [self->scrollV setContentOffset:CGPointMake(YScreenW * 3, 0)];
-        self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 3;
+        [self->scrollV setContentOffset:CGPointMake(YScreenW * 4, 0)];
+        self->gifView.centerX = 90 * YScaleHeight + 764 * YScaleWidth + YScreenW * 4;
 
     } completion:^(BOOL finished) {
-         
-        [gifView stopAnimating];
-        //成功接口
-        [self successFetch];
+                 
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+//            [gifView stopAnimating];
+            //认读玩结束
+            //成功接口
+            [self successFetch];
+
+        });
         
     }];
 
@@ -826,13 +999,13 @@
 
 //成功之后 通过的接口调用
 - (void)successFetch{
+//    if(self.xuanzhongIndex < [YUserDefaults integerForKey:khas_learn_num]){
+//    }
     
-    if(self.xuanzhongIndex < [YUserDefaults integerForKey:khas_learn_num]){
+    if(self.ifFuxi){
         [self dismissViewControllerAnimated:YES completion:nil];
-        
         return;
     }
-    
     
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -841,9 +1014,7 @@
     param[@"id"] = [NSNumber numberWithInteger:self.selectedMod.ID];
 
     YLog(@"%@",[NSString getBaseUrl:_URL_Success withparam:param])
-    
-//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
+        
     [YLHttpTool POST:_URL_Success parameters:param progress:^(NSProgress *progress) {
         
     } success:^(id dic) {
@@ -895,7 +1066,7 @@
     [scrollV addSubview:renV];
     renV.frame = CGRectMake(0, 0, YScreenW, YScreenH);
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg7"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg6"]];
     [renV addSubview:img];
     
     if(isPad){
@@ -955,7 +1126,7 @@
     [scrollV addSubview:duV];
     duV.frame = CGRectMake(YScreenW, 0, YScreenW, YScreenH);
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg8"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg7"]];
     [duV addSubview:img];
     
     if(isPad){
@@ -1034,7 +1205,7 @@
     [scrollV addSubview:wanV];
     wanV.frame = CGRectMake(YScreenW * 2, 0, YScreenW, YScreenH);
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg1"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg8"]];
     [wanV addSubview:img];
     
     if(isPad){
@@ -1148,6 +1319,24 @@
     
     [wanV addSubview:fankunV3];
     fankunV3.sd_layout.leftSpaceToView(wanV, 806 * YScaleWidth).topSpaceToView(wanV, roadH + 12 * YScaleWidth).widthIs(200 * YScaleWidth).heightEqualToWidth();
+    
+    rightFangkuaiV = [[YYAnimatedImageView alloc] initWithImage:image];
+    [wanV addSubview:rightFangkuaiV];
+    rightFangkuaiV.sd_layout.leftSpaceToView(wanV, 568 * YScaleWidth).topSpaceToView(wanV, roadH - 34 * YScaleWidth).widthIs(520 * YScaleWidth).heightIs(268 * YScaleWidth);
+         
+    UILabel *labell = [UILabel new];
+//    label.text = self.combine_words.firstObject;
+    labell.textColor = [JKUtil getColor:@"492B19"];
+    labell.textAlignment = NSTextAlignmentCenter;
+    labell.font = [UIFont fontWithName:@"kaiti" size:80 * YScaleWidth];
+    //富文本属性  设置字间距
+    labell.attributedText = [[NSAttributedString alloc] initWithString:self.combine_words.lastObject attributes:textDict];
+
+    [rightFangkuaiV addSubview:labell];
+    labell.sd_layout.leftSpaceToView(rightFangkuaiV, 112 * YScaleWidth).bottomSpaceToView(rightFangkuaiV, 68 * YScaleWidth).widthIs(266 * YScaleWidth).heightIs(80 * YScaleWidth);
+    [rightFangkuaiV stopAnimating];
+    rightFangkuaiV.hidden = YES;
+    
 
 
     UIImageView *roadImg4 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementroad4"]];
@@ -1191,74 +1380,61 @@
         label.sd_layout.centerXEqualToView(v).topSpaceToView(v, 38 * YScaleWidth).widthIs(84 * YScaleWidth).heightIs(80 * YScaleWidth);
 
         if(i == rightIndex){
-            tishiAnimation = [LOTAnimationView animationNamed:@"hint_animation"];
-            [v addSubview:tishiAnimation];
-            tishiAnimation.frame = CGRectMake(66 * YScaleWidth, 80 * YScaleWidth, 120 * YScaleWidth, 130 * YScaleWidth);
-            
-            tishiAnimation.loopAnimation = YES;
-            [tishiAnimation play];
-            
-            /*
-            srand([[NSDate date] timeIntervalSince1970]);
-            float rand=(float)random();
-            CFTimeInterval t=rand*0.0000000001;
-            
-            [UIView animateWithDuration:0.1 delay:t options:0  animations:^
-             {
-                v.transform = CGAffineTransformMakeTranslation(0, -20);
-             } completion:^(BOOL finished)
-             {
-                 [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
-                  {
-                     v.transform = CGAffineTransformMakeTranslation(0, 20);
-                  } completion:^(BOOL finished) {}];
-             }];
-            
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                
-                [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
-                 {
-                     v.transform = CGAffineTransformIdentity;
-                 } completion:^(BOOL finished) {}];
-                
-            });
-             */
-            
-            
+            rightV = v;
         }
         
+        tishiAnimation = [LOTAnimationView animationNamed:@"hint_animation"];
+        [rightV addSubview:tishiAnimation];
+        tishiAnimation.frame = CGRectMake(66 * YScaleWidth, 80 * YScaleWidth, 120 * YScaleWidth, 130 * YScaleWidth);
+        
+        tishiAnimation.loopAnimation = YES;
+        [tishiAnimation play];
+        tishiAnimation.hidden = YES;
+        
     }
-    
 
     
 }
 
+
 //绘制 成功页面
 - (void)setsuccessV{
+    UIView *qiansuccessV = [UIView new];
+    [scrollV addSubview:qiansuccessV];
+    qiansuccessV.frame = CGRectMake(YScreenW * 3, 0, YScreenW, YScreenH);
+    
+    UIImageView *imggg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg1"]];
+    [qiansuccessV addSubview:imggg];
+        
+    //添加下面的路
+    UIImageView *roadImgg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad1"]];
+    [qiansuccessV addSubview:roadImgg];
+    roadImgg.frame = CGRectMake(0, roadH, YScreenW, 236 * YScaleWidth);
+
     successV = [UIView new];
     [scrollV addSubview:successV];
-    successV.frame = CGRectMake(YScreenW * 3, 0, YScreenW, YScreenH);
+    successV.frame = CGRectMake(YScreenW * 4, 0, YScreenW, YScreenH);
     
     UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg2"]];
     [successV addSubview:img];
-    
 
     //添加下面的路
     UIImageView *roadImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"funroad2"]];
     [successV addSubview:roadImg];
     roadImg.frame = CGRectMake(0, roadH, YScreenW, 236 * YScaleWidth);
     
+    //红旗图片
     UIImageView *imgg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementflag"]];
     [successV addSubview:imgg];
     imgg.frame = CGRectMake(764 * YScaleWidth, 0, 180 * YScaleHeight, 328 * YScaleHeight);
     
     if(isPad){
+        imggg.frame = CGRectMake(0, 0, YScreenW, YScreenH);
         img.frame = CGRectMake(0, 0, YScreenW, YScreenH);
         imgg.mj_y = 293 * YScaleHeight;
-
     }
     else{
+        imggg.frame = CGRectMake(0,  -50 * YScaleHeight, YScreenW, YScreenW * 0.75);
         img.frame = CGRectMake(0,  -50 * YScaleHeight, YScreenW, YScreenW * 0.75);
         imgg.mj_y = 263 * YScaleHeight;
     }
@@ -1300,7 +1476,17 @@
         
         
         //选错提示音
+        /*
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"错误" ofType:@"wav"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
+        [self bofangwithUrl:@[localVideoUrl]];
         
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            [self.player stop];
+            self.player = nil;
+        };
+         */
         
         return;
     }
@@ -1333,6 +1519,9 @@
     label.sd_layout.centerXEqualToView(v).topSpaceToView(v, 38 * YScaleWidth).widthIs(84 * YScaleWidth).heightIs(80 * YScaleWidth);
 
     if(successIndex == 0){
+        
+        [self xuanzhongRight];
+        
         [UIView animateWithDuration:0.5 animations:^{
             v.center = okV1.center;
             
@@ -1344,8 +1533,10 @@
                 
                 [leftFangkuaiV startAnimating];
                 leftFangkuaiV.hidden = NO;
+                fankunV.hidden = YES;
+                fankunV1.hidden = YES;
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     
                     [gifView startAnimating];
                     [self banpingcaozuo];
@@ -1365,6 +1556,8 @@
         //第一关完成
         if(firstCheck){
             
+            [self xuanzhongRight];
+            
             [UIView animateWithDuration:0.5 animations:^{
                 v.center = okV2.center;
                 
@@ -1372,9 +1565,28 @@
                 [v removeFromSuperview];
                 self->okV2.hidden = NO;
                 
-                //一段成功的音乐
-                [gifView startAnimating];
-                [self successCaozuo];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    [rightFangkuaiV startAnimating];
+                    rightFangkuaiV.hidden = NO;
+
+                    fankunV2.hidden = YES;
+                    fankunV3.hidden = YES;
+                    
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        if(iftuichu){
+                            return;
+                        }
+
+                        //一段成功的音乐
+                        [gifView startAnimating];
+                        [self successCaozuo];
+
+                    });
+                });
+
+                
 
             }];
 

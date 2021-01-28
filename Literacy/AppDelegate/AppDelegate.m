@@ -20,7 +20,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    [NSThread sleepForTimeInterval:1];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
+    YLog(@"%.0f",[[NSDate date] timeIntervalSince1970])
+    
+    [YUserDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kfirstchuo];
     
     //进入欢迎页
     [self gotoWelcome];
@@ -51,6 +57,9 @@
     keyboardManager.enable = YES; // 控制整个功能是否启用
     keyboardManager.shouldResignOnTouchOutside = YES; // 控制点击背景是否收起键盘
     
+    //处于开发阶段注释
+    
+    //处于发布阶段
     //友盟统计 iPad和iPhone版
     if(isPad){
         [UMConfigure initWithAppkey:@"5fe05fac345b8b53f5754613" channel:@"App Store"];
@@ -73,6 +82,38 @@
     WelcomeViewController *welcomeVc = [[WelcomeViewController alloc] init];
     [self.window setRootViewController:welcomeVc];
     [self.window makeKeyAndVisible];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+    
+    double nowchuo = [[NSDate date] timeIntervalSince1970];
+    double shijiancha = nowchuo - [YUserDefaults doubleForKey:kfirstchuo];
+    
+    NSString *shijianchaS = [NSString stringWithFormat:@"%.0f",shijiancha];
+    
+    param[@"using_time"] = [NSNumber numberWithInteger:[shijianchaS integerValue]];
+
+    YLog(@"%@",[NSString getBaseUrl:_URL_UsingLong withparam:param])
+    
+    [YLHttpTool POST:_URL_UsingLong parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+        
+        if([dic[@"code"] integerValue] == 200){
+            
+        }
+        else{
+                
+        }
+        YLog(@"%@",dic)
+        
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        
+    }];
+    
 }
 
 //- (void)gotoFuxi{

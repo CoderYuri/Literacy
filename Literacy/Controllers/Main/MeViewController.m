@@ -94,6 +94,11 @@
     }
 
     self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
+
 
     self.player.assetURLs = urlArr;
     [self.player playTheIndex:0];
@@ -186,15 +191,35 @@
     shangzL.textColor = [JKUtil getColor:@"5B5B5B"];
     shangzL.textAlignment = NSTextAlignmentCenter;
     [dengluV addSubview:shangzL];
-    shangzL.sd_layout.topSpaceToView(dengluV, 75 * thisScale).centerXEqualToView(dengluV).widthIs(400 * thisScale).heightIs(45 * thisScale);
+    shangzL.sd_layout.topSpaceToView(dengluV, 55 * thisScale).centerXEqualToView(dengluV).widthIs(400 * thisScale).heightIs(45 * thisScale);
     
-    UILabel *detaiL = [UILabel new];
-    detaiL.text = @"未注册的手机号将自动创建账户";
-    detaiL.font = YSystemFont(22 * thisScale);
-    detaiL.textColor = [JKUtil getColor:@"B6B7BA"];
-    detaiL.textAlignment = NSTextAlignmentCenter;
-    [dengluV addSubview:detaiL];
-    detaiL.sd_layout.topSpaceToView(shangzL, 10 * thisScale).centerXEqualToView(dengluV).widthIs(400 * thisScale).heightIs(22 * thisScale);
+//    UILabel *detaiL = [UILabel new];
+//    detaiL.text = @"未注册的手机号将自动创建账户";
+//    detaiL.font = YSystemFont(22 * thisScale);
+//    detaiL.textColor = [JKUtil getColor:@"B6B7BA"];
+//    detaiL.textAlignment = NSTextAlignmentCenter;
+//    [dengluV addSubview:detaiL];
+//    detaiL.sd_layout.topSpaceToView(shangzL, 10 * thisScale).centerXEqualToView(dengluV).widthIs(400 * thisScale).heightIs(22 * thisScale);
+    
+    UIView *vipBackV = [UIView new];
+    [dengluV addSubview:vipBackV];
+    vipBackV.sd_layout.topSpaceToView(dengluV, 110 * thisScale).centerXEqualToView(dengluV).widthIs(335 * thisScale).heightIs(44 * thisScale);
+    
+    UIImageView *vipBackImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementbgvip"]];
+    [vipBackV addSubview:vipBackImg];
+    vipBackImg.sd_layout.leftEqualToView(vipBackV).rightEqualToView(vipBackV).topEqualToView(vipBackV).bottomEqualToView(vipBackV);
+    
+    UIImageView *vipiconImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementvip"]];
+    [vipBackV addSubview:vipiconImg];
+    vipiconImg.sd_layout.leftSpaceToView(vipBackV, 20 * thisScale).centerYEqualToView(vipBackV).widthIs(26 * thisScale).heightEqualToWidth();
+    
+    UILabel *vipdengluL = [UILabel new];
+    vipdengluL.text = @"登录特权：保存并同步学习进度";
+    vipdengluL.font = YSystemFont(18 * thisScale);
+    vipdengluL.textColor = [JKUtil getColor:@"954623"];
+    [vipBackV addSubview:vipdengluL];
+    vipdengluL.sd_layout.leftSpaceToView(vipiconImg, 9 * thisScale).centerYEqualToView(vipBackV).rightSpaceToView(vipBackV, 0).heightIs(26 * thisScale);
+    
     
     UIView *backV1 = [UIView new];
     [dengluV addSubview:backV1];
@@ -425,7 +450,7 @@
     topV.sd_layout.leftEqualToView(goumaiV).rightEqualToView(goumaiV).heightIs(60 * YScaleWidth);
     
     NSArray *shangArr = @[@"1580个",@"3160个",@"1580个",@"不限次数"];
-    NSArray *xiaArr = @[@"部编版汉字",@"常用词语",@"创意字卡",@"重新免费学习"];
+    NSArray *xiaArr = @[@"部编版汉字",@"常用词语",@"原创字卡",@"重新免费学习"];
 
     
     for (int j = 0; j < shangArr.count; j++) {
@@ -459,9 +484,9 @@
     [goumaiV addSubview:zhongjianV];
     zhongjianV.sd_layout.centerXEqualToView(goumaiV).widthIs(700 * YScaleWidth).heightIs(178 * thisScale);
     
-    NSArray *nameArr = @[@"永久卡",@"年卡",@"月卡"];
-    NSArray *monArr = @[@"68",@"45",@"8"];
-    NSArray *shixiaoArr = @[@"终身有效",@"低至0.1元/天",@""];
+    NSArray *nameArr = @[@"月卡",@"年卡",@"永久卡"];
+    NSArray *monArr = @[@"8",@"45",@"68"];
+    NSArray *shixiaoArr = @[@"",@"低至0.1元/天",@"终身有效"];
     
     CGFloat margin = (700 * YScaleWidth - 600 * thisScale)/2.0;
     for (int i = 0; i < nameArr.count; i++) {
@@ -971,9 +996,7 @@
     param[@"nickname"] = nameTextF.text;
     
     YLog(@"%@",[NSString getBaseUrl:_URL_nickname withparam:param])
-    
-//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
+        
     [YLHttpTool POST:_URL_nickname parameters:param progress:^(NSProgress *progress) {
         
     } success:^(id dic) {
@@ -1024,11 +1047,16 @@
             //获取新的userid
             //网络请求数据
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
-            
+            if(isPad){
+                param[@"device"] = @"iPad";
+            }
+            else{
+                param[@"device"] = @"iPhone";
+            }
+            param[@"origin"] = @"app store";
+
             YLog(@"%@",[NSString getBaseUrl:_URL_userID withparam:param])
-            
-        //    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            
+                        
             [YLHttpTool GET:_URL_userID parameters:param progress:^(NSProgress *progress) {
                 
             } success:^(id dic) {
@@ -1054,7 +1082,6 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         if(error.code == -1009){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -1281,9 +1308,7 @@
     param[@"phone"] = mobileTextF.text;
     
     YLog(@"%@",[NSString getBaseUrl:_URL_code withparam:param])
-    
-//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
+        
     [YLHttpTool GET:_URL_code parameters:param progress:^(NSProgress *progress) {
         
     } success:^(id dic) {
@@ -1300,7 +1325,6 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         if(error.code == -1009){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -1369,6 +1393,8 @@
         return;;
     }
     
+    [SVProgressHUD showWithStatus:@"登录中..."];
+    
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"phone"] = mobileTextF.text;
@@ -1420,7 +1446,6 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         if(error.code == -1009){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -1623,7 +1648,8 @@
                 vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
                 vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
                 vc.word_audio = [NSString stringWithFormat:@"%@",dict[@"word_audio"]];
-
+                vc.words_audios = dict[@"words_audios"];
+                vc.ifFuxi = YES;
 
                 vc.callBack = ^(NSInteger xuanzhongIndex) {
 
@@ -1645,7 +1671,6 @@
 
             YLog(@"%@",dic);
         } failure:^(NSError *error) {
-            //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
             if(error.code == -1009){
                 NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
                 NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -1669,13 +1694,13 @@
     
     NSString *product_type;
     if(selectIndex == 0){
-        product_type = @"permanent";
+        product_type = @"month";
     }
     else if(selectIndex == 1){
         product_type = @"year";
     }
     else{
-        product_type = @"month";
+        product_type = @"permanent";
     }
     
     //网络请求数据
@@ -1686,6 +1711,8 @@
         param[@"device"] = @"iPad";
     else
         param[@"device"] = @"iPhone";
+    
+    param[@"origin"] = @"app store";
     
     YLog(@"%@",[NSString getBaseUrl:_URL_iOSorder withparam:param])
     
@@ -1711,7 +1738,6 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         if(error.code == -1009){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -1840,27 +1866,15 @@
                 [self completeTransaction:transaction];
                 
                 [SVProgressHUD dismiss];
-
-//                UIAlertView *alerView =  [[UIAlertView alloc] initWithTitle:@""
-//                                                                    message:@"购买成功"
-//                                                                   delegate:nil cancelButtonTitle:NSLocalizedString(@"关闭",nil) otherButtonTitles:nil];
-//
-//                [alerView show];
                 
             } break;
             case SKPaymentTransactionStateFailed://交易失败
             {
                 [self failedTransaction:transaction];
                 NSLog(@"-----交易失败 --------");
-//                UIAlertView *alerView2 =  [[UIAlertView alloc] initWithTitle:@"提示"
-//                                                                     message:@"购买失败，请重新尝试购买"
-//                                                                    delegate:nil cancelButtonTitle:NSLocalizedString(@"关闭",nil) otherButtonTitles:nil];
-//
-//                [alerView2 show];
+                
                 [SVProgressHUD showErrorWithStatus:@"购买失败"];
                 [SVProgressHUD dismissWithDelay:1];
-
-                ///[self gotoDetail];
 
                 
             }break;
@@ -1899,6 +1913,9 @@
     NSString *environment=[self environmentForReceipt:str];
     NSLog(@"----- 完成交易调用的方法completeTransaction 1--------%@",environment);
     
+
+    YLog(@"%@",transaction.transactionIdentifier)
+
     
     // 验证凭据，获取到苹果返回的交易凭据
     // appStoreReceiptURL iOS7.0增加的，购买交易完成后，会将凭据存放在该地址
@@ -1918,7 +1935,6 @@
     [SVProgressHUD dismiss];
     [SVProgressHUD showSuccessWithStatus:@"内购成功"];
 
-    
     //生成流水号 接口
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -1957,7 +1973,6 @@
             };
         }
 
-//        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
     }];
      
 }
@@ -1970,9 +1985,7 @@
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     
     YLog(@"%@",[NSString getBaseUrl:_URL_userInfo withparam:param])
-    
-//    NSString *urlString = [_URL_userID stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
+        
     [YLHttpTool POST:_URL_userInfo parameters:param progress:^(NSProgress *progress) {
         
     } success:^(id dic) {
@@ -1997,7 +2010,6 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         if(error.code == -1009){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];

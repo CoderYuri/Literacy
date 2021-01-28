@@ -22,11 +22,14 @@
     
     NSDictionary *thisDict;
     BOOL ifback;
+    BOOL ifChooseRight;
+        
+    BOOL iftuichu;
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
-@property (nonatomic, strong) UIImageView *containerView;
-@property (nonatomic, strong) ZFPlayerControlView *controlView;
+//@property (nonatomic, strong) ZFPlayerController *cuowuplayer;
+
 @end
 
 @implementation FuxiPlayViewController
@@ -34,11 +37,20 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.player.viewControllerDisappear = NO;
+    
+    iftuichu = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.player.viewControllerDisappear = YES;
+    
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+
+    iftuichu = YES;
 }
 
 - (void)bofangwithUrl:(NSArray *)urlArr{
@@ -46,9 +58,18 @@
         [self.player stop];
         self.player = nil;
     }
-
+    
     self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
-
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
+    
+//    self.player.volume = 1;
+    self.player.notification.volumeChanged = ^(float volume) {
+        YLog(@"%f",volume)
+    };
+    
     self.player.assetURLs = urlArr;
     [self.player playTheIndex:0];
 }
@@ -59,6 +80,21 @@
     
     thisDict = self.fuxiArr[self.successCounts];
     [self setupView];
+    
+    if(!self.successCounts){
+        
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"正确汉字" ofType:@"mp3"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
+        [self bofangwithUrl:@[localVideoUrl]];
+        
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            [self.player stop];
+            self.player = nil;
+            
+        };
+    }
+    
 }
 
 - (void)setupView{
@@ -109,6 +145,8 @@
     [labaBtn setBackgroundImage:[UIImage imageNamed:@"fuxiplay"] forState:UIControlStateNormal];
     [backV addSubview:labaBtn];
     labaBtn.sd_layout.leftSpaceToView(backV, 30 * YScaleWidth + 27 * YScaleHeight).bottomSpaceToView(backV,57 * YScaleHeight).widthIs(66 * YScaleHeight).heightEqualToWidth();
+    [labaBtn setEnlargeEdgeWithTop:30 * YScaleHeight right:30 * YScaleHeight bottom:30 * YScaleHeight left:30 * YScaleHeight];
+    
     [labaBtn addTarget:self action:@selector(labaClick) forControlEvents:UIControlEventTouchUpInside];
     
     nextBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
@@ -127,10 +165,29 @@
     nextBtn.hidden = YES;
     backBtn.hidden = YES;
     
+    
+    CGFloat leftlightMargin,rightZiMargin;
+    if(isPad){
+        leftlightMargin = 0;
+        rightZiMargin = 96 * YScaleWidth;
+    }
+    else{
+        if(Height_Bottom){
+            leftlightMargin = 150 * YScaleWidth;
+            rightZiMargin = 246 * YScaleWidth;
+        }
+        else{
+            leftlightMargin = 50 * YScaleWidth;
+            rightZiMargin = 146 * YScaleWidth;
+        }
+        
+    }
+
+    
     ziV = [UIView new];
     [backV addSubview:ziV];
     ziV.backgroundColor = ClearColor;
-    ziV.sd_layout.rightSpaceToView(backV, 96 * YScaleWidth).topSpaceToView(backV, 293 * YScaleHeight).widthIs(422 * YScaleHeight).heightIs(418 * YScaleHeight);
+    ziV.sd_layout.rightSpaceToView(backV, rightZiMargin).topSpaceToView(backV, 293 * YScaleHeight).widthIs(422 * YScaleHeight).heightIs(418 * YScaleHeight);
     
     NSMutableArray *ziArr = [NSMutableArray arrayWithArray:thisDict[@"similar_words"]];
     rightIndex = arc4random_uniform(4);
@@ -168,7 +225,9 @@
     lightV.backgroundColor = ClearColor;
     [backV addSubview:lightV];
 //    lightV.sd_layout.leftSpaceToView(backV, 0 * YScaleWidth).topSpaceToView(backV, 0 * YScaleHeight).widthIs(513 * YScaleHeight).heightIs(760 * YScaleHeight);
-    lightV.frame = CGRectMake(0, 0, 513 * YScaleHeight, 760 * YScaleHeight);
+    
+    
+    lightV.frame = CGRectMake(leftlightMargin, 0, 513 * YScaleHeight, 760 * YScaleHeight);
     
     UIImageView *lightoffImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fuxilightoff"]];
     [lightV addSubview:lightoffImg];
@@ -182,7 +241,7 @@
     UIImageView *leftimg = [[UIImageView alloc] init];
     [leftimg sd_setImageWithURL:[NSURL URLWithString:thisDict[@"word_image"]]];
     [ziV addSubview:leftimg];
-    leftimg.sd_layout.centerXEqualToView(ziV).centerYEqualToView(ziV).widthIs(349.333 * YScaleHeight).heightIs(262 * YScaleHeight);
+    leftimg.sd_layout.centerXEqualToView(ziV).centerYEqualToView(ziV).widthIs(349.333 * YScaleHeight * 1.2).heightIs(262 * YScaleHeight * 1.2);
 
 
     
@@ -194,9 +253,11 @@
     
     NSString *webVideoPath = thisDict[@"word_audio"];
     NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
-
+        
     [self bofangwithUrl:@[webVideoUrl]];
     
+    YLog(@"%@",webVideoPath)
+        
     self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
         [self.player stop];
         self.player = nil;
@@ -204,12 +265,6 @@
 }
 
 - (void)nextClick{
-    
-    //复习完成 进入首页
-//    if(self.successCounts == 5){
-//    }
-//    else{
-//    }
 
     //进入下一个学习页面
     FuxiPlayViewController *vc = [[FuxiPlayViewController alloc] init];
@@ -234,6 +289,10 @@
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap{
+    if(ifChooseRight){
+        return;
+    }
+    
     NSInteger index = tap.view.tag;
     
     YLog(@"%ld----%ld",index,rightIndex)
@@ -247,15 +306,68 @@
         UILabel *L = v.subviews.lastObject;
         L.textColor = WhiteColor;
         
-        [self rightClick];
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"成功" ofType:@"wav"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
+        [self bofangwithUrl:@[localVideoUrl]];
+        
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            [self.player stop];
+            self.player = nil;
+            
+            [self rightClick];
+        };
+        
+        ifChooseRight = YES;
+
     }
     else{
         UIView *v = ziV.subviews[index];
         UIImageView *img = v.subviews.firstObject;
         img.image = [UIImage imageNamed:@"fuxiwrong"]; //fuxiright
         
+        srand([[NSDate date] timeIntervalSince1970]);
+        float rand=(float)random();
+        CFTimeInterval t=rand*0.0000000001;
+        
+        [UIView animateWithDuration:0.1 delay:t options:0  animations:^
+         {
+            v.transform = CGAffineTransformMakeRotation(-0.05);
+         } completion:^(BOOL finished)
+         {
+             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+              {
+                 v.transform = CGAffineTransformMakeRotation(0.05);
+              } completion:^(BOOL finished) {}];
+         }];
+        
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
+             {
+                 v.transform = CGAffineTransformIdentity;
+             } completion:^(BOOL finished) {}];
+            
+        });
+        
+        
+        
         UILabel *L = v.subviews.lastObject;
         L.textColor = WhiteColor;
+        
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"错误" ofType:@"wav"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
+        [self bofangwithUrl:@[localVideoUrl]];
+        
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            [self.player stop];
+            self.player = nil;
+        };
+
+        ifChooseRight = NO;
+        
     }
 
 }
@@ -278,13 +390,31 @@
     [UIView animateWithDuration:1 animations:^{
         v.mj_y = 134 * YScaleHeight;
         
-        v.mj_x = 55 * YScaleWidth - 628 * (YScaleWidth - YScaleHeight);
-        self->lightV.mj_x = 212 * YScaleWidth + 200 * (YScaleWidth - YScaleHeight);
+        if(isPad){
+            v.mj_x = 55 * YScaleWidth - 628 * (YScaleWidth - YScaleHeight);
+            self->lightV.mj_x = 212 * YScaleWidth + 200 * (YScaleWidth - YScaleHeight);
+
+        }
+        else{
+            
+            if(Height_Bottom){
+                v.mj_x = 55 * YScaleWidth - 628 * (YScaleWidth - YScaleHeight) + 170 * YScaleWidth ;
+                self->lightV.mj_x = 212 * YScaleWidth + 200 * (YScaleWidth - YScaleHeight) + 20 * YScaleWidth;
+            }
+            else{
+                v.mj_x = 55 * YScaleWidth - 628 * (YScaleWidth - YScaleHeight) + 70 * YScaleWidth ;
+                self->lightV.mj_x = 212 * YScaleWidth + 200 * (YScaleWidth - YScaleHeight) + 20 * YScaleWidth;
+
+            }
+
+        }
+        
 
     } completion:^(BOOL finished) {
         //选词正确 放一遍语音
-        [self labaClick];
         
+        [self labaClick];
+
         //修改灯的颜色
         UIImageView *lightImg = lightV.subviews.firstObject;
         lightImg.image = [UIImage imageNamed:@"fuxilighton"];
@@ -301,7 +431,48 @@
             backBtn.hidden = NO;
             
             //学习完成接口
-//            [self fuxiOk];
+            [self fuxiOk];
+
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if(iftuichu){
+                    return;
+                }
+                
+//                //backBtn增加向左动效
+//                srand([[NSDate date] timeIntervalSince1970]);
+//                float rand=(float)random();
+//                CFTimeInterval t=rand*0.0000000001;
+//
+//                [UIView animateWithDuration:0.5 delay:t options:0  animations:^
+//                 {
+//                    backBtn.transform = CGAffineTransformMakeTranslation(-10, 0);
+//                 } completion:^(BOOL finished)
+//                 {
+//                     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+//                      {
+//                         backBtn.transform = CGAffineTransformMakeTranslation(0, 0);
+//                      } completion:^(BOOL finished) {}];
+//                 }];
+
+                
+                NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"充电完毕" ofType:@"mp3"];
+                NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
+                [self bofangwithUrl:@[localVideoUrl]];
+                
+                self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                    [self.player stop];
+                    self.player = nil;
+                    
+                    [self back];
+                };
+
+                
+            });
+            
+
+            
         }
                 
     }];
@@ -318,11 +489,9 @@
     } success:^(id dic) {
         
         if([dic[@"code"] integerValue] == 200){
-
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self back];
-            });
-            
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [self back];
+//            });
         }
         
         YLog(@"%@",dic)
@@ -332,6 +501,7 @@
         if(error.code == -1009){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
             [self bofangwithUrl:@[localVideoUrl]];
             
             self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
@@ -349,7 +519,6 @@
     if(!ifback){
         [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
         ifback = YES;
-
     }
 }
 

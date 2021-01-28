@@ -196,7 +196,8 @@
                 vc.word_image = [NSString stringWithFormat:@"%@",dict[@"word_image"]];
                 vc.word_video = [NSString stringWithFormat:@"%@",dict[@"word_video"]];
                 vc.word_audio = [NSString stringWithFormat:@"%@",dict[@"word_audio"]];
-
+                vc.words_audios = dict[@"words_audios"];
+                vc.ifFuxi = YES;
 
                 vc.callBack = ^(NSInteger xuanzhongIndex) {
 
@@ -245,6 +246,11 @@
     }
 
     self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
+
 
     self.player.assetURLs = urlArr;
     [self.player playTheIndex:0];

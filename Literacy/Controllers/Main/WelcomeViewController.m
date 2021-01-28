@@ -6,8 +6,6 @@
 //
 
 #import "WelcomeViewController.h"
-#import "ZFAVPlayerManager.h"
-#import "ZFPlayerControlView.h"
 #import "MainViewController.h"
 #import "FuxiViewController.h"
 
@@ -43,6 +41,11 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.player.viewControllerDisappear = YES;
+    
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
 }
 
 //- (ZFPlayerControlView *)controlView {
@@ -98,6 +101,14 @@
 - (void)getuserID{
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    if(isPad){
+        param[@"device"] = @"iPad";
+    }
+    else{
+        param[@"device"] = @"iPhone";
+    }
+    param[@"origin"] = @"app store";
+    
     
     YLog(@"%@",[NSString getBaseUrl:_URL_userID withparam:param])
     
@@ -112,6 +123,7 @@
             NSDictionary *d = dic[@"data"];
             [YUserDefaults setObject:d[@"user_id"] forKey:kuserid];
             
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
             //获取字库信息
             //网络请求数据
             param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
@@ -120,17 +132,16 @@
             [YLHttpTool GET:_URL_words parameters:param progress:^(NSProgress *progress) {
                 
             } success:^(id dic) {
-                
+                YLog(@"%@",dic)
+
                 if([dic[@"code"] integerValue] == 200){
                     
                     NSDictionary *d = dic[@"data"];
                     NSArray *array = d[@"words"];
                     [YUserDefaults setObject:array forKey:kziKu];
-                    
+
                     [YUserDefaults setInteger:[d[@"free_words_num"]integerValue] forKey:kfree_words_num];
                     [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
-
-                    YLog(@"%@",dic)
 
                 }
                 
@@ -141,7 +152,7 @@
             
         }
         
-        YLog(@"%@",dic);
+//        YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         if(error.code == -1009){
@@ -183,7 +194,6 @@
                 [self presentViewController:vc animated:YES completion:nil];
             }
             
-            
         }
         else{
             ifFuxi = NO;
@@ -219,8 +229,13 @@
         [self.player stop];
         self.player = nil;
     }
+    
 
     self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
 
     self.player.assetURLs = urlArr;
     [self.player playTheIndex:0];
@@ -231,25 +246,35 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+//    NSError *error;
+//
+//        [NSFileManager.defaultManager removeItemAtPath:[NSString stringWithFormat:@"%@/Library/SplashBoard",NSHomeDirectory()] error:&error];
+//
+//     if (error) {
+//
+//            NSLog(@"Failed to delete launch screen cache: %@",error);
+//
+//        }
+
     
     if([YUserDefaults objectForKey:kuserid]){
-        if([YUserDefaults objectForKey:ktoken]){
+//        if([YUserDefaults objectForKey:ktoken]){
             fuxiArr = [NSArray array];
-            
             [self fetchFuxi];
-        }
+//        }
     }
     else{
         [self netWorkChangeEvent];
     }
     
-    self.view.backgroundColor = [JKUtil getColor:@"0061E8"];
+//    self.view.backgroundColor = [JKUtil getColor:@"0061E8"];
     
     UIImageView *img = [[UIImageView alloc] init];
     img.image = [UIImage imageNamed:@"launchimage"];
     img.contentMode = UIViewContentModeScaleAspectFill;
     [self.view addSubview:img];
-    img.sd_layout.leftEqualToView(self.view).rightEqualToView(self.view).bottomEqualToView(self.view).topEqualToView(self.view);
+//    img.sd_layout.leftEqualToView(self.view).rightEqualToView(self.view).bottomEqualToView(self.view).topEqualToView(self.view);
+    img.frame = CGRectMake(0, 0, YScreenW, YScreenH);
     
     //新增温馨提示页面
     //第一次打开

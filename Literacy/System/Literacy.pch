@@ -75,6 +75,7 @@
 #define kziKu             @"kziku"
 #define kexpiretime       @"kexpiretime"
 #define koneVoice         @"koneVoice"
+#define kfirstchuo        @"kfirstchuo"
 
 
 #define weixinappid @"wx02362430224788af"

@@ -10,17 +10,70 @@
 
 @interface FuxiViewController (){
     UIView *backV;
+    UIButton *loginBtn;
 }
+
+@property (nonatomic, strong) ZFPlayerController *player;
 
 @end
 
 @implementation FuxiViewController
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.player.viewControllerDisappear = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.player.viewControllerDisappear = YES;
+    
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+}
+
+//播放音频
+- (void)bofangwithUrl:(NSArray *)urlArr{
+    if(self.player){
+        [self.player stop];
+        self.player = nil;
+    }
+
+    self.player = [ZFPlayerController playerWithPlayerManager: [[ZFAVPlayerManager alloc] init] containerView:[UIView new]];
+    
+    ZFPlayerControlView *v = [ZFPlayerControlView new];
+    self.player.controlView = v;
+    [v showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModePortrait];
+
+    self.player.assetURLs = urlArr;
+    [self.player playTheIndex:0];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+               selector:@selector(applicationDidBecomeActive:)
+                   name:UIApplicationDidBecomeActiveNotification
+                 object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+               selector:@selector(applicationDidEnterBackground:)
+                   name:UIApplicationDidEnterBackgroundNotification
+                 object:nil];
+
     [self setupView];
+    
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"开始充电" ofType:@"mp3"];
+    NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+    [self bofangwithUrl:@[localVideoUrl]];
+    
+    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+        [self.player stop];
+        self.player = nil;
+    };
     
 }
 
@@ -58,8 +111,8 @@
     [backV addSubview:fuImg];
     fuImg.sd_layout.centerXEqualToView(backV).centerYEqualToView(backV).widthIs(560 * thisScale).heightIs(438 * thisScale);
     
-    UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [loginBtn setTitle:@"立即充电" forState:UIControlStateNormal];
+    loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [loginBtn setTitle:@"开始充电" forState:UIControlStateNormal];
     [loginBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
     [loginBtn setBackgroundColor:korangeColor];
     loginBtn.titleLabel.font = YSystemFont(22 * thisScale);
@@ -68,8 +121,40 @@
     loginBtn.layer.masksToBounds = YES;
     [backV addSubview:loginBtn];
     loginBtn.sd_layout.centerXEqualToView(backV).topSpaceToView(fuImg, -41 * thisScale).widthIs(310 * thisScale).heightIs(58 * thisScale);
+    
+    [self doudongBtn];
+}
+
+- (void)doudongBtn{
+    srand([[NSDate date] timeIntervalSince1970]);
+    float rand= (float)random();
+    CFTimeInterval t = rand * 0.0000000001;
+    
+    [UIView animateWithDuration:1 delay:t options:0 animations:^
+     {
+        loginBtn.transform = CGAffineTransformMakeScale(0.95, 0.95);;
+     } completion:^(BOOL finished)
+     {
+         [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+          {
+             loginBtn.transform = CGAffineTransformMakeScale(1.05, 1.05);;
+          } completion:^(BOOL finished) {}];
+     }];
+}
+
+//app进入前台
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+    [self doudongBtn];
+}
+
+
+//app进入后台
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+//    loginBtn.transform = CGAffineTransformIdentity;
+    loginBtn.transform = CGAffineTransformMakeScale(1.0, 1.0);;
 
 }
+
 
 - (void)fuxiClick{
     FuxiPlayViewController *vc = [[FuxiPlayViewController alloc] init];

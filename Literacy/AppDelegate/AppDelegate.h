@@ -13,7 +13,5 @@
 
 - (void)gotoMainVC;
 
-//- (void)gotoFuxi;
-
 @end
 
