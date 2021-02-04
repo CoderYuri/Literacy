@@ -76,6 +76,16 @@
 #define kexpiretime       @"kexpiretime"
 #define koneVoice         @"koneVoice"
 #define kfirstchuo        @"kfirstchuo"
+#define kifshaonNan       @"kifshaonNan"
+#define kmembertype       @"kmembertype"
+
+//缓存一次需要的音视频
+#define knowvideo         @"knowvideo"
+#define knowaudio         @"knowaudio"
+#define kurlimage         @"kurlimage"
+#define kfirstaudio       @"kfirstaudio"
+#define ksecondaudio      @"ksecondaudio"
+
 
 
 #define weixinappid @"wx02362430224788af"

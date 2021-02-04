@@ -37,7 +37,11 @@
     UITextField *nameTextF;
     UILabel *vipL;
     
-    
+    UIImageView *IconVipImg;
+    NoHighBtn *detailIcon;
+    UIImageView *youxiaoqiImg;
+    UILabel *restTimeL;
+
     UIButton *selectedBtn;
     UIView *selectedV;
     NSInteger selectIndex;
@@ -68,6 +72,9 @@
     CGFloat thisScale;
     
     BOOL iftogoumai;
+    
+    //恢复购买按钮
+    NoHighBtn *restoreBtn;
 }
 
 @property (nonatomic,strong) NudeIn *monL;
@@ -332,7 +339,15 @@
     
     
     ///个人信息
-    UIImageView *userIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"elementuser"]];
+    UIImageView *userIcon = [[UIImageView alloc] init];
+    
+    if([YUserDefaults boolForKey:kifshaonNan]){
+        userIcon.image = [UIImage imageNamed:@"usernan"];
+    }
+    else{
+        userIcon.image = [UIImage imageNamed:@"usernv"];
+    }
+    
     [leftV addSubview:userIcon];
     userIcon.sd_layout.leftSpaceToView(leftV, 11 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight).widthIs(50 * YScaleWidth).heightEqualToWidth();
     
@@ -342,9 +357,9 @@
     userBtn.sd_layout.leftSpaceToView(leftV, 11 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight).widthIs(50 * YScaleWidth).heightEqualToWidth();
     [userBtn setEnlargeEdgeWithTop:0 right:80 * YScaleWidth bottom:0 left:0];
     
-    vipImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notvip"]];
-    [leftV addSubview:vipImg];
-    vipImg.sd_layout.leftSpaceToView(leftV, 45 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight + 35 * YScaleWidth).widthIs(18 * YScaleWidth).heightEqualToWidth();
+//    vipImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notvip"]];
+//    [leftV addSubview:vipImg];
+//    vipImg.sd_layout.leftSpaceToView(leftV, 45 * YScaleWidth).topSpaceToView(leftV, 30 * YScaleHeight + 35 * YScaleWidth).widthIs(18 * YScaleWidth).heightEqualToWidth();
     
     nameTextF = [self textF];
     nameTextF.keyboardType = UIKeyboardTypeDefault;
@@ -376,6 +391,40 @@
     [leftV addSubview:vipL];
     vipL.sd_layout.leftEqualToView(nameTextF).topSpaceToView(nameTextF, 3 * YScaleHeight).heightIs(16 * YScaleWidth).widthIs(108 * YScaleWidth);
 
+    IconVipImg = [[UIImageView alloc] init];
+    IconVipImg.image = [UIImage imageNamed:@"vipmonth"];
+    [leftV addSubview:IconVipImg];
+    IconVipImg.sd_layout.leftSpaceToView(leftV, 65 * YScaleWidth).topSpaceToView(nameTextF , 1 * YScaleHeight).heightIs(22 * YScaleWidth).widthIs(67 * YScaleWidth);
+    IconVipImg.hidden = YES;
+    
+    detailIcon = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [detailIcon setBackgroundImage:[UIImage imageNamed:@"icon_tip"] forState:UIControlStateNormal];
+    [leftV addSubview:detailIcon];
+    detailIcon.sd_layout.leftSpaceToView(IconVipImg, 2 * YScaleWidth).centerYEqualToView(IconVipImg).widthIs(12 * YScaleWidth).heightEqualToWidth();
+    [detailIcon addTarget:self action:@selector(detailClick) forControlEvents:UIControlEventTouchUpInside];
+    [detailIcon setEnlargeEdgeWithTop:20 right:20 bottom:20 left:20];
+    detailIcon.hidden = YES;
+    
+//    detailIcon.userInteractionEnabled = YES;
+//    //1.创建长按手势
+//    UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longP:)];
+//    //2.添加手势
+//    [detailIcon addGestureRecognizer:longP];
+    
+    
+    youxiaoqiImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"popupbox"]];
+    [leftV addSubview:youxiaoqiImg];
+    youxiaoqiImg.sd_layout.leftSpaceToView(leftV, 50 * YScaleWidth).topSpaceToView(IconVipImg, -5 * YScaleHeight).widthIs(116 * YScaleWidth).heightIs(32 * YScaleWidth);
+
+    restTimeL = [UILabel new];
+    restTimeL.textColor = [JKUtil getColor:@"FF6112"];
+    restTimeL.font = YSystemFont(8 * YScaleWidth);
+    [leftV addSubview:restTimeL];
+    restTimeL.sd_layout.centerXEqualToView(youxiaoqiImg).centerYEqualToView(youxiaoqiImg).widthIs(82 * YScaleWidth).heightIs(12 * YScaleWidth);
+    
+    youxiaoqiImg.hidden = YES;
+    restTimeL.hidden = YES;
+    
     //更新页面信息
     if([YUserDefaults objectForKey:kusername]){
         [self gerenxinxiyemianxiugai];
@@ -395,7 +444,7 @@
         [btn setTitleColor:WhiteColor forState:UIControlStateSelected];
 
         [leftV addSubview:btn];
-        btn.frame = CGRectMake(0, 50 * YScaleWidth + 60 * YScaleHeight + 66 * YScaleWidth * i, 180 * YScaleWidth, 52 * YScaleWidth);
+        btn.frame = CGRectMake(0, 50 * YScaleWidth + 30 * YScaleWidth + 30 * YScaleHeight + 66 * YScaleWidth * i, 180 * YScaleWidth, 52 * YScaleWidth);
         
         btn.tag = 1000 + i;
         [btn addTarget:self action:@selector(caozuoClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -413,6 +462,17 @@
     
     
     [self setupView1];
+}
+
+- (void)detailClick{
+    if(youxiaoqiImg.hidden){
+        youxiaoqiImg.hidden = NO;
+        restTimeL.hidden = NO;
+    }
+    else{
+        youxiaoqiImg.hidden = YES;
+        restTimeL.hidden = YES;
+    }
 }
 
 //购买方案
@@ -621,7 +681,15 @@
 
     }
 
-
+    restoreBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
+    [restoreBtn setTitle:@"恢复购买" forState:UIControlStateNormal];
+    [restoreBtn setTitleColor:kgrayColor forState:UIControlStateNormal];
+    restoreBtn.titleLabel.font = YSystemFont(20 * thisScale);
+    restoreBtn.titleLabel.textAlignment = NSTextAlignmentRight;
+    [goumaiV addSubview:restoreBtn];
+    restoreBtn.sd_layout.rightSpaceToView(goumaiV, 30 * YScaleWidth).widthIs(100 * thisScale).heightIs(30 * thisScale).centerYEqualToView(payBtn);
+    [restoreBtn addTarget:self action:@selector(restoreClick) forControlEvents:UIControlEventTouchUpInside];
+    restoreBtn.hidden = YES;
     
     
     /*
@@ -734,6 +802,16 @@
     }
     */
     
+}
+
+- (void)restoreClick{
+//    YLogFunc
+    
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showWithStatus:@"正在恢复购买..."];
+    
+    [SVProgressHUD dismissWithDelay:arc4random_uniform(3) + 2];
+
 }
 
 //识字情况
@@ -1038,9 +1116,16 @@
             [YUserDefaults setObject:dictArr forKey:kziKu];
             
             nameTextF.text = @"未登录";
-            vipImg.image = [UIImage imageNamed:@"notvip"];
+//            vipImg.image = [UIImage imageNamed:@"notvip"];
             vipL.textColor = [JKUtil getColor:@"17449C"];
             self->vipL.text = @"当前未开通会员";
+            
+            vipL.hidden = NO;
+            IconVipImg.hidden = YES;
+            detailIcon.hidden = YES;
+            youxiaoqiImg.hidden = YES;
+            restTimeL.hidden = YES;
+            
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"refresh" object:self];
 
@@ -1417,6 +1502,8 @@
             [YUserDefaults setObject:d[@"expire_time"] forKey:kexpiretime];
             
             [YUserDefaults setBool:[d[@"has_purchase"] boolValue] forKey:khas_purchase];
+            
+            [YUserDefaults setObject:d[@"member_type"] forKey:kmembertype];
 
             //更新页面信息
             [self gerenxinxiyemianxiugai];
@@ -1553,6 +1640,13 @@
 - (void)tapAction:(UITapGestureRecognizer *)tap{
     UIView *v = tap.view;
     selectIndex = v.tag;
+    
+    if(v.tag == 2){
+        restoreBtn.hidden = NO;
+    }
+    else{
+        restoreBtn.hidden = YES;
+    }
     
     if(v != selectedV){
         
@@ -1768,7 +1862,7 @@
             return;
         }
     }
-    
+        
     // 5.点击按钮的时候判断app是否允许apple支付
     
     //如果app允许applepay
@@ -1999,6 +2093,7 @@
             [YUserDefaults setObject:d[@"expire_time"] forKey:kexpiretime];
             [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
             [YUserDefaults setBool:[d[@"has_purchase"] boolValue] forKey:khas_purchase];
+            [YUserDefaults setObject:d[@"member_type"] forKey:kmembertype];
 
             
             [self gerenxinxiyemianxiugai];
@@ -2028,13 +2123,20 @@
 - (void)gerenxinxiyemianxiugai{
     nameTextF.text = [YUserDefaults objectForKey:kusername];
     if([YUserDefaults boolForKey:kis_member]){
-        self->vipImg.image = [UIImage imageNamed:@"vip"];
-        self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
-        self->vipL.textColor = [JKUtil getColor:@"FF6112"];
+//        self->vipImg.image = [UIImage imageNamed:@"vip"];
+//        self->vipL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
+//        self->vipL.textColor = [JKUtil getColor:@"FF6112"];
+        
+        vipL.hidden = YES;
+        IconVipImg.hidden = NO;
+        detailIcon.hidden = NO;
+        youxiaoqiImg.hidden = YES;
+        restTimeL.hidden = YES;
+        restTimeL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
 
     }
     else{
-        self->vipImg.image = [UIImage imageNamed:@"notvip"];
+//        self->vipImg.image = [UIImage imageNamed:@"notvip"];
         self->vipL.textColor = [JKUtil getColor:@"A6A6A6"];
         
         if([YUserDefaults boolForKey:khas_purchase]){
@@ -2043,6 +2145,13 @@
         else{
             self->vipL.text = @"当前未开通会员";
         }
+        
+        vipL.hidden = NO;
+        IconVipImg.hidden = YES;
+        detailIcon.hidden = YES;
+        youxiaoqiImg.hidden = YES;
+        restTimeL.hidden = YES;
+        
     }
 }
 

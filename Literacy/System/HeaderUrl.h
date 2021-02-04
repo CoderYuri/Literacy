@@ -11,12 +11,19 @@
 //#define BaseUrl @"https://literacy.huabanche.club/"
 
 //处于开发阶段
-//#define BaseUrl @"http://123.56.231.29:8899/"
+#ifdef DEBUG
+#define BaseUrl @"http://123.56.231.29:8899/"
+#else
 //处于发布阶段
 #define BaseUrl @"https://literacy.huabanche.club/"
+#endif
+
 
 //getuserID
 #define _URL_userID [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/userid"]
+
+//获取头像分析
+#define _URL_IconFenxi [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/avatar"]
 
 //字库
 #define _URL_words [NSString stringWithFormat:@"%@%@",BaseUrl,@"index/words"]

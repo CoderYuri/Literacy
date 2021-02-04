@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) AllModel *selectedMod;
 
 @property(nonatomic,assign) NSInteger xuanzhongIndex;
+
 @property (nonatomic, strong) void(^callBack)(NSInteger xuanzhongIndex);
 
 @property(nonatomic,strong) NSArray *similar_words;

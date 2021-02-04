@@ -19,12 +19,14 @@
     UIView *ziV;
     
     NSInteger rightIndex;
+    UIView *rightV;
     
     NSDictionary *thisDict;
     BOOL ifback;
     BOOL ifChooseRight;
         
     BOOL iftuichu;
+    BOOL ifdianji;
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
@@ -92,9 +94,87 @@
             [self.player stop];
             self.player = nil;
             
+            [self jinrucaozuo];
+
         };
     }
     
+    else{
+        [self jinrucaozuo];
+    }
+    
+
+
+    
+}
+
+//首次进入页面操作
+- (void)jinrucaozuo{
+    //每隔5s  播放音频
+    [self tishiyinpin];
+
+    //10s中之后  正确的字开始跳动
+    [self zitiaodong];
+}
+
+//每隔5s  播放音频
+- (void)tishiyinpin{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        YLogFunc
+        
+        if(ifdianji){
+            return;
+        }
+        
+        if(iftuichu){
+            return;
+        }
+
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"正确汉字" ofType:@"mp3"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+
+        [self bofangwithUrl:@[localVideoUrl]];
+        
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            [self.player stop];
+            self.player = nil;
+            
+            [self tishiyinpin];
+        };
+    });
+    
+}
+
+//10s之后 字跳动
+- (void)zitiaodong{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if(ifdianji){
+            return;
+        }
+
+        
+        srand([[NSDate date] timeIntervalSince1970]);
+        float rand=(float)random();
+        CFTimeInterval t=rand*0.0000000001;
+        
+        [UIView animateWithDuration:0.5 delay:t options:0  animations:^
+         {
+            rightV.transform = CGAffineTransformMakeTranslation(0, -10);
+         } completion:^(BOOL finished)
+         {
+             [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+              {
+                 rightV.transform = CGAffineTransformMakeTranslation(0, 0);
+              } completion:^(BOOL finished) {}];
+         }];
+
+        
+        
+    });
+
 }
 
 - (void)setupView{
@@ -218,6 +298,10 @@
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
         tap.numberOfTapsRequired = 1;
         [v addGestureRecognizer:tap];
+        
+        if(i == rightIndex){
+            rightV = v;
+        }
 
     }
     
@@ -289,9 +373,12 @@
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap{
+    ifdianji = YES;
+    
     if(ifChooseRight){
         return;
     }
+    
     
     NSInteger index = tap.view.tag;
     
@@ -299,12 +386,17 @@
     YLog(@"%ld",ziV.subviews.count)
     
     if(index == rightIndex){
+        
         UIView *v = ziV.subviews[index];
         UIImageView *img = v.subviews.firstObject;
         img.image = [UIImage imageNamed:@"fuxiright"]; //fuxiright
         
         UILabel *L = v.subviews.lastObject;
         L.textColor = WhiteColor;
+        
+        //让字不跳动
+        [self zibutiaodong];
+
         
         NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"成功" ofType:@"wav"];
         NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -372,7 +464,37 @@
 
 }
 
+- (void)zibutiaodong{
+    //让字不跳动
+    srand([[NSDate date] timeIntervalSince1970]);
+    float rand=(float)random();
+    CFTimeInterval t=rand*0.0000000001;
+    
+    [UIView animateWithDuration:0.01 delay:t options:0  animations:^
+     {
+        rightV.transform = CGAffineTransformMakeTranslation(0, 0);
+     } completion:^(BOOL finished)
+     {
+         [UIView animateWithDuration:0.01 delay:0 options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse|UIViewAnimationOptionAllowUserInteraction  animations:^
+          {
+             rightV.transform = CGAffineTransformMakeTranslation(0, -0.001);
+          } completion:^(BOOL finished) {}];
+     }];
+
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+        [UIView animateWithDuration:0.01 delay:0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState animations:^
+         {
+            self->rightV.transform = CGAffineTransformIdentity;
+         } completion:^(BOOL finished) {}];
+
+    });
+
+}
+
 - (void)rightClick{
+    
     UIView *v = ziV.subviews[rightIndex];
     
     //去掉所有的错字

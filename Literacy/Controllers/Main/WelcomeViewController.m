@@ -136,6 +136,13 @@
 
                 if([dic[@"code"] integerValue] == 200){
                     
+                    //新增温馨提示页面
+                    //第一次打开
+                    if(![YUserDefaults objectForKey:kxieyi]){
+                        [self xieyiyemian];
+                    }
+
+                    
                     NSDictionary *d = dic[@"data"];
                     NSArray *array = d[@"words"];
                     [YUserDefaults setObject:array forKey:kziKu];
@@ -149,10 +156,10 @@
                 
             }];
 
-            
+        
         }
         
-//        YLog(@"%@",dic);
+        YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
         if(error.code == -1009){
@@ -276,12 +283,6 @@
 //    img.sd_layout.leftEqualToView(self.view).rightEqualToView(self.view).bottomEqualToView(self.view).topEqualToView(self.view);
     img.frame = CGRectMake(0, 0, YScreenW, YScreenH);
     
-    //新增温馨提示页面
-    //第一次打开
-    if(![YUserDefaults objectForKey:kxieyi]){
-        [self xieyiyemian];
-    }
-
     
     NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"滑板车识字" ofType:@"mp3"];
     NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -523,14 +524,20 @@
 
 //同意并进入
 - (void)tongyi{
-    [xieyiCoverView removeFromSuperview];
-    xieyiCoverView = nil;
+    NSArray *arr = [YUserDefaults objectForKey:kziKu];
     
-    [YUserDefaults setObject:@"keyi" forKey:kxieyi];
-    
-    if([YUserDefaults objectForKey:kuserid]){
+    if(arr.count){
+        [xieyiCoverView removeFromSuperview];
+        xieyiCoverView = nil;
+        
+        [YUserDefaults setObject:@"keyi" forKey:kxieyi];
+
         [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
     }
+    else{
+        
+    }
+    
 }
 
 //不同意操作

@@ -93,7 +93,7 @@
         }
     }
     
-    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg"]];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg1"]];
     if(isPad){
         img.frame = CGRectMake(0 , 0, YScreenW, YScreenH);
     }

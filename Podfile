@@ -26,8 +26,8 @@ platform :ios, '9.0'
   # 支付SDK
   #pod 'AlipaySDK-iOS'
   #pod 'WechatOpenSDK'
-#  pod 'ZFPlayer', '~> 4.0'
-#  pod 'UMCommon'
+  #pod 'ZFPlayer', '~> 4.0'
+  #pod 'UMCommon'
 
   pod 'lottie-ios','2.5.3'
 

@@ -16,6 +16,8 @@
     NSMutableArray *dataArr;
     
     UICollectionView *collectionView;
+    
+    FunViewController *fuxiVc;
 }
 
 @property (nonatomic, strong) ZFPlayerController *player;
@@ -175,7 +177,6 @@
 
         YLog(@"%@",[NSString getBaseUrl:_URL_fun withparam:param])
 
-
         [YLHttpTool POST:_URL_fun parameters:param progress:^(NSProgress *progress) {
 
         } success:^(id dic) {
@@ -183,7 +184,6 @@
             if([dic[@"code"] integerValue] == 200){
 
                 NSDictionary *dict = dic[@"data"];
-
 
                 FunViewController *vc = [[FunViewController alloc] init];
                 vc.selectedMod = selectedMod;
@@ -202,14 +202,10 @@
                 vc.callBack = ^(NSInteger xuanzhongIndex) {
 
                 };
-
-                [self presentViewController:vc animated:YES completion:^{
-
-                }];
-
-
-
-
+                self->fuxiVc = vc;
+                
+                //音视频图片 缓存
+                [self huancun];
             }
 
             else{
@@ -237,6 +233,32 @@
     }
 
 }
+
+
+- (void)huancun{
+    // 获取cache目录路径
+      NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+    
+    AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
+    NSString  *fullPath = [NSString stringWithFormat:@"%@/%@", cachesDir, @"video.mp4"];
+    NSURL *url = [NSURL URLWithString:fuxiVc.word_video];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLSessionDownloadTask *task =
+    [manger downloadTaskWithRequest:request
+                            progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+        
+                                return [NSURL fileURLWithPath:fullPath];
+        
+                            }
+                   completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+                        
+                        [self presentViewController:fuxiVc animated:YES completion:^{
+                        }];
+
+                   }];
+    [task resume];
+}
+
 
 //播放录音
 - (void)bofangwithUrl:(NSArray *)urlArr{

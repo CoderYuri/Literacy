@@ -56,9 +56,10 @@
     keyboardManager.toolbarDoneBarButtonItemText = @"完成";
     keyboardManager.enable = YES; // 控制整个功能是否启用
     keyboardManager.shouldResignOnTouchOutside = YES; // 控制点击背景是否收起键盘
-    
-    //处于开发阶段注释
-    
+        
+    //处于开发阶段
+    #ifdef DEBUG
+    #else
     //处于发布阶段
     //友盟统计 iPad和iPhone版
     if(isPad){
@@ -67,6 +68,8 @@
     else{
         [UMConfigure initWithAppkey:@"5fe05fec345b8b53f5754617" channel:@"App Store"];
     }
+    #endif
+
     
     return YES;
 }
