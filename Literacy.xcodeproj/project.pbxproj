@@ -64,15 +64,15 @@
 		DA45773C257917110086392D /* YLwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA45773B257917110086392D /* YLwebViewController.m */; };
 		DA4BBF88259AF7D300C2AC4C /* UMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA4BBF87259AF7D300C2AC4C /* UMCommon.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		DA52ADF325C3B7EA008F3469 /* shaonan.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA52ADF225C3B7EA008F3469 /* shaonan.gif */; };
+		DA5DCFBE25CD60C500E5B511 /* btn_next.json in Resources */ = {isa = PBXBuildFile; fileRef = DA5DCFBD25CD60C500E5B511 /* btn_next.json */; };
+		DA5DCFC325CD6E6A00E5B511 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA5DCFC225CD6E6A00E5B511 /* loading.gif */; };
+		DA5DCFC725CD923500E5B511 /* 按顺序学习.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA5DCFC625CD923500E5B511 /* 按顺序学习.mp3 */; };
 		DA64912E25CB81A800B04709 /* 读.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA64912B25CB81A700B04709 /* 读.mp3 */; };
 		DA64912F25CB81A800B04709 /* 玩.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA64912C25CB81A800B04709 /* 玩.mp3 */; };
 		DA64913025CB81A800B04709 /* 认.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA64912D25CB81A800B04709 /* 认.mp3 */; };
-		DA64913525CB81BC00B04709 /* 解锁更多汉字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA64913325CB81BC00B04709 /* 解锁更多汉字.mp3 */; };
-		DA64913625CB81BC00B04709 /* 按顺序学习.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA64913425CB81BC00B04709 /* 按顺序学习.mp3 */; };
 		DA67AD0525BC261A00C2324F /* 正确汉字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA67AD0425BC261A00C2324F /* 正确汉字.mp3 */; };
 		DA67AD0925BC38C900C2324F /* 一起旅行.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA67AD0825BC38C800C2324F /* 一起旅行.mp3 */; };
 		DA67AD1525BC47E100C2324F /* 光标.wav in Resources */ = {isa = PBXBuildFile; fileRef = DA67AD1425BC47E100C2324F /* 光标.wav */; };
-		DA712C1125709FBC000DB9BD /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA712C1025709FBC000DB9BD /* loading.gif */; };
 		DA8184352574837500190F38 /* FuxiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8184342574837500190F38 /* FuxiViewController.m */; };
 		DA9132C82583593700D1E8F9 /* welcome.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = DA9132C72583593700D1E8F9 /* welcome.mp4 */; };
 		DA9132CC25835A7400D1E8F9 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9132CB25835A7400D1E8F9 /* WelcomeViewController.m */; };
@@ -86,8 +86,9 @@
 		DAA0D33B25B704C700F8CD77 /* 错误.wav in Resources */ = {isa = PBXBuildFile; fileRef = DAA0D33A25B704C700F8CD77 /* 错误.wav */; };
 		DAA0D33F25B7095300F8CD77 /* 成功.wav in Resources */ = {isa = PBXBuildFile; fileRef = DAA0D33E25B7095300F8CD77 /* 成功.wav */; };
 		DAB181E225B7C181002E8BD6 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAB181E125B7C181002E8BD6 /* MediaPlayer.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		DAB789DB25CD24D3009904A3 /* Mainhint.json in Resources */ = {isa = PBXBuildFile; fileRef = DAB789DA25CD24D3009904A3 /* Mainhint.json */; };
+		DAB789E025CD3D0B009904A3 /* 解锁更多汉字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAB789DF25CD3D0B009904A3 /* 解锁更多汉字.mp3 */; };
 		DAC0DE19259588CA007F8881 /* 滑板车识字.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAC0DE18259588CA007F8881 /* 滑板车识字.mp3 */; };
-		DAC0DE1C259588DD007F8881 /* 家长.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAC0DE1B259588DD007F8881 /* 家长.mp3 */; };
 		DAEA2F0E256CFD3B00F8081F /* AllModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DAEA2F0D256CFD3A00F8081F /* AllModel.m */; };
 		DAF31F70256E2B2B0056435B /* FunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF31F6F256E2B2B0056435B /* FunViewController.m */; };
 		DAF3630E2581FF5500BD8C16 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF3630D2581FF5400BD8C16 /* StoreKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -120,10 +121,6 @@
 		DAF5E4FE256366D700003A85 /* UIResponder+Router.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4B5256366D600003A85 /* UIResponder+Router.m */; };
 		DAF5E4FF256366D700003A85 /* UINavigationBar+Awesome.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4B6256366D600003A85 /* UINavigationBar+Awesome.m */; };
 		DAF5E503256366D700003A85 /* NullSafe.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4C1256366D600003A85 /* NullSafe.m */; };
-		DAF5E504256366D700003A85 /* MSSAutoresizeLabelFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4C3256366D600003A85 /* MSSAutoresizeLabelFlow.m */; };
-		DAF5E505256366D700003A85 /* MSSAutoresizeLabelFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4C4256366D600003A85 /* MSSAutoresizeLabelFlowLayout.m */; };
-		DAF5E506256366D700003A85 /* MSSAutoresizeLabelFlowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4C9256366D600003A85 /* MSSAutoresizeLabelFlowCell.m */; };
-		DAF5E507256366D700003A85 /* MSSAutoresizeLabelFlowConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4CA256366D600003A85 /* MSSAutoresizeLabelFlowConfig.m */; };
 		DAF5E508256366D700003A85 /* JKUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4CD256366D600003A85 /* JKUtil.m */; };
 		DAF5E509256366D700003A85 /* YLHttpTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5E4CE256366D600003A85 /* YLHttpTool.m */; };
 		DAFB73D225A985210006273F /* mic_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = DAFB73D025A985200006273F /* mic_animation.json */; };
@@ -233,15 +230,15 @@
 		DA45773B257917110086392D /* YLwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLwebViewController.m; sourceTree = "<group>"; };
 		DA4BBF87259AF7D300C2AC4C /* UMCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMCommon.framework; sourceTree = "<group>"; };
 		DA52ADF225C3B7EA008F3469 /* shaonan.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = shaonan.gif; sourceTree = "<group>"; };
+		DA5DCFBD25CD60C500E5B511 /* btn_next.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = btn_next.json; sourceTree = "<group>"; };
+		DA5DCFC225CD6E6A00E5B511 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
+		DA5DCFC625CD923500E5B511 /* 按顺序学习.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "按顺序学习.mp3"; sourceTree = "<group>"; };
 		DA64912B25CB81A700B04709 /* 读.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "读.mp3"; sourceTree = "<group>"; };
 		DA64912C25CB81A800B04709 /* 玩.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "玩.mp3"; sourceTree = "<group>"; };
 		DA64912D25CB81A800B04709 /* 认.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "认.mp3"; sourceTree = "<group>"; };
-		DA64913325CB81BC00B04709 /* 解锁更多汉字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "解锁更多汉字.mp3"; sourceTree = "<group>"; };
-		DA64913425CB81BC00B04709 /* 按顺序学习.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "按顺序学习.mp3"; sourceTree = "<group>"; };
 		DA67AD0425BC261A00C2324F /* 正确汉字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "正确汉字.mp3"; sourceTree = "<group>"; };
 		DA67AD0825BC38C800C2324F /* 一起旅行.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "一起旅行.mp3"; sourceTree = "<group>"; };
 		DA67AD1425BC47E100C2324F /* 光标.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "光标.wav"; sourceTree = "<group>"; };
-		DA712C1025709FBC000DB9BD /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
 		DA8184332574837500190F38 /* FuxiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FuxiViewController.h; sourceTree = "<group>"; };
 		DA8184342574837500190F38 /* FuxiViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuxiViewController.m; sourceTree = "<group>"; };
 		DA9132C72583593700D1E8F9 /* welcome.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = welcome.mp4; sourceTree = "<group>"; };
@@ -261,9 +258,10 @@
 		DAA0D33A25B704C700F8CD77 /* 错误.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "错误.wav"; sourceTree = "<group>"; };
 		DAA0D33E25B7095300F8CD77 /* 成功.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "成功.wav"; sourceTree = "<group>"; };
 		DAB181E125B7C181002E8BD6 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		DAB789DA25CD24D3009904A3 /* Mainhint.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Mainhint.json; sourceTree = "<group>"; };
+		DAB789DF25CD3D0B009904A3 /* 解锁更多汉字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "解锁更多汉字.mp3"; sourceTree = "<group>"; };
 		DABD4E3B257B7697001F6CF6 /* HeaderUrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeaderUrl.h; sourceTree = "<group>"; };
 		DAC0DE18259588CA007F8881 /* 滑板车识字.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "滑板车识字.mp3"; sourceTree = "<group>"; };
-		DAC0DE1B259588DD007F8881 /* 家长.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "家长.mp3"; sourceTree = "<group>"; };
 		DAEA2F0C256CFD3A00F8081F /* AllModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllModel.h; sourceTree = "<group>"; };
 		DAEA2F0D256CFD3A00F8081F /* AllModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllModel.m; sourceTree = "<group>"; };
 		DAF31F6E256E2B2B0056435B /* FunViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunViewController.h; sourceTree = "<group>"; };
@@ -324,14 +322,6 @@
 		DAF5E4B6256366D600003A85 /* UINavigationBar+Awesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+Awesome.m"; sourceTree = "<group>"; };
 		DAF5E4B7256366D600003A85 /* Toast+UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Toast+UIView.h"; sourceTree = "<group>"; };
 		DAF5E4C1256366D600003A85 /* NullSafe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NullSafe.m; sourceTree = "<group>"; };
-		DAF5E4C3256366D600003A85 /* MSSAutoresizeLabelFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSAutoresizeLabelFlow.m; sourceTree = "<group>"; };
-		DAF5E4C4256366D600003A85 /* MSSAutoresizeLabelFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSAutoresizeLabelFlowLayout.m; sourceTree = "<group>"; };
-		DAF5E4C5256366D600003A85 /* MSSAutoresizeLabelFlowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSAutoresizeLabelFlowCell.h; sourceTree = "<group>"; };
-		DAF5E4C6256366D600003A85 /* MSSAutoresizeLabelFlowConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSAutoresizeLabelFlowConfig.h; sourceTree = "<group>"; };
-		DAF5E4C7256366D600003A85 /* MSSAutoresizeLabelFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSAutoresizeLabelFlow.h; sourceTree = "<group>"; };
-		DAF5E4C8256366D600003A85 /* MSSAutoresizeLabelFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSAutoresizeLabelFlowLayout.h; sourceTree = "<group>"; };
-		DAF5E4C9256366D600003A85 /* MSSAutoresizeLabelFlowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSAutoresizeLabelFlowCell.m; sourceTree = "<group>"; };
-		DAF5E4CA256366D600003A85 /* MSSAutoresizeLabelFlowConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSAutoresizeLabelFlowConfig.m; sourceTree = "<group>"; };
 		DAF5E4CC256366D600003A85 /* YLHttpTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YLHttpTool.h; sourceTree = "<group>"; };
 		DAF5E4CD256366D600003A85 /* JKUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKUtil.m; sourceTree = "<group>"; };
 		DAF5E4CE256366D600003A85 /* YLHttpTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YLHttpTool.m; sourceTree = "<group>"; };
@@ -631,7 +621,6 @@
 				DAF5E5122563B41400003A85 /* Sources */,
 				DAF5E486256366D600003A85 /* Category */,
 				DAF5E4C1256366D600003A85 /* NullSafe.m */,
-				DAF5E4C2256366D600003A85 /* Class */,
 				DAF5E4CB256366D600003A85 /* HTTP TOOL */,
 			);
 			path = Vender;
@@ -697,21 +686,6 @@
 			path = Category;
 			sourceTree = "<group>";
 		};
-		DAF5E4C2256366D600003A85 /* Class */ = {
-			isa = PBXGroup;
-			children = (
-				DAF5E4C3256366D600003A85 /* MSSAutoresizeLabelFlow.m */,
-				DAF5E4C4256366D600003A85 /* MSSAutoresizeLabelFlowLayout.m */,
-				DAF5E4C5256366D600003A85 /* MSSAutoresizeLabelFlowCell.h */,
-				DAF5E4C6256366D600003A85 /* MSSAutoresizeLabelFlowConfig.h */,
-				DAF5E4C7256366D600003A85 /* MSSAutoresizeLabelFlow.h */,
-				DAF5E4C8256366D600003A85 /* MSSAutoresizeLabelFlowLayout.h */,
-				DAF5E4C9256366D600003A85 /* MSSAutoresizeLabelFlowCell.m */,
-				DAF5E4CA256366D600003A85 /* MSSAutoresizeLabelFlowConfig.m */,
-			);
-			path = Class;
-			sourceTree = "<group>";
-		};
 		DAF5E4CB256366D600003A85 /* HTTP TOOL */ = {
 			isa = PBXGroup;
 			children = (
@@ -730,8 +704,8 @@
 				DA64912B25CB81A700B04709 /* 读.mp3 */,
 				DA64912D25CB81A800B04709 /* 认.mp3 */,
 				DA64912C25CB81A800B04709 /* 玩.mp3 */,
-				DA64913325CB81BC00B04709 /* 解锁更多汉字.mp3 */,
-				DA64913425CB81BC00B04709 /* 按顺序学习.mp3 */,
+				DAB789DF25CD3D0B009904A3 /* 解锁更多汉字.mp3 */,
+				DA5DCFC625CD923500E5B511 /* 按顺序学习.mp3 */,
 				DAF3BA15258DE417001C8734 /* 网络.mp3 */,
 				DA67AD0425BC261A00C2324F /* 正确汉字.mp3 */,
 				DA67AD1425BC47E100C2324F /* 光标.wav */,
@@ -739,10 +713,11 @@
 				DA2D67AB258B93CA008F2143 /* 跟我读.mp3 */,
 				DA21962B25B96371002AC298 /* 充电完毕.mp3 */,
 				DA21962C25B96372002AC298 /* 开始充电.mp3 */,
+				DA5DCFBD25CD60C500E5B511 /* btn_next.json */,
 				DAFB73D125A985210006273F /* hint_animation.json */,
 				DAFB73D025A985200006273F /* mic_animation.json */,
+				DAB789DA25CD24D3009904A3 /* Mainhint.json */,
 				DA40157525CA4D8D003D7980 /* hint.json */,
-				DAC0DE1B259588DD007F8881 /* 家长.mp3 */,
 				DAA0D33A25B704C700F8CD77 /* 错误.wav */,
 				DAA0D33E25B7095300F8CD77 /* 成功.wav */,
 				DA41A3D325876811001C2C51 /* 开始今天的学习吧.mp3 */,
@@ -753,7 +728,7 @@
 				DA9132C72583593700D1E8F9 /* welcome.mp4 */,
 				DA52ADF225C3B7EA008F3469 /* shaonan.gif */,
 				DA1EAF5725A4618F0048F7FD /* shaonv.gif */,
-				DA712C1025709FBC000DB9BD /* loading.gif */,
+				DA5DCFC225CD6E6A00E5B511 /* loading.gif */,
 				DAF428F725B5877200FEE91D /* roadstar.gif */,
 				DA2D6782258B49CD008F2143 /* success.gif */,
 				DA9FD80525676BD40048D870 /* kaiti.ttf */,
@@ -820,11 +795,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAC0DE19259588CA007F8881 /* 滑板车识字.mp3 in Resources */,
+				DA5DCFC725CD923500E5B511 /* 按顺序学习.mp3 in Resources */,
 				DA4274D2255E7B9400610D12 /* Assets.xcassets in Resources */,
 				DAFB73D225A985210006273F /* mic_animation.json in Resources */,
 				DA64912F25CB81A800B04709 /* 玩.mp3 in Resources */,
 				DA21962E25B96372002AC298 /* 开始充电.mp3 in Resources */,
 				DA3F97EE25BAAF5A003F151B /* ZFPlayer.bundle in Resources */,
+				DA5DCFBE25CD60C500E5B511 /* btn_next.json in Resources */,
 				DA41A3E025876812001C2C51 /* 再读一遍.mp3 in Resources */,
 				DA4274D3255E7B9400610D12 /* LaunchScreen.storyboard in Resources */,
 				DA9FD80625676BD40048D870 /* kaiti.ttf in Resources */,
@@ -834,10 +811,9 @@
 				DA67AD0525BC261A00C2324F /* 正确汉字.mp3 in Resources */,
 				DAF428F825B5877300FEE91D /* roadstar.gif in Resources */,
 				DAA0D33B25B704C700F8CD77 /* 错误.wav in Resources */,
-				DA64913525CB81BC00B04709 /* 解锁更多汉字.mp3 in Resources */,
 				DA67AD1525BC47E100C2324F /* 光标.wav in Resources */,
 				DA52ADF325C3B7EA008F3469 /* shaonan.gif in Resources */,
-				DAC0DE1C259588DD007F8881 /* 家长.mp3 in Resources */,
+				DA5DCFC325CD6E6A00E5B511 /* loading.gif in Resources */,
 				DA9E2B6F257F4AB900CE95FA /* yonghuxieyi in Resources */,
 				DAF3BA16258DE417001C8734 /* 网络.mp3 in Resources */,
 				DA41A3D925876812001C2C51 /* 你太棒了.mp3 in Resources */,
@@ -850,12 +826,12 @@
 				DA9E2B6C257F496300CE95FA /* yinsixieyi in Resources */,
 				DA41A3DD25876812001C2C51 /* 开始今天的学习吧.mp3 in Resources */,
 				DA3FE83C25BEBF5200379FB4 /* launchimage.png in Resources */,
+				DAB789DB25CD24D3009904A3 /* Mainhint.json in Resources */,
 				DAFB73D325A985210006273F /* hint_animation.json in Resources */,
 				DA67AD0925BC38C900C2324F /* 一起旅行.mp3 in Resources */,
 				DA64912E25CB81A800B04709 /* 读.mp3 in Resources */,
-				DA712C1125709FBC000DB9BD /* loading.gif in Resources */,
 				DA2D6783258B49CD008F2143 /* success.gif in Resources */,
-				DA64913625CB81BC00B04709 /* 按顺序学习.mp3 in Resources */,
+				DAB789E025CD3D0B009904A3 /* 解锁更多汉字.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -910,7 +886,6 @@
 			files = (
 				DA4274D6255E7B9400610D12 /* AppDelegate.m in Sources */,
 				DAF5E4F7256366D700003A85 /* NSObject+FileManager.m in Sources */,
-				DAF5E504256366D700003A85 /* MSSAutoresizeLabelFlow.m in Sources */,
 				DA3F97F225BAAF5A003F151B /* ZFLoadingView.m in Sources */,
 				DA3F97DC25BAAF5A003F151B /* ZFPersentInteractiveTransition.m in Sources */,
 				DA3F97EA25BAAF5A003F151B /* UIView+ZFFrame.m in Sources */,
@@ -918,7 +893,6 @@
 				DAF5E4E8256366D700003A85 /* UIButton+CenterImageAndTitle.m in Sources */,
 				DA1A75F92575D7B000B047FC /* FuxiPlayViewController.m in Sources */,
 				DA3F97DF25BAAF5A003F151B /* ZFPresentTransition.m in Sources */,
-				DAF5E506256366D700003A85 /* MSSAutoresizeLabelFlowCell.m in Sources */,
 				DA3F97E025BAAF5A003F151B /* ZFFloatView.m in Sources */,
 				DA008661256F39D000E01904 /* UIImageView+PlayGIF.m in Sources */,
 				DAF5E4ED256366D700003A85 /* OSAddressPickerView.m in Sources */,
@@ -941,7 +915,6 @@
 				DAF5E509256366D700003A85 /* YLHttpTool.m in Sources */,
 				DA3F97D725BAAF5A003F151B /* ZFPlayerGestureControl.m in Sources */,
 				DA3F97D925BAAF5A003F151B /* ZFLandscapeWindow.m in Sources */,
-				DAF5E505256366D700003A85 /* MSSAutoresizeLabelFlowLayout.m in Sources */,
 				DA008660256F39D000E01904 /* YFGIFImageView.m in Sources */,
 				DA3F97F325BAAF5A003F151B /* ZFSpeedLoadingView.m in Sources */,
 				DAF5E4FC256366D700003A85 /* NoHighBtn.m in Sources */,
@@ -960,7 +933,6 @@
 				DA3F97DA25BAAF5A003F151B /* ZFOrientationObserver.m in Sources */,
 				DAF5E4EF256366D700003A85 /* UITapImageView.m in Sources */,
 				DA3F97E825BAAF5A003F151B /* ZFAVPlayerManager.m in Sources */,
-				DAF5E507256366D700003A85 /* MSSAutoresizeLabelFlowConfig.m in Sources */,
 				DA4274D4255E7B9400610D12 /* main.m in Sources */,
 				DA3F97D825BAAF5A003F151B /* ZFPlayerController.m in Sources */,
 				DAF5E508256366D700003A85 /* JKUtil.m in Sources */,
@@ -1126,7 +1098,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Literacy/Literacy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 8R3385G3CM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1168,7 +1140,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Literacy/Literacy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 8R3385G3CM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

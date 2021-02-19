@@ -75,6 +75,8 @@
     
     //恢复购买按钮
     NoHighBtn *restoreBtn;
+    
+    FunViewController *fuxiVc;
 }
 
 @property (nonatomic,strong) NudeIn *monL;
@@ -130,20 +132,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    //特殊界面进入的时候 播放录音
-//    if(self.ifluyin){
-//        //    播放录音
-//        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"解锁更多汉字" ofType:@"mp3"];
-//        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
-//        
-//        [self bofangwithUrl:@[localVideoUrl]];
-//        
-//        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
-//            [self.player stop];
-//            self.player = nil;
-//        };
-//
-//    }
     
     dataArr = [NSMutableArray array];
     NSArray *arr = [YUserDefaults objectForKey:kziKu];
@@ -1164,10 +1152,32 @@
             }];
             
         }
+
+        
+        else{
+            if([YUserDefaults objectForKey:ktoken]){
+                
+                [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
+                [SVProgressHUD dismissWithDelay:1];
+                
+                nameTextF.text = [YUserDefaults objectForKey:kusername];
+
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//
+//                    
+//                    nameTextF.enabled = YES;
+//                    [nameTextF becomeFirstResponder];
+//
+//                });
+
+            }
+            
+        }
+         
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -1410,7 +1420,7 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -1475,7 +1485,7 @@
     if(!codeTextF.text.length){
         [SVProgressHUD showErrorWithStatus:@"请输入验证码"];
         [SVProgressHUD dismissWithDelay:1];
-        return;;
+        return;
     }
     
     [SVProgressHUD showWithStatus:@"登录中..."];
@@ -1533,7 +1543,7 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -1713,6 +1723,8 @@
 
     if(selectedMod.is_learn){
 
+        [SVProgressHUD showWithStatus:@"加载中..."];
+        
         //网络请求数据
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
@@ -1748,12 +1760,11 @@
                 vc.callBack = ^(NSInteger xuanzhongIndex) {
 
                 };
+                
+                fuxiVc = vc;
 
-                [self presentViewController:vc animated:YES completion:^{
-
-                }];
-
-
+                //音视频图片 缓存
+                [self huancun];
 
 
             }
@@ -1765,7 +1776,7 @@
 
             YLog(@"%@",dic);
         } failure:^(NSError *error) {
-            if(error.code == -1009){
+            if(error.code == -1009 || error.code == -1020){
                 NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
                 NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
                 [self bofangwithUrl:@[localVideoUrl]];
@@ -1782,6 +1793,60 @@
     }
 
 }
+
+
+- (void)huancun{
+    // 获取cache目录路径
+    NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+    
+    NSString *directoryPath = [[cachesDir stringByAppendingPathComponent:renduwanDic] copy];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath]) {
+          [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    __block NSInteger wangluoSuccessCounts = 0;
+
+    NSArray *nameArr = @[videoname,audioname,ziqianname,zihouname,ziimgname];
+    NSArray *urlArr = @[fuxiVc.word_video,fuxiVc.word_audio,fuxiVc.words_audios.firstObject,fuxiVc.words_audios.lastObject,fuxiVc.word_image];
+
+    for (int i = 0; i < nameArr.count; i++) {
+        
+        AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
+        NSString  *fullPath = [NSString stringWithFormat:@"%@/%@", directoryPath, nameArr[i]];
+        NSURL *url = [NSURL URLWithString:urlArr[i]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        NSURLSessionDownloadTask *task =
+        [manger downloadTaskWithRequest:request
+                                progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+            
+                                    return [NSURL fileURLWithPath:fullPath];
+            
+                                }
+                       completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+                        
+            YLog(@"%d----%ld",i,wangluoSuccessCounts)
+
+            wangluoSuccessCounts++;
+            
+            if(wangluoSuccessCounts == 5){
+                [SVProgressHUD dismiss];
+                
+                [self presentViewController:fuxiVc animated:YES completion:^{
+                }];
+
+            }
+
+            
+                       }];
+        [task resume];
+
+    }
+    
+}
+
+
+
 
 - (void)applepay{
     YLog(@"%ld",selectIndex)
@@ -1832,7 +1897,7 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -2056,7 +2121,7 @@
         
     } failure:^(NSError *error) {
 
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -2105,7 +2170,7 @@
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -2133,6 +2198,21 @@
         youxiaoqiImg.hidden = YES;
         restTimeL.hidden = YES;
         restTimeL.text = [NSString stringWithFormat:@"有效期至%@",[YUserDefaults objectForKey:kexpiretime]];
+        
+        NSString *cardType = [YUserDefaults objectForKey:kmembertype];
+        if([cardType isEqualToString:@"月卡"]){
+            IconVipImg.image = [UIImage imageNamed:@"vipmonth"];
+
+        }
+        else if([cardType isEqualToString:@"年卡"]){
+            IconVipImg.image = [UIImage imageNamed:@"vipyear"];
+
+        }
+        else if([cardType isEqualToString:@"永久"]){
+            IconVipImg.image = [UIImage imageNamed:@"viplongest"];
+
+        }
+
 
     }
     else{

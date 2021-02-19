@@ -117,10 +117,10 @@
     [self zitiaodong];
 }
 
-//每隔5s  播放音频
+//每隔8s  播放音频
 - (void)tishiyinpin{
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         YLogFunc
         
         if(ifdianji){
@@ -146,10 +146,10 @@
     
 }
 
-//10s之后 字跳动
+//16s之后 字跳动
 - (void)zitiaodong{
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(16 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         if(ifdianji){
             return;
@@ -620,7 +620,7 @@
         
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
 

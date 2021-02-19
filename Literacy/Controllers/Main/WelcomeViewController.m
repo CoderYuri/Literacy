@@ -21,7 +21,6 @@
 
 @property (nonatomic,strong) NudeIn *xieyiLabel;
 @property (nonatomic, strong) ZFPlayerController *player;
-@property (nonatomic, strong) UIImageView *containerView;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 
 /*
@@ -162,7 +161,7 @@
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -180,8 +179,7 @@
 
 - (void)fetchFuxi{
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    //获取字库信息
-    //网络请求数据
+    //获取复习信息数据
     param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
     YLog(@"%@",[NSString getBaseUrl:_URL_ifFuxi withparam:param])
     
@@ -215,6 +213,12 @@
         
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+        
+        if(iffangwan){
+            [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
+        }
+        
+        /*
         if(error.code == -1009){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -225,7 +229,7 @@
                 self.player = nil;
             };
         }
-
+         */
         
     }];
 
@@ -253,22 +257,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    NSError *error;
-//
-//        [NSFileManager.defaultManager removeItemAtPath:[NSString stringWithFormat:@"%@/Library/SplashBoard",NSHomeDirectory()] error:&error];
-//
-//     if (error) {
-//
-//            NSLog(@"Failed to delete launch screen cache: %@",error);
-//
-//        }
-
-    
     if([YUserDefaults objectForKey:kuserid]){
-//        if([YUserDefaults objectForKey:ktoken]){
-            fuxiArr = [NSArray array];
-            [self fetchFuxi];
-//        }
+        fuxiArr = [NSArray array];
+        [self fetchFuxi];
     }
     else{
         [self netWorkChangeEvent];
@@ -310,42 +301,6 @@
         }
     };
 
-
-    
-    /*
-    _containerView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:WhiteColor]];
-    [self.view addSubview:_containerView];
-    _containerView.frame = CGRectMake(0, 0, YScreenW, YScreenH);
-
-    
-    ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-//    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
-
-    playerManager.shouldAutoPlay = YES;
-    
-    /// 播放器相关
-    self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
-    self.player.controlView = self.controlView;
-    /// 设置退到后台继续播放
-    self.player.pauseWhenAppResignActive = NO;
-    
-    self.player.assetURLs = @[[NSURL fileURLWithPath:[[NSBundle bundleWithPath:[[NSBundle mainBundle] bundlePath]] pathForResource:@"welcome" ofType:@"mp4"]]];
-    [self.player playTheIndex:0];
-    [self.controlView showTitle:@"" coverURLString:@"" fullScreenMode:ZFFullScreenModeAutomatic];
-
-    self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
-        fangwan = YES;
-        
-        if([YUserDefaults objectForKey:kuserid]){
-            [(AppDelegate*)[UIApplication sharedApplication].delegate gotoMainVC];
-//            MainViewController *vc = [[MainViewController alloc] init];
-//            vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//            vc.modalPresentationStyle = UIModalPresentationFullScreen;
-//            [self presentViewController:vc animated:YES completion:nil];
-        }
-    };
-     */
-    
 }
 
 #pragma mark - 协议页面

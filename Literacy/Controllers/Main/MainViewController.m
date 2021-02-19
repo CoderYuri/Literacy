@@ -73,8 +73,11 @@
     //gif加载
     UIView *LoadingBackV;
     YYAnimatedImageView *loadingView;
+    
+    FunViewController *fuxiVc;
 }
 //chuqutaijiuleyaokougongqiande
+@property (nonatomic,strong) NudeIn *numLabel;
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) ZFPlayerController *backgroundplayer;
 
@@ -204,12 +207,11 @@
             NSDictionary *d = dic[@"data"];
             
             if([d[@"has_learn_num"] integerValue] != [YUserDefaults integerForKey:khas_learn_num]){
-                
+                           
                 //重新赋值  已学习个数
                 [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
-                
-                zishuNumL.text = [NSString stringWithFormat:@"%04ld",[YUserDefaults integerForKey:khas_learn_num]];
-                
+
+                [self setnumLwithstring];
                 [self gengxingdeng];
             }
             
@@ -226,12 +228,11 @@
             [YUserDefaults setObject:d[@"expire_time"] forKey:kexpiretime];
             [YUserDefaults setBool:[d[@"has_purchase"] boolValue] forKey:khas_purchase];
             [YUserDefaults setObject:d[@"member_type"] forKey:kmembertype];
+            [YUserDefaults setObject:d[@"member_type"] forKey:kmembertype];
+            [YUserDefaults setInteger:[d[@"has_learn_num"] integerValue] forKey:khas_learn_num];
 
-
+            [self setnumLwithstring];
             [self shouyeyemianrefresh];
-            
-            
-            
 //            joanna
         }
         
@@ -268,9 +269,8 @@
     
     self.player.viewControllerDisappear = NO;
     self.backgroundplayer.viewControllerDisappear = NO;
-
-    zishuNumL.text = [NSString stringWithFormat:@"%04ld",[YUserDefaults integerForKey:khas_learn_num]];
     
+    [self setnumLwithstring];
     [self fetchuserInfo];
     [self.backgroundplayer.currentPlayerManager play];
 }
@@ -328,18 +328,6 @@
         }
     }
     
-//    NSArray *arr = [YUserDefaults objectForKey:kziKu];
-//    NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
-//
-//    for (int i = 0; i < [YUserDefaults integerForKey:khas_learn_num]; i++) {
-//        AllModel *mod = array[i];
-//        mod.is_learn = YES;
-//        [array replaceObjectAtIndex:i withObject:mod];
-//    }
-//
-//    NSArray *dictArr = [AllModel mj_keyValuesArrayWithObjectArray:array];
-//    [YUserDefaults setObject:dictArr forKey:kziKu];
-
 
 }
 
@@ -460,10 +448,44 @@
         scrollV.contentOffset = CGPointMake((lightVMargin + lightVWidth) * shijiCount + 497 * YScaleHeight, 0);
         
         gifCenterX = 673 * YScaleHeight + (lightVWidth + lightVMargin) * shijiCount;//初始位置
+        
+        //清空小手指
+        for (UIView *v in scrollV.subviews) {
+            if (v.tag == 10000)
+            {
+                if(v.subviews.count == 5){
+                    UIImageView *img = v.subviews.lastObject;
+                    [img removeFromSuperview];
+                    img = nil;
+                }
+                
+            }
+        }
+
 
     }
     else{
         gifCenterX = chushicenterX;
+        
+        //清空小手指
+        for (UIView *v in scrollV.subviews) {
+            if (v.tag == 10000)
+            {
+                if(v.subviews.count == 4){
+                    tishiAnimation = [LOTAnimationView animationNamed:@"Mainhint"];
+                    [v addSubview:tishiAnimation];
+                    tishiAnimation.frame = CGRectMake(129 * YScaleHeight, 235 * YScaleHeight, 103 * YScaleHeight, 111 * YScaleHeight);
+                    
+                    tishiAnimation.userInteractionEnabled = NO;
+                    tishiAnimation.loopAnimation = YES;
+                    [tishiAnimation play];
+
+                }
+                
+            }
+        }
+
+        
     }
 
     
@@ -482,6 +504,8 @@
 - (void)plusClick:(NSNotification *)note{
     [self gengxingdeng];
     
+    scrollV.contentOffset = CGPointMake(0, 0);
+
     if(gifView){
         [gifView removeFromSuperview];
         gifView = nil;
@@ -511,6 +535,7 @@
         scrollV.scrollEnabled = YES;
     }];
     
+    
 }
 
 - (void)viewDidLoad {
@@ -534,8 +559,76 @@
     dataArr = [AllModel mj_objectArrayWithKeyValuesArray:arr];
     [self setupView];
 
-    
+    //监听网络变化
+    [self netWorkChangeEvent];
 }
+
+- (void)netWorkChangeEvent{
+    NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:url];
+    [manager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                NSLog(@"当前使用的是流量模式");
+                [self zixuewan];
+                break;
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                NSLog(@"当前使用的是wifi模式");
+                [self zixuewan];
+
+                break;
+            case AFNetworkReachabilityStatusNotReachable:
+                NSLog(@"断网了");
+                break;
+            case AFNetworkReachabilityStatusUnknown:
+                NSLog(@"变成了未知网络状态");
+                break;
+                
+            default:
+                break;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"netWorkChangeEventNotification" object:@(status)];
+    }];
+    [manager.reachabilityManager startMonitoring];
+
+}
+
+//有网的时候 把已学的字 后台同步
+- (void)zixuewan{
+    if([YUserDefaults objectForKey:kquerenzi]){
+        [self querenzhiqianzi];
+    }
+}
+
+- (void)querenzhiqianzi{
+    //网络请求数据
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
+    param[@"word"] = [YUserDefaults objectForKey:kquerenzi];
+    param[@"id"] = [NSNumber numberWithInteger:[YUserDefaults integerForKey:kquerenID]];
+
+    YLog(@"%@",[NSString getBaseUrl:_URL_Success withparam:param])
+        
+    [YLHttpTool POST:_URL_Success parameters:param progress:^(NSProgress *progress) {
+        
+    } success:^(id dic) {
+
+        if([dic[@"code"] integerValue] == 200){
+            
+            NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
+            [defs removeObjectForKey:kquerenzi];
+            [defs removeObjectForKey:kquerenID];
+            [defs synchronize];
+            
+        }
+        
+        YLog(@"%@",dic);
+    } failure:^(NSError *error) {
+        //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
+    }];
+
+}
+
 
 - (void)fetchIcon{
     //网络请求数据
@@ -556,6 +649,17 @@
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         
+        if(error.code == -1009 || error.code == -1020){
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                [self.player stop];
+                self.player = nil;
+            };
+        }
+
     }];
 //    yaofenglaaaaaaaaaa
 }
@@ -686,10 +790,11 @@
         
         if(haslearnCounts == 0){
             if(i == 0){
-                tishiAnimation = [LOTAnimationView animationNamed:@"hint"];
+                tishiAnimation = [LOTAnimationView animationNamed:@"Mainhint"];
                 [v addSubview:tishiAnimation];
                 tishiAnimation.frame = CGRectMake(129 * YScaleHeight, 235 * YScaleHeight, 103 * YScaleHeight, 111 * YScaleHeight);
                 
+                tishiAnimation.userInteractionEnabled = NO;
                 tishiAnimation.loopAnimation = YES;
                 [tishiAnimation play];
             }
@@ -904,12 +1009,56 @@
     ziBtn.sd_layout.rightSpaceToView(backV, 38 * YScaleWidth).topSpaceToView(backV, 38 * YScaleWidth).widthIs(76 * YScaleWidth).heightIs(90 * YScaleWidth);
     [ziBtn addTarget:self action:@selector(ziClick) forControlEvents:UIControlEventTouchUpInside];
     
+    
     zishuNumL = [UILabel new];
-    zishuNumL.text = [NSString stringWithFormat:@"%04ld",[YUserDefaults integerForKey:khas_learn_num]];
+//    NSString *geshu = [NSString stringWithFormat:@"%ld",(long)[YUserDefaults integerForKey:khas_learn_num]];
+    zishuNumL.textAlignment = NSTextAlignmentCenter;
     zishuNumL.textColor = [JKUtil getColor:@"0378FE"];
-    zishuNumL.font = [UIFont boldSystemFontOfSize:18 * YScaleWidth];
     [ziBtn addSubview:zishuNumL];
-    zishuNumL.sd_layout.leftSpaceToView(ziBtn, 20 * YScaleWidth).topSpaceToView(ziBtn, 38 * YScaleWidth).widthIs(50 * YScaleWidth).heightIs(24 * YScaleWidth);
+    zishuNumL.sd_layout.leftSpaceToView(ziBtn, 8 * YScaleWidth).topSpaceToView(ziBtn, 40 * YScaleWidth).rightSpaceToView(ziBtn, 0).heightIs(24 * YScaleWidth);
+    [self setnumLwithstring];
+}
+
+- (void)setnumLwithstring{
+    
+    NSString *geshu = [NSString stringWithFormat:@"%ld",(long)[YUserDefaults integerForKey:khas_learn_num]];
+    NSInteger firstZi = 19 - geshu.length;
+    NSInteger SecondZi = 13 - geshu.length;
+    
+//    if(geshu.length == 1){
+//        firstZi = 18;
+//        SecondZi = 12;
+//    }
+//    else if(geshu.length == 2){
+//        firstZi = 17;
+//        SecondZi = 10;
+//    }
+//    else if(geshu.length == 3){
+//        firstZi = 16;
+//        SecondZi = 9;
+//    }
+//    else if(geshu.length == 4){
+//        firstZi = 15;
+//        SecondZi = 8;
+//    }
+    
+    NSMutableAttributedString * attributedStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@个",geshu]];
+    
+    //富文本的属性通过字典的形式传入
+    NSDictionary *attributeDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   [UIFont fontWithName:@"Helvetica-Bold" size:firstZi * YScaleWidth],NSFontAttributeName,//字体
+                                   nil];
+    
+    NSDictionary *attributeDict1 = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   [UIFont fontWithName:@"Helvetica-Bold" size:SecondZi * YScaleWidth],NSFontAttributeName,//字体
+                                   nil];
+
+    [attributedStr addAttributes:attributeDict range:NSMakeRange(0, geshu.length)];
+    [attributedStr addAttributes:attributeDict1 range:NSMakeRange(geshu.length, 1)];
+
+    zishuNumL.attributedText = attributedStr;
+
+    
 }
 
 - (void)nannvclick{
@@ -944,7 +1093,7 @@
     UIImage *image = [YYImage imageNamed:@"loading.gif"];
     loadingView = [[YYAnimatedImageView alloc] initWithImage:image];
     [backV addSubview:loadingView];
-    loadingView.sd_layout.centerYEqualToView(backV).centerXEqualToView(backV).widthIs(495 * YScaleHeight).heightIs(210 * YScaleHeight);
+    loadingView.sd_layout.centerYEqualToView(backV).centerXEqualToView(backV).widthIs(330 * YScaleHeight).heightIs(140 * YScaleHeight);
 }
 
 - (void)removeLoading{
@@ -991,8 +1140,10 @@
     }
     
 
+    if(ziIndex <= [YUserDefaults integerForKey:khas_learn_num]){
+        [self loading];
+    }
     
-    [self loading];
     
     AllModel *selectedMod = dataArr[ziIndex];
 
@@ -1004,26 +1155,14 @@
         
     YLog(@"%@",[NSString getBaseUrl:_URL_fun withparam:param])
     
-    
     [YLHttpTool POST:_URL_fun parameters:param progress:^(NSProgress *progress) {
         
     } success:^(id dic) {
         
-//        [LoadingBackV removeFromSuperview];
-//        LoadingBackV = nil;
-
-        [self removeLoading];
-
         if([dic[@"code"] integerValue] == 200){
             
             NSDictionary *dict = dic[@"data"];
-        
-            
             //不同字的时候  才开始动画
-//            if(ziIndex != selectIndex){
-//                ifcanYidong = NO;
-//            }
-            
             for (UIView *v in scrollV.subviews) {
                 if (v.tag == b.superview.tag)
                 {
@@ -1115,10 +1254,9 @@
                             [self ludengdianliang:xuanzhongIndex + 10000];
                         };
                         
-                        [self presentViewController:vc animated:YES completion:^{
-
-                        }];
-
+                        fuxiVc = vc;
+                        [self huancun];
+                        
                     }];
 
 
@@ -1129,13 +1267,7 @@
             
             
             
-            
-            
-            
-            
-            
-            
-            
+                        
             
 
         }
@@ -1143,7 +1275,8 @@
         else{
 //            [SVProgressHUD showErrorWithStatus:dic[@"msg"]];
 //            [SVProgressHUD dismissWithDelay:1.0];
-            
+            [self removeLoading];
+
             if ([dic[@"code"] integerValue] == 413) {
                 //    播放录音
                 NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"按顺序学习" ofType:@"mp3"];
@@ -1160,8 +1293,6 @@
                 
                 [self xuexiyemian];
                 //回到之前所在地
-//                scrollV.contentOffset = CGPointMake(gifCenterX - chushicenterX, 0);
-//                gifView.transform = CGAffineTransformMakeScale(1.0, 1.0);//水平翻转
                 
             }
             
@@ -1205,13 +1336,13 @@
             
         }
         
-//        YLog(@"%@",dic);
+        YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
 
         [self removeLoading];
 
-        if(error.code == -1009){
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -1230,7 +1361,62 @@
  
 }
 
+- (void)huancun{
+    // 获取cache目录路径
+    NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+    
+    NSString *directoryPath = [[cachesDir stringByAppendingPathComponent:renduwanDic] copy];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath]) {
+          [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    __block NSInteger wangluoSuccessCounts = 0;
+    
+    NSArray *nameArr = @[videoname,audioname,ziqianname,zihouname,ziimgname];
+    NSArray *urlArr = @[fuxiVc.word_video,fuxiVc.word_audio,fuxiVc.words_audios.firstObject,fuxiVc.words_audios.lastObject,fuxiVc.word_image];
+
+    for (int i = 0; i < nameArr.count; i++) {
+        
+        AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
+        NSString  *fullPath = [NSString stringWithFormat:@"%@/%@", directoryPath, nameArr[i]];
+        NSURL *url = [NSURL URLWithString:urlArr[i]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        NSURLSessionDownloadTask *task =
+        [manger downloadTaskWithRequest:request
+                                progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+            
+                                    return [NSURL fileURLWithPath:fullPath];
+            
+                                }
+                       completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+                        
+            YLog(@"%d----%ld",i,wangluoSuccessCounts)
+
+            wangluoSuccessCounts++;
+            
+            if(wangluoSuccessCounts == 5){
+                [self removeLoading];
+                
+                [self presentViewController:fuxiVc animated:YES completion:^{
+                }];
+
+            }
+
+            
+                       }];
+        [task resume];
+
+    }
+    
+}
+
+
 - (void)xuexiyemian{
+    if(xuexiBackV){
+        return;
+    }
+    
     BlackJZV = [UIView new];
     BlackJZV.backgroundColor = [JKUtil getColor:@"131313"];
     BlackJZV.alpha = 0.8;
@@ -1284,6 +1470,10 @@
 - (void)gotoxuexi{
     [self closexuexiyemian];
     
+    scrollV.contentOffset = CGPointMake(gifCenterX - chushicenterX, 0);
+    gifView.transform = CGAffineTransformMakeScale(1.0, 1.0);//水平翻转
+
+    
     NSInteger hasLearnCount = [YUserDefaults integerForKey:khas_learn_num];
     UIView *v = [scrollV viewWithTag:10000 + hasLearnCount];
 
@@ -1319,6 +1509,9 @@
     [defs removeObjectForKey:khas_purchase];
     [defs removeObjectForKey:kuserid];
     
+//    zishuNumL.text = [NSString stringWithFormat:@"%d",0];
+    [self setnumLwithstring];
+
     [defs synchronize];
     
     //修改字库数据
@@ -1335,9 +1528,12 @@
 //    vipImg.image = [UIImage imageNamed:@"notvip"];
     vipL.alpha = 0.8;
     vipL.textColor = [JKUtil getColor:@"17449C"];
+    self->vipL.hidden = NO;
     self->vipL.text = @"当前未开通会员";
+    IconVipImg.hidden = YES;
     
     [self plusClick:nil];
+//    [self gengxingdeng];
     
     //获取新的userid
     //网络请求数据
@@ -1364,7 +1560,7 @@
             [YUserDefaults setObject:d[@"user_id"] forKey:kuserid];
             
             //跳转购买页
-//            [self tapAction];
+            
 
 
         }
@@ -1377,7 +1573,7 @@
 
 }
 
-//401之后修改信息
+//之后修改信息
 - (void)xiugaixinxi{
     
     [YUserDefaults setBool:NO forKey:kis_member];
@@ -1482,15 +1678,15 @@
 //学习完成之后  点亮路灯
 - (void)ludengdianliang:(NSInteger)index{
     
-    if(index == 10000){
-        for (UIView *v in scrollV.subviews) {
-            if (v.tag == 10000)
-            {
-                LOTAnimationView *im = v.subviews.lastObject;
-                [im removeFromSuperview];
-            }
-        }
-    }
+//    if(index == 10000){
+//        for (UIView *v in scrollV.subviews) {
+//            if (v.tag == 10000)
+//            {
+//                LOTAnimationView *im = v.subviews.lastObject;
+//                [im removeFromSuperview];
+//            }
+//        }
+//    }
 
     //点亮路灯
     /*
@@ -1622,7 +1818,7 @@
         return;
     }
     
-    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"家长" ofType:@"mp3"];
+    NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"解锁更多汉字" ofType:@"mp3"];
     NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
     [self bofangwithUrl:@[localVideoUrl]];
     
@@ -1649,6 +1845,12 @@
     [backV addSubview:BlackJZV];
     BlackJZV.sd_layout.leftEqualToView(backV).rightEqualToView(backV).topEqualToView(backV).bottomEqualToView(backV);
         
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeJiazhang)];
+    tap.delegate = self;
+    tap.numberOfTapsRequired = 1;
+    [BlackJZV addGestureRecognizer:tap];
+
+    
     jiazhangV = [UIView new];
     jiazhangV.backgroundColor = ClearColor;
     [backV addSubview:jiazhangV];

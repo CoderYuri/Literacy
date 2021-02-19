@@ -55,7 +55,7 @@
             
             YLog(@"%ld",error.code)
             
-            if(error.code == -1009){
+            if(error.code == -1009 || error.code == -1020){
                 
                 [SVProgressHUD showErrorWithStatus:@"当前无网络，建议检查设备网络状态"];
                 [SVProgressHUD dismissWithDelay:1];
@@ -66,10 +66,10 @@
                 [SVProgressHUD dismissWithDelay:1];
             }
 
-            else{
-                [SVProgressHUD showErrorWithStatus:@"请稍候再试"];
-                [SVProgressHUD dismissWithDelay:1];
-            }
+//            else{
+//                [SVProgressHUD showErrorWithStatus:@"请稍候再试"];
+//                [SVProgressHUD dismissWithDelay:1];
+//            }
 
 
             failure(error);
@@ -123,7 +123,7 @@
         if (failure) {
             // 打印下错误信息
             YLog(@"---打印错误信息---%@",error.description)
-            if(error.code == -1009){
+            if(error.code == -1009 || error.code == -1020){
 
                 [SVProgressHUD showErrorWithStatus:@"当前无网络，建议检查设备网络状态"];
                 [SVProgressHUD dismissWithDelay:1];
@@ -134,10 +134,10 @@
                 [SVProgressHUD dismissWithDelay:1];
             }
 
-            else{
-                [SVProgressHUD showErrorWithStatus:@"请稍候再试"];
-                [SVProgressHUD dismissWithDelay:1];
-            }
+//            else{
+//                [SVProgressHUD showErrorWithStatus:@"请稍候再试"];
+//                [SVProgressHUD dismissWithDelay:1];
+//            }
 
             failure(error);
         }

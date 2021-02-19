@@ -74,7 +74,7 @@
     UIView *ziBackV;
     
     NoHighBtn *lastBtn;
-    NoHighBtn *nextBtn;
+    LOTAnimationView *nextBtn;
     NSString *progressString;
 }
 
@@ -291,11 +291,20 @@
     [lastBtn addTarget:self action:@selector(lastClick) forControlEvents:UIControlEventTouchUpInside];
     lastBtn.hidden = YES;
     
-    nextBtn = [NoHighBtn buttonWithType:UIButtonTypeCustom];
-    [nextBtn setBackgroundImage:[UIImage imageNamed:@"elementnext"] forState:UIControlStateNormal];
+    nextBtn = [LOTAnimationView animationNamed:@"btn_next"];
     [backV addSubview:nextBtn];
-    nextBtn.sd_layout.rightSpaceToView(backV, 30 * YScaleWidth).bottomSpaceToView(backV, 30 * YScaleWidth).widthIs(70 * YScaleHeight).heightEqualToWidth();
-    [nextBtn addTarget:self action:@selector(nextClick) forControlEvents:UIControlEventTouchUpInside];
+    nextBtn.sd_layout.rightSpaceToView(backV, 0 * YScaleWidth).bottomSpaceToView(backV, 30 * YScaleWidth).widthIs(133.3 * YScaleHeight).heightIs(70 * YScaleHeight);
+//    [nextBtn addTarget:self action:@selector(nextClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    nextBtn.loopAnimation = YES;
+    [nextBtn play];
+
+    nextBtn.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nextClick)];
+    tap.numberOfTapsRequired = 1;
+    [nextBtn addGestureRecognizer:tap];
+
+    
     nextBtn.hidden = YES;
 
 }
@@ -324,6 +333,31 @@
         cikaV.hidden = YES;
         renCoverImg.hidden = YES;
         
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            if(iftuichu){
+                return;
+            }
+
+            //    播放录音
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"认" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            
+            
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                
+                [self.player stop];
+                self.player = nil;
+                
+
+            };
+
+            
+        });
+
+        
         [UIView animateWithDuration:renduwantimeinterval animations:^{
             
             [self->scrollV setContentOffset:CGPointMake(0, 0)];
@@ -339,23 +373,8 @@
 //            nextBtn.hidden = NO;
 //            lastBtn.hidden = YES;
 
-            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"认" ofType:@"mp3"];
-            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
-            
-            
-            [self bofangwithUrl:@[localVideoUrl]];
-            
-            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
-                
-                [self.player stop];
-                self.player = nil;
-                
-//                [gifView stopAnimating];
-                //读的画面操作
-                [self dianshiVjiazai];
-
-            };
-
+            //读的画面操作
+            [self dianshiVjiazai];
 
 
             
@@ -366,6 +385,32 @@
 
     }
     else if([progressString isEqualToString:@"wan"]){
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            if(iftuichu){
+                return;
+            }
+
+            //    播放录音
+            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"读" ofType:@"mp3"];
+            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+            
+            
+            [self bofangwithUrl:@[localVideoUrl]];
+            
+            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+                
+                [self.player stop];
+                self.player = nil;
+                
+
+            };
+
+            
+        });
+
+        
         
         [UIView animateWithDuration:renduwantimeinterval animations:^{
             
@@ -378,30 +423,9 @@
                 return;
             }
             
-//            nextBtn.hidden = NO;
-//            lastBtn.hidden = NO;
             progressString = @"du";
-
-            NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"读" ofType:@"mp3"];
-            NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
-            
-            
-            [self bofangwithUrl:@[localVideoUrl]];
-            
-            self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
-                
-                [self.player stop];
-                self.player = nil;
-                
-                
-//                [gifView stopAnimating];
-                //读的画面操作
-                [self duVjiazai];
-
-            };
-
-
-
+            //读的画面操作
+            [self duVjiazai];
             
         }];
 
@@ -464,17 +488,12 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [UIView animateWithDuration:Transformtimeinterval animations:^{
-        self->gifView.centerX = 330 * YScaleWidth;
-
-    } completion:^(BOOL finished) {
-//            [self->gifView stopAnimating];
-        //加载电视机 放动画  完成之后进入下个页面
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         if(iftuichu){
             return;
         }
-        
+
         //    播放录音
         NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"认" ofType:@"mp3"];
         NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
@@ -487,16 +506,43 @@
             [self.player stop];
             self.player = nil;
             
-            //进入认页面
-            [self dianshiVjiazai];
-            //直接进入玩页面
-//            [self quwan];
-    //        [self successCaozuo];
 
         };
+
+        
+    });
+    
+    [UIView animateWithDuration:Transformtimeinterval animations:^{
+        self->gifView.centerX = 330 * YScaleWidth;
+
+    } completion:^(BOOL finished) {
+//            [self->gifView stopAnimating];
+        //加载电视机 放动画  完成之后进入下个页面
+        if(iftuichu){
+            return;
+        }
+        
+        [self dianshiVjiazai];
+        //进入认页面
+        //直接进入玩页面
+//            [self quwan];
+//        [self successCaozuo];
+
     }];
 
     
+}
+
+- (BOOL)ifexistwithString:(NSString *)dicString{
+    NSString *fileName = dicString;
+    NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+    NSString *filepath = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@/%@/%@",cachesDir,renduwanDic,fileName]];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:filepath]) {
+        return  YES;
+    } else{
+        return NO;
+    };
 }
 
 - (ZFPlayerControlView *)controlView {
@@ -556,11 +602,21 @@
         }
         
         NSString *webVideoPath = self.word_video;
-        NSURL *VideoUrl = [NSURL URLWithString:webVideoPath];
+        NSURL *VideoUrl;
         
-//        NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
-//
-//        NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@", cachesDir, @"video.mp4"];
+        
+        if([self ifexistwithString:videoname]){
+            
+            NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+
+            NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,videoname];
+            
+            VideoUrl = [NSURL fileURLWithPath:localFilePath];
+        }
+        else{
+            VideoUrl = [NSURL URLWithString:webVideoPath];
+        }
+
 //
 //        NSURL *VideoUrl = [NSURL fileURLWithPath:localFilePath];
         
@@ -621,22 +677,18 @@
                     
                         });
                         
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            
-                            if(iftuichu){
-                                return;
-                            }
-                            
-                            nextBtn.hidden = NO;
-                            lastBtn.hidden = YES;
-                        });
+//                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//
+//
+//                        });
 
-
-                        
-                        
                     }
                     
                     
+                    if([[NSString stringWithFormat:@"%.f",current] isEqual:@"26"]){
+                        nextBtn.hidden = NO;
+                        lastBtn.hidden = YES;
+                    }
                     
                     
                 }
@@ -734,6 +786,32 @@
 - (void)ducaozuo{
 
     self->renCoverImg.hidden = YES;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if(iftuichu){
+            return;
+        }
+
+        //    播放录音
+        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"读" ofType:@"mp3"];
+        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+        
+        
+        [self bofangwithUrl:@[localVideoUrl]];
+        
+        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
+            
+            [self.player stop];
+            self.player = nil;
+            
+
+        };
+
+        
+    });
+
+    
         
     [UIView animateWithDuration:renduwantimeinterval animations:^{
         
@@ -747,26 +825,9 @@
         }
         
         progressString = @"du";
-//        nextBtn.hidden = NO;
-//        lastBtn.hidden = NO;
-
-        NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"读" ofType:@"mp3"];
-        NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
+        //读的画面操作
+        [self duVjiazai];
         
-        
-        [self bofangwithUrl:@[localVideoUrl]];
-        
-        self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
-            
-            [self.player stop];
-            self.player = nil;
-            
-            
-//            [gifView stopAnimating];
-            //读的画面操作
-            [self duVjiazai];
-
-        };
     }];
 
 }
@@ -795,10 +856,24 @@
         NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
         
         NSString *webVideoPath = self.word_audio;
-        NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
-//        NSURL *webVideoUrl = [YUserDefaults objectForKey:knowaudio];
+//        NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+
+        NSURL *VideoUrl;
+        if([self ifexistwithString:audioname]){
+            
+            NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+
+            NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,audioname];
+            
+            VideoUrl = [NSURL fileURLWithPath:localFilePath];
+        }
+        else{
+            VideoUrl = [NSURL URLWithString:webVideoPath];
+        }
         
-        [self bofangwithUrl:@[localVideoUrl , webVideoUrl]];
+        
+        
+        [self bofangwithUrl:@[localVideoUrl , VideoUrl]];
         
         self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
             if(ifhoutai){
@@ -848,11 +923,23 @@
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             
             NSString *webVideoPath = self.word_audio;
-            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
-//            NSURL *webVideoUrl = [YUserDefaults objectForKey:knowaudio];
+//            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+
+            NSURL *VideoUrl;
+            if([self ifexistwithString:audioname]){
+                
+                NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+
+                NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,audioname];
+                
+                VideoUrl = [NSURL fileURLWithPath:localFilePath];
+            }
+            else{
+                VideoUrl = [NSURL URLWithString:webVideoPath];
+            }
             
-            [self bofangwithUrl:@[localVideoUrl , webVideoUrl]];
-            
+            [self bofangwithUrl:@[localVideoUrl , VideoUrl]];
+
             if(ifhoutai){
                 [self.player.currentPlayerManager pause];
             }
@@ -929,21 +1016,12 @@
 //玩 页面操作
 //进入  玩 页面
 - (void)wancaozuo{
-
-    [UIView animateWithDuration:renduwantimeinterval animations:^{
-        self->gifView.centerX = 100 * YScaleWidth + YScreenW * 2;
-
-        [self->scrollV setContentOffset:CGPointMake(YScreenW * 2, 0)];
-        self->yidongV.mj_x = 105 * YScaleWidth;
-
-    } completion:^(BOOL finished) {
-//            [gifView stopAnimating];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         if(iftuichu){
             return;
         }
-                
-        progressString = @"wan";
 
         //    播放录音
         NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"玩" ofType:@"mp3"];
@@ -956,13 +1034,97 @@
             
             [self.player stop];
             self.player = nil;
+            
+
+        };
+
+        
+    });
+
+    
+    if(successIndex){
+
+        [UIView animateWithDuration:renduwantimeinterval animations:^{
+            
+            [self->scrollV setContentOffset:CGPointMake(YScreenW * 2, 0)];
+            self->yidongV.mj_x = 105 * YScaleWidth;
+            self->gifView.centerX = 590 * YScaleWidth + YScreenW * 2;
+
+        } completion:^(BOOL finished) {
+            if(iftuichu){
+                return;
+            }
+                    
+            progressString = @"wan";
+
             nextBtn.hidden = YES;
             lastBtn.hidden = NO;
 
-            [self ciyubofang];
-        };
+            
+            firstCheck = YES;
+    //        [self->gifView stopAnimating];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                bofangCounts = 0;
+                
+                NSString *webVideoPath = self.words_audios.lastObject;
+    //            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+                
+                NSURL *VideoUrl;
+                if([self ifexistwithString:zihouname]){
+                    
+                    NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+
+                    NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,zihouname];
+                    
+                    VideoUrl = [NSURL fileURLWithPath:localFilePath];
+                }
+                else{
+                    VideoUrl = [NSURL URLWithString:webVideoPath];
+                }
+
+                
+                [self newPlaywithUrl:VideoUrl :^{
+                    [self doudongwithV];
+                }];
+                
+            });
+
+            
+        }];
+
         
-    }];
+    }
+    else{
+        
+        [UIView animateWithDuration:renduwantimeinterval animations:^{
+            self->gifView.centerX = 100 * YScaleWidth + YScreenW * 2;
+
+            [self->scrollV setContentOffset:CGPointMake(YScreenW * 2, 0)];
+            self->yidongV.mj_x = 105 * YScaleWidth;
+
+        } completion:^(BOOL finished) {
+    //            [gifView stopAnimating];
+            
+            if(iftuichu){
+                return;
+            }
+                    
+            progressString = @"wan";
+
+            nextBtn.hidden = YES;
+            lastBtn.hidden = NO;
+
+            
+            [self ciyubofang];
+
+            
+        }];
+
+        
+    }
+
 
 }
 
@@ -988,11 +1150,22 @@
             bofangCounts = 0;
             
             NSString *webVideoPath = self.words_audios.firstObject;
-            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+//            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
             
-//                    NSURL *webVideoUrl = [YUserDefaults objectForKey:kfirstaudio];
-            
-            [self newPlaywithUrl:webVideoUrl :^{
+            NSURL *VideoUrl;
+            if([self ifexistwithString:ziqianname]){
+                
+                NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+
+                NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,ziqianname];
+                
+                VideoUrl = [NSURL fileURLWithPath:localFilePath];
+            }
+            else{
+                VideoUrl = [NSURL URLWithString:webVideoPath];
+            }
+
+            [self newPlaywithUrl:VideoUrl :^{
                 [self doudongwithV];
             }];
             
@@ -1062,7 +1235,7 @@
 
     srand([[NSDate date] timeIntervalSince1970]);
     float rand=(float)random();
-    CFTimeInterval t=rand*0.0000000001;
+    CFTimeInterval t = rand*0.0000000001;
     
     [UIView animateWithDuration:0.5 delay:t options:0  animations:^
      {
@@ -1082,21 +1255,33 @@
     
     //音频结束
     //再放一遍词语音频
-//    NSString *webVideoPath;
-    NSURL *webVideoUrl;
+    NSString *webVideoPath;
+    NSString *audioN;
+    
     if(successIndex == 0){
-//        webVideoPath = self.words_audios.firstObject;
-        webVideoUrl = [NSURL URLWithString:self.words_audios.firstObject];
+        webVideoPath = self.words_audios.firstObject;
+        audioN = ziqianname;
     }
     else{
-//        webVideoPath = self.words_audios.lastObject;
-        webVideoUrl = [NSURL URLWithString:self.words_audios.lastObject];
-
+        webVideoPath = self.words_audios.lastObject;
+        audioN = zihouname;
     }
     
-//    NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+    NSURL *VideoUrl;
+    if([self ifexistwithString:audioN]){
+        
+        NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
 
-    [self bofangwithUrl:@[webVideoUrl]];
+        NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,audioN];
+        
+        VideoUrl = [NSURL fileURLWithPath:localFilePath];
+    }
+    else{
+        VideoUrl = [NSURL URLWithString:webVideoPath];
+    }
+
+    
+    [self bofangwithUrl:@[VideoUrl]];
         
     self.player.playerDidToEnd = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset) {
         
@@ -1138,7 +1323,7 @@
 
 //滑动至半屏位置
 - (void)banpingcaozuo{
-    [UIView animateWithDuration:1.7 animations:^{
+    [UIView animateWithDuration:Transformtimeinterval animations:^{
         
         self->gifView.centerX = 590 * YScaleWidth + YScreenW * 2;
 
@@ -1152,10 +1337,23 @@
             bofangCounts = 0;
             
             NSString *webVideoPath = self.words_audios.lastObject;
-            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
-//            NSURL *webVideoUrl = [YUserDefaults objectForKey:ksecondaudio];
+//            NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+            
+            NSURL *VideoUrl;
+            if([self ifexistwithString:zihouname]){
+                
+                NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
 
-            [self newPlaywithUrl:webVideoUrl :^{
+                NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,zihouname];
+                
+                VideoUrl = [NSURL fileURLWithPath:localFilePath];
+            }
+            else{
+                VideoUrl = [NSURL URLWithString:webVideoPath];
+            }
+
+            
+            [self newPlaywithUrl:VideoUrl :^{
                 [self doudongwithV];
             }];
             
@@ -1216,14 +1414,10 @@
 
     } completion:^(BOOL finished) {
                  
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-//            [gifView stopAnimating];
-            //认读玩结束
-            //成功接口
-            [self successFetch];
 
-        });
+        //成功接口
+        [self successFetch];
+
     }];
 }
 
@@ -1232,10 +1426,47 @@
 //    if(self.xuanzhongIndex < [YUserDefaults integerForKey:khas_learn_num]){
 //    }
     
+    //清空认读玩数据
+    [self cleanCache];
+
     if(self.ifFuxi){
+
         [self dismissViewControllerAnimated:YES completion:nil];
         return;
     }
+    
+//    NSArray *arr = [YUserDefaults objectForKey:kziKu];
+//    NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+//    AllModel *mod = array[self.xuanzhongIndex];
+//    mod.is_learn = YES;
+//    [array replaceObjectAtIndex:self.xuanzhongIndex withObject:mod];
+//
+//    NSArray *dictArr = [AllModel mj_keyValuesArrayWithObjectArray:array];
+//    [YUserDefaults setObject:dictArr forKey:kziKu];
+//
+//    //播放语音
+//    [YUserDefaults setInteger:(self.xuanzhongIndex + 1) forKey:khas_learn_num];
+//
+//    if(self.callBack){
+//        self.callBack(self.xuanzhongIndex);
+//    }
+    
+    NSArray *arr = [YUserDefaults objectForKey:kziKu];
+    NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
+    AllModel *mod = array[self.xuanzhongIndex];
+    mod.is_learn = YES;
+    [array replaceObjectAtIndex:self.xuanzhongIndex withObject:mod];
+    
+    NSArray *dictArr = [AllModel mj_keyValuesArrayWithObjectArray:array];
+    [YUserDefaults setObject:dictArr forKey:kziKu];
+    
+    //播放语音
+    [YUserDefaults setInteger:(self.xuanzhongIndex + 1) forKey:khas_learn_num];
+
+    if(self.callBack){
+        self.callBack(self.xuanzhongIndex);
+    }
+
     
     //网络请求数据
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -1250,30 +1481,20 @@
     } success:^(id dic) {
 
         if([dic[@"code"] integerValue] == 200){
-            
-            NSArray *arr = [YUserDefaults objectForKey:kziKu];
-            NSMutableArray *array = [AllModel mj_objectArrayWithKeyValuesArray:arr];
-            AllModel *mod = array[self.xuanzhongIndex];
-            mod.is_learn = YES;
-            [array replaceObjectAtIndex:self.xuanzhongIndex withObject:mod];
-            
-            NSArray *dictArr = [AllModel mj_keyValuesArrayWithObjectArray:array];
-            [YUserDefaults setObject:dictArr forKey:kziKu];
-            
-            //播放语音
-            [YUserDefaults setInteger:(self.xuanzhongIndex + 1) forKey:khas_learn_num];
-            
-            if(self.callBack){
-                self.callBack(self.xuanzhongIndex);
-            }
+                                    
             [self dismissViewControllerAnimated:YES completion:nil];
-
+            
         }
         
         YLog(@"%@",dic);
     } failure:^(NSError *error) {
         //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
-        if(error.code == -1009){
+        [YUserDefaults setObject:self.selectedMod.word forKey:kquerenzi];
+        [YUserDefaults setInteger:self.selectedMod.ID forKey:kquerenID];
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
+
+        if(error.code == -1009 || error.code == -1020){
             NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
             NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
             [self bofangwithUrl:@[localVideoUrl]];
@@ -1285,8 +1506,40 @@
         }
 
     }];
+    
+}
+
+- (void)cleanCache{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        // 创建文件管理者
+        NSFileManager *mgr = [NSFileManager defaultManager];
+        
+        // 删除文件
+        NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+
+        NSString  *fullPath = [NSString stringWithFormat:@"%@/%@", cachesDir, renduwanDic];
+
+        NSString *path = fullPath;
+        
+        BOOL isDirectory;
+        
+        BOOL isFileExist = [mgr fileExistsAtPath:path isDirectory:&isDirectory];
+        
+        if (!isFileExist) return;
+        
+        if (isDirectory) {
+            NSArray *subPaths = [mgr subpathsAtPath:path];
+            for (NSString *subPath in subPaths) {
+                
+                NSString *filePath = [path stringByAppendingPathComponent:subPath];
+                [mgr removeItemAtPath:filePath error:nil];
+            }
+        }
+                
+    });
 
 }
+
 
 
 #pragma mark -- View init
@@ -1390,9 +1643,25 @@
     imgV.frame = CGRectMake(59 * YScaleHeight, 48 * YScaleHeight, 340 * YScaleHeight, 289 * YScaleHeight);
     
     UIImageView *leftimg = [[UIImageView alloc] init];
-    [leftimg sd_setImageWithURL:[NSURL URLWithString:self.word_image]];
-//    [leftimg sd_setImageWithURL:[NSURL URLWithString:[YUserDefaults objectForKey:kurlimage]]];
+    
+    NSURL *VideoUrl;
+    if([self ifexistwithString:ziimgname]){
+        
+        NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
 
+        NSString  *localFilePath = [NSString stringWithFormat:@"%@/%@/%@", cachesDir, renduwanDic,ziimgname];
+        
+        leftimg.image = [UIImage imageWithContentsOfFile:localFilePath];
+    }
+    else{
+        VideoUrl = [NSURL URLWithString:self.word_image];
+        [leftimg sd_setImageWithURL:VideoUrl];
+    }
+
+
+
+    
+    
     [imgV addSubview:leftimg];
     leftimg.sd_layout.centerXEqualToView(imgV).centerYEqualToView(imgV).widthIs(385.333 * YScaleHeight * 1.4).heightIs(289 * YScaleHeight * 1.4);
     
@@ -1875,6 +2144,7 @@
         //第一关完成
         if(firstCheck){
             
+            lastBtn.hidden = YES;
             [self xuanzhongRight];
             
             [UIView animateWithDuration:0.5 animations:^{
@@ -1899,7 +2169,7 @@
                         }
 
                         //一段成功的音乐
-                        [gifView startAnimating];
+//                        [gifView startAnimating];
                         [self successCaozuo];
 
                     });
@@ -1957,6 +2227,7 @@
         self.player = nil;
     }
 
+    [self cleanCache];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

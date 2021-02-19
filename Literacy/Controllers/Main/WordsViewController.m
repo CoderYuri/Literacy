@@ -46,10 +46,10 @@
     // Do any additional setup after loading the view.
     dataArr = [NSMutableArray array];
     NSArray *arr = [YUserDefaults objectForKey:kziKu];
+    
     if(arr.count){
         dataArr = [AllModel mj_objectArrayWithKeyValuesArray:arr];
         [self setupView];
-
     }
 }
 
@@ -169,6 +169,8 @@
 
     if(selectedMod.is_learn){
 
+        [SVProgressHUD showWithStatus:@"加载中..."];
+        
         //网络请求数据
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         param[@"user_id"] = [YUserDefaults objectForKey:kuserid];
@@ -206,6 +208,7 @@
                 
                 //音视频图片 缓存
                 [self huancun];
+                
             }
 
             else{
@@ -216,7 +219,7 @@
             YLog(@"%@",dic);
         } failure:^(NSError *error) {
             //        [self.view makeToast:@"网络连接失败" duration:2 position:@"center"];
-            if(error.code == -1009){
+            if(error.code == -1009 || error.code == -1020){
                 NSString* localFilePath=[[NSBundle mainBundle]pathForResource:@"网络" ofType:@"mp3"];
                 NSURL *localVideoUrl = [NSURL fileURLWithPath:localFilePath];
                 [self bofangwithUrl:@[localVideoUrl]];
@@ -237,26 +240,52 @@
 
 - (void)huancun{
     // 获取cache目录路径
-      NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+    NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
     
-    AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
-    NSString  *fullPath = [NSString stringWithFormat:@"%@/%@", cachesDir, @"video.mp4"];
-    NSURL *url = [NSURL URLWithString:fuxiVc.word_video];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLSessionDownloadTask *task =
-    [manger downloadTaskWithRequest:request
-                            progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-        
-                                return [NSURL fileURLWithPath:fullPath];
-        
-                            }
-                   completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-                        
-                        [self presentViewController:fuxiVc animated:YES completion:^{
-                        }];
+    NSString *directoryPath = [[cachesDir stringByAppendingPathComponent:renduwanDic] copy];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath]) {
+          [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    __block NSInteger wangluoSuccessCounts = 0;
 
-                   }];
-    [task resume];
+    NSArray *nameArr = @[videoname,audioname,ziqianname,zihouname,ziimgname];
+    NSArray *urlArr = @[fuxiVc.word_video,fuxiVc.word_audio,fuxiVc.words_audios.firstObject,fuxiVc.words_audios.lastObject,fuxiVc.word_image];
+
+    for (int i = 0; i < nameArr.count; i++) {
+        
+        AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
+        NSString  *fullPath = [NSString stringWithFormat:@"%@/%@", directoryPath, nameArr[i]];
+        NSURL *url = [NSURL URLWithString:urlArr[i]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        NSURLSessionDownloadTask *task =
+        [manger downloadTaskWithRequest:request
+                                progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+            
+                                    return [NSURL fileURLWithPath:fullPath];
+            
+                                }
+                       completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+                        
+            YLog(@"%d----%ld",i,wangluoSuccessCounts)
+
+            wangluoSuccessCounts++;
+            
+            if(wangluoSuccessCounts == 5){
+                [SVProgressHUD dismiss];
+
+                [self presentViewController:fuxiVc animated:YES completion:^{
+                }];
+
+            }
+
+            
+                       }];
+        [task resume];
+
+    }
+    
 }
 
 

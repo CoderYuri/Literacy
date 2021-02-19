@@ -74,42 +74,26 @@
 #define khas_learn_num    @"khas_learn_num"
 #define kziKu             @"kziku"
 #define kexpiretime       @"kexpiretime"
-#define koneVoice         @"koneVoice"
 #define kfirstchuo        @"kfirstchuo"
 #define kifshaonNan       @"kifshaonNan"
 #define kmembertype       @"kmembertype"
+#define kxieyi            @"kxieyi"
+#define kquerenzi         @"kquerenzi"
+#define kquerenID         @"kquerenID"
+
+#define Transformtimeinterval 2.5
 
 //缓存一次需要的音视频
-#define knowvideo         @"knowvideo"
-#define knowaudio         @"knowaudio"
-#define kurlimage         @"kurlimage"
-#define kfirstaudio       @"kfirstaudio"
-#define ksecondaudio      @"ksecondaudio"
-
-
-
-#define weixinappid @"wx02362430224788af"
-#define appstoreId  @"1523616454"
-#define kxieyi      @"kxieyi"
-#define CK_universalLink @"https://www.leqi.us/"
-#define kuserwhetherBind @"kuserwhetherBind"
-#define kshouye     @"kshouye"
-
+#define renduwanDic @"Renduwan"
+#define videoname   @"video.mp4"
+#define audioname   @"zi.mp3"
+#define ziqianname  @"qian.mp3"
+#define zihouname   @"hou.mp3"
+#define ziimgname   @"ziimg.png"
 
 #define Appkey      @"ALMIGHTY_IDPHOTO"
 #define ClientType  @"iOS"
 #define khistory    @"khistory"
-#define kremen      @"kremen"
-#define kbaocun     @"kbaocun"
-
-#define knickname   @"knickname"
-#define kheadIcon   @"kheadIcon"
-#define Transformtimeinterval 2.5
-
-#define localPhone @"18012485542"
-#define localweChat @"idphoto2017"
-#define kwechateCode @"wechatCode"
-#define shareUrl @"https://operation.id-photo-verify.com/apps/Almighty/DownloadPage/index.html"
 
 #define  YUserDefaults [NSUserDefaults standardUserDefaults]
 #define  YSystemFont(size) [UIFont systemFontOfSize:size]

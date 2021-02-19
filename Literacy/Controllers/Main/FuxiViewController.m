@@ -152,7 +152,6 @@
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
 //    loginBtn.transform = CGAffineTransformIdentity;
     loginBtn.transform = CGAffineTransformMakeScale(1.0, 1.0);;
-
 }
 
 
